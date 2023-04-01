@@ -12,12 +12,16 @@ export default function NotesScreen() {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
 
-
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text>{item}</Text>
     </View>
   );
+
+  const addNote = () => {
+    setNotes([...notes, newNote]);
+    setNewNote("");
+  };
 
   return (
     <View style={styles.container}>

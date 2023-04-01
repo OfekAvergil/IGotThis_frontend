@@ -18,10 +18,7 @@ export default function addNoteDialog() {
     setOpen(false);
   };
 
-  const addNote = () => {
-    setNotes([...notes, newNote]);
-    setNewNote("");
-  };
+
 
   return (
     <div>
