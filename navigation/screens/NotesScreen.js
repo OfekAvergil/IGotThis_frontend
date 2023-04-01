@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+} from "react-native";
 
 export default function NotesScreen() {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
+  const [newNote, setNewNote] = useState("");
 
-  const addNote = () => {
-    setNotes([...notes, newNote]);
-    setNewNote('');
-  };
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
@@ -18,15 +21,9 @@ export default function NotesScreen() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setNewNote(text)}
-        value={newNote}
-        placeholder="Add a new note..."
-      />
-      <TouchableOpacity style={styles.addButton} onPress={addNote}>
-        <Text style={styles.addButtonText}>Add</Text>
-      </TouchableOpacity>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Add new Note
+      </Button>
       <FlatList
         data={notes}
         renderItem={renderItem}
@@ -40,26 +37,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 10,
   },
   addButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   addButtonText: {
-    color: '#fff',
+    color: "#fff",
   },
   item: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 10,
   },
