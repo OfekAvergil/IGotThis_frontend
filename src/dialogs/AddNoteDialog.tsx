@@ -6,9 +6,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { TextareaAutosize } from "@mui/material";
+import notesStore from "../stores/notesStore";
+import { observer } from "mobx-react";
 
-export default function addNoteDialog() {
-  const [open, setOpen] = React.useState(false);
+function AddNoteDialog() {
+  const [open, setOpen] = React.useState(true);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -18,35 +21,38 @@ export default function addNoteDialog() {
     setOpen(false);
   };
 
-
-
   return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+  <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Subscribe</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
+            add note
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
-            type="email"
+            label="Header"
+            type="text"
             fullWidth
             variant="standard"
+          />
+          <TextareaAutosize
+            autoFocus
+            id="content"
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          <Button onClick={()=> {
+            notesStore.addNote("hey");
+            handleClose();
+          }}>
+            Subscribe
+          </Button>
         </DialogActions>
       </Dialog>
-    </div>
   );
 }
+
+export default AddNoteDialog;
