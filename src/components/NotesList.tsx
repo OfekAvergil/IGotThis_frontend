@@ -1,24 +1,12 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  Button,
-} from "react-native";
+import { View, Text, StyleSheet, Button} from "react-native";
 import notesStore from "../stores/notesStore";
-import { Header } from "react-native/Libraries/NewAppScreen";
-import { observer } from "mobx-react";
-import AddNoteDialog from "../dialogs/AddNoteDialog";
-import MyComponent from "../dialogs/AddNoteDialog";
 
 function NotesItems() {
   return(
     <>
       {notesStore.notes.map((note: {name: string, content: string}) => (
-        <View>
+        <View style={styles.container}>
           <Text>{note.name}</Text>
           <Text>{note.content}</Text>
           <Button title="delete"/>
@@ -28,25 +16,12 @@ function NotesItems() {
   );
 }
 
-const ObservedNotesList = observer(NotesItems)
-
-
-function NotesList() {
-  return (
-    <>
-      <Text>Notes List</Text>
-      <ObservedNotesList/>
-      <MyComponent/>
-      <Button title="Open form dialog "/>
-    </>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#ccc",
   },
   input: {
     borderWidth: 1,
@@ -71,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotesList;
+export default NotesItems;

@@ -9,23 +9,29 @@ export interface note{
 
 class NotesStore{
     notes: note[] = [];
+    isDialogVisible: boolean = false;
 
     constructor(){
         makeAutoObservable(this);
     }
     
-    addNote(noteName: string){
+    addNote(noteName: string): void{
+        console.log("here!");
         this.notes = [...this.notes,
         {
             name: noteName,
             creationDate: new Date(),
-            content: "",
+            content: "my note",
         }
         ];
     }
 
-    get count(){
+    get count(): number{
         return this.notes.length;
+    }
+
+    setVisible(isVisible: boolean): void {
+        this.isDialogVisible = isVisible;
     }
 }
 
