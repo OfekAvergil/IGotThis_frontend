@@ -1,58 +1,49 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { TextareaAutosize } from "@mui/material";
-import notesStore from "../stores/notesStore";
-import { observer } from "mobx-react";
+import * as React from 'react';
+import { Button, Dialog, Portal, Text, TextInput } from 'react-native-paper';
 
-function AddNoteDialog() {
-  const [open, setOpen] = React.useState(true);
+const MyComponent = () => {
+  const [visible, setVisible] = React.useState(true);
+  const [title, setTitle] = React.useState("");
+  const [content, setContent] = React.useState("");
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+
+  const hideDialog = () => setVisible(false);
 
   return (
-  <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            add note
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Header"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-          <TextareaAutosize
-            autoFocus
-            id="content"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={()=> {
-            notesStore.addNote("hey");
-            handleClose();
-          }}>
-            Subscribe
-          </Button>
-        </DialogActions>
-      </Dialog>
-  );
-}
+    <Portal>
+      <Dialog visible={visible} onDismiss={hideDialog}>
+      <Dialog.Title>New Note</Dialog.Title>
+        <Dialog.Content>
+        <TextInput
+          label="title"
+          value={title}
+          onChangeText={title => setTitle(title)}
+        />
 
-export default AddNoteDialog;
+        <TextInput
+          label="content"
+          value={content}
+          onChangeText={content => setContent(content)}
+          multiline= {true}
+        />
+        <Button icon="camera" mode="contained" onPress={() => console.log('Pressed')}>
+          Press me
+        </Button>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={() => {
+            console.log('Cancel');
+            setVisible(false);
+            }}>Cancel</Button>
+          <Button onPress={() => {
+            console.log('Ok');
+            setVisible(false);
+            }}>Ok</Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
+  );
+};
+
+export default MyComponent;

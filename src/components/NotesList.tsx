@@ -11,6 +11,8 @@ import {
 import notesStore from "../stores/notesStore";
 import { Header } from "react-native/Libraries/NewAppScreen";
 import { observer } from "mobx-react";
+import AddNoteDialog from "../dialogs/AddNoteDialog";
+import MyComponent from "../dialogs/AddNoteDialog";
 
 function NotesItems() {
   return(
@@ -32,8 +34,9 @@ const ObservedNotesList = observer(NotesItems)
 function NotesList() {
   return (
     <>
-      <Header>Notes List</Header>
+      <Text>Notes List</Text>
       <ObservedNotesList/>
+      <MyComponent/>
       <Button title="Open form dialog "/>
     </>
   );

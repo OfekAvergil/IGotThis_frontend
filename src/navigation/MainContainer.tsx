@@ -19,10 +19,9 @@ export default function MainContainer() {
         initialRouteName="Home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
+            let iconName: string = "";
             if (route.name === "Home") {
-              iconName = focused ? "home" : "home-outline";
+              let iconName = focused ? "home" : "home-outline";
             } else if (route.name === "ToDo") {
               iconName = focused ? "list" : "list-outline";
             } else if (route.name === "Notes") {
