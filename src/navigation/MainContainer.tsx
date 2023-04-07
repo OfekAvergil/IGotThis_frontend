@@ -16,18 +16,18 @@ export default function MainContainer() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="Notes"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName: string = "";
             if (route.name === "Home") {
-              let iconName = focused ? "home" : "home-outline";
+              iconName = focused ? "home" : "home-outline";
             } else if (route.name === "ToDo") {
               iconName = focused ? "list" : "list-outline";
             } else if (route.name === "Notes") {
               iconName = focused ? "book" : "book-outline";
             }
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={size} color={"#E45082"} />;
           },
         })}
       >
