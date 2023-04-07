@@ -16,7 +16,7 @@ export default function MainContainer() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Notes"
+        initialRouteName="Home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName: string = "";
