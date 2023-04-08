@@ -11,11 +11,9 @@ import {
 import NotesList from "../../components/NotesList";
 import AddNoteDialog from "../../dialogs/AddNoteDialog";
 
-
 export default function NotesScreen() {
   // const [notes, setNotes] = useState([]);
   // const [newNote, setNewNote] = useState("");
-
 
   // const renderItem = ({ item }) => (
   //   <View style={styles.item}>
@@ -28,12 +26,11 @@ export default function NotesScreen() {
       <NotesList />
       {/* <AddNoteDialog/> */}
     </>
-    
 
     // <View style={styles.container}>
     //   <Button variant="outlined" title="Add new Note" onClick={handleClickOpen}>
     //   </Button>
-    
+
     //   <observer>{()=>
     //     <FlatList
     //       data={notes}
@@ -41,7 +38,7 @@ export default function NotesScreen() {
     //       keyExtractor={(item, index) => index.toString()}
     //     />
     //   }
-        
+
     //   </observer>
     // </View>
   );

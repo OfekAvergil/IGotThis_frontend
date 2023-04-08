@@ -1,15 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import MainContainer from './src/navigation/MainContainer';
-import React from 'react';
-import { Provider as PaperProvider } from 'react-native-paper';
-
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import MainContainer from "./src/navigation/MainContainer";
+import React from "react";
+import { Provider as PaperProvider } from "react-native-paper";
+import LogInScreen from "./src/LogInScreen";
 
 export default function App() {
-  
   return (
     <PaperProvider>
-      <MainContainer/>
+      <LogInScreen />
     </PaperProvider>
   );
 }
@@ -17,8 +16,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
