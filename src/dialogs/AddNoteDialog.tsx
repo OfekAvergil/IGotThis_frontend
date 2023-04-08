@@ -38,6 +38,7 @@ const AddNoteDialog = () => {
       </View>
     ),
     isVisible: notesStore.isDialogVisible,
+    enableActions: true,
     onOk: () => {
       console.log("ok");
       notesStore.setVisible(false);

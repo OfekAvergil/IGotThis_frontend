@@ -18,17 +18,10 @@ const ShowNoteDialog = () => {
       </View>
     ),
     isVisible: notesStore.isNoteOpen,
-    onOk: () => {
-      console.log("ok");
-      notesStore.openNote(false);
-    },
-    onCancle: () => {
-      console.log("cancle");
-      notesStore.openNote(false);
-    },
-    onDismiss: () => {
+    enableActions: false,
+    onDismiss: () =>{
       notesStore.setVisible(false);
-    },
+    }
   });
 };
 
