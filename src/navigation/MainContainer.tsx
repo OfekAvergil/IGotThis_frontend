@@ -19,8 +19,7 @@ export default function MainContainer() {
         initialRouteName="Home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
+            let iconName: string = "";
             if (route.name === "Home") {
               iconName = focused ? "home" : "home-outline";
             } else if (route.name === "ToDo") {
@@ -28,7 +27,7 @@ export default function MainContainer() {
             } else if (route.name === "Notes") {
               iconName = focused ? "book" : "book-outline";
             }
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={size} color={"#E45082"} />;
           },
         })}
       >

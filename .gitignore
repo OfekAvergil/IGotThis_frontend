@@ -15,3 +15,17 @@ web-build/
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
+.vscode/.react/debuggerWorker.js
+my-app/app.json
+my-app/App.tsx
+my-app/babel.config.js
+my-app/package.json
+my-app/Readme.md
+my-app/tsconfig.json
+my-app/.expo-shared/assets.json
+my-app/assets/adaptive-icon.png
+my-app/assets/favicon.png
+my-app/assets/icon.png
+my-app/assets/nativebase-logo.svg
+my-app/assets/splash.png
+my-app/components/NativeBaseIcon.tsx

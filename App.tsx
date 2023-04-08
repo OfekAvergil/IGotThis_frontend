@@ -1,23 +1,22 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import MainContainer from "./src/navigation/MainContainer";
-import React from "react";
-import { Provider as PaperProvider } from "react-native-paper";
-import LogInScreen from "./src/LogInScreen";
+import {MD3LightTheme, Provider as PaperProvider,} from 'react-native-paper';
+import MainContainer from './src/navigation/MainContainer';
+import React from 'react';
+
+const theme = {
+  ...MD3LightTheme, // or MD3DarkTheme
+  roundness: 2,
+  colors: {
+    ...MD3LightTheme.colors,
+    primary: '#E5517E',
+    secondary: '#6029D2',
+  },
+};
 
 export default function App() {
   return (
-    <PaperProvider>
-      <LogInScreen />
+    <PaperProvider theme={theme}>
+      <MainContainer/>
     </PaperProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

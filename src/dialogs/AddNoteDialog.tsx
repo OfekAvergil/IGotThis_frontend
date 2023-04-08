@@ -1,58 +1,88 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { TextareaAutosize } from "@mui/material";
+import { Button, TextInput } from "react-native-paper";
 import notesStore from "../stores/notesStore";
-import { observer } from "mobx-react";
+import BasicDialog from "./BaseDialog";
+import { StyleSheet, View } from "react-native";
 
-function AddNoteDialog() {
-  const [open, setOpen] = React.useState(true);
+const AddNoteDialog = () => {
+  const [title, setTitle] = React.useState("");
+  const [content, setContent] = React.useState("");
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-  <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            add note
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Header"
-            type="text"
-            fullWidth
-            variant="standard"
+  return BasicDialog({
+    title: "New Note",
+    content: (
+      <View style={styles.dialogContent}>
+        <View style={styles.form}>
+          <TextInput
+            label="title"
+            value={title}
+            onChangeText={(title) => setTitle(title)}
+            style={styles.input}
           />
-          <TextareaAutosize
-            autoFocus
-            id="content"
+          <TextInput
+            label="content"
+            value={content}
+            onChangeText={(content) => setContent(content)}
+            multiline={true}
+            numberOfLines={5}
+            style={styles.inputArea}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={()=> {
-            notesStore.addNote("hey");
-            handleClose();
-          }}>
-            Subscribe
+          <Button
+            icon="microphone"
+            mode="contained"
+            onPress={() => console.log("Pressed")}
+          >
+            Press me
           </Button>
-        </DialogActions>
-      </Dialog>
-  );
-}
+        </View>
+      </View>
+    ),
+    isVisible: notesStore.isDialogVisible,
+    onOk: () => {
+      console.log("ok");
+      notesStore.setVisible(false);
+      notesStore.addNote(title, content);
+    },
+    onCancle: () => {
+      console.log("cancle");
+      notesStore.setVisible(false);
+      setTitle("");
+      setContent("");
+    },
+    onDismiss: () => {
+      notesStore.setVisible(false);
+    },
+  });
+};
 
 export default AddNoteDialog;
+
+const styles = StyleSheet.create({
+  dialogContent: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    width: "100%",
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+  },
+  form: {
+    marginBottom: 15,
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  inputArea: {
+    height: 200,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    textAlignVertical: "top",
+  },
+});
