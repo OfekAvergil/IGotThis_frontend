@@ -3,19 +3,23 @@ import { View, Text } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 //Screens
 import HomeScreen from "./screens/HomeScreen";
 import ToDoScreen from "./screens/ToDoScreen";
 import NotesScreen from "./screens/NotesScreen";
+import LogInScreen from "./screens/LogInScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-export default function MainContainer() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
+/**
+const TabNavigator = ()=>{
+  return(
+    <Tab.Navigator
         initialRouteName="Home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -35,6 +39,19 @@ export default function MainContainer() {
         <Tab.Screen name="ToDo" component={ToDoScreen} />
         <Tab.Screen name="Notes" component={NotesScreen} />
       </Tab.Navigator>
+  )
+};
+*/
+
+export default function MainContainer() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Register" component={RegisterScreen}/>
+        <Stack.Screen name="Login" component={LogInScreen}/>
+      </Stack.Navigator>
+      
     </NavigationContainer>
   );
 }
+
