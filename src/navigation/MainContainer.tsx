@@ -1,6 +1,4 @@
 import * as React from "react";
-import { View, Text } from "react-native";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -19,7 +17,7 @@ const Stack = createNativeStackNavigator();
 /**
 const TabNavigator = ()=>{
   return(
-    <Tab.Navigator
+      <Tab.Navigator
         initialRouteName="Home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -33,6 +31,7 @@ const TabNavigator = ()=>{
             }
             return <Ionicons name={iconName} size={size} color={"#E45082"} />;
           },
+          header: () => (<Header />),
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
@@ -54,4 +53,3 @@ export default function MainContainer() {
     </NavigationContainer>
   );
 }
-
