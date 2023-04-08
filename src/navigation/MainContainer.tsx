@@ -47,11 +47,9 @@ export default function MainContainer() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Register" component={RegisterScreen}/>
-        <Stack.Screen name="Login" component={LogInScreen}/>
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Login" component={LogInScreen} />
       </Stack.Navigator>
-      
     </NavigationContainer>
   );
 }
-
