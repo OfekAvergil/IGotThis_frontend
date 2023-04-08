@@ -27,9 +27,19 @@ class NotesStore{
         }
     ];
     isDialogVisible: boolean = false;
+    isNoteOpen: boolean= false;
+    selectedNote: note = {
+        name: this.notes[0].name,
+        content: this.notes[0].content,
+        creationDate: this.notes[0].creationDate
+    };
 
     constructor(){
         makeAutoObservable(this);
+    }
+    
+    setNotes(notes: note[]): void{
+        this.notes = notes;
     }
     
     addNote(noteName: string, contentToSet: string): void{
@@ -49,6 +59,14 @@ class NotesStore{
 
     setVisible(isVisible: boolean): void {
         this.isDialogVisible = isVisible;
+    }
+
+    openNote(isVisible: boolean): void {
+        this.isNoteOpen = isVisible;
+    }
+
+    setSelectedNote(note: note): void {
+        this.selectedNote = note;
     }
 }
 

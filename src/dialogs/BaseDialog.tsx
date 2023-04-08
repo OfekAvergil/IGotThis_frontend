@@ -22,13 +22,14 @@ const BasicDialog = (props: props) => {
     <Portal>
       <Dialog visible={props.isVisible}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>New Note</Text>
+          <Text style={styles.headerTitle}>{props.title}</Text>
           <View style={styles.closeButton}>
             <Button
               icon="close"
               onPress={() => {
                 props.onCancle();
-              }}>
+              }}
+              style={{justifyContent: "flex-end"}}>
               </Button>
           </View>
         </View>
@@ -79,12 +80,12 @@ const styles = StyleSheet.create({
     margin: 0,
     marginTop: 0,
     backgroundColor: "#6029D2",
-    paddingHorizontal: 20,
     paddingVertical: 15,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
   headerTitle: {
+    paddingHorizontal: 20,
     fontSize: 18,
     color: "white",
     flex: 3,
@@ -104,6 +105,5 @@ const styles = StyleSheet.create({
   closeButton: {
     paddingHorizontal: 0,
     flexDirection: "row",
-    justifyContent: "flex-end",
   },
 });
