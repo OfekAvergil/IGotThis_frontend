@@ -14,9 +14,9 @@ import RegisterScreen from "./screens/RegisterScreen";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-/**
-const TabNavigator = ()=>{
-  return(
+const TabNavigator = () => {
+  return (
+    <NavigationContainer independent={true}>
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={({ route }) => ({
@@ -38,18 +38,19 @@ const TabNavigator = ()=>{
         <Tab.Screen name="ToDo" component={ToDoScreen} />
         <Tab.Screen name="Notes" component={NotesScreen} />
       </Tab.Navigator>
-  )
+    </NavigationContainer>
+  );
 };
-*/
 
 export default function MainContainer() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Register" component={RegisterScreen}/>
-        <Stack.Screen name="Login" component={LogInScreen}/>
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Login" component={LogInScreen} />
+        <Stack.Screen name="NavBar" component={TabNavigator} />
       </Stack.Navigator>
-      
     </NavigationContainer>
+    
   );
 }
