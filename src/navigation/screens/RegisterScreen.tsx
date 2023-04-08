@@ -5,10 +5,7 @@ import userStore from "../../stores/userStore";
 
 import { useNavigation } from "@react-navigation/native";
 
-const RegisterScreen = () => {
-  const navigation = useNavigation();
-
-  const { user_name, user_password, setUser } = userStore;
+const RegisterScreen = ({ navigation }: any) => {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -16,9 +13,22 @@ const RegisterScreen = () => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const handleRegister = () => {
-    setUser(username, password);
+    userStore.setUser(username, password);
     setUsername("");
     setPassword("");
+    setEmail("");
+    setPasswordRepeat("");
+    // alert
+    alert(userStore.user_name + " " + userStore.user_password);
+    navigation.navigate("NavBar");
+  };
+
+  const handkeAllreadyHaveAccount = () => {
+    setUsername("");
+    setPassword("");
+    setEmail("");
+    setPasswordRepeat("");
+    navigation.navigate("Login");
   };
 
   return (
@@ -36,7 +46,7 @@ const RegisterScreen = () => {
             source={require("../../../assets/icon.png")}
             resizeMode="contain"
           />
-          <TextInput 
+          <TextInput
             placeholder="User name"
             value={username}
             onChangeText={setUsername}
@@ -87,7 +97,7 @@ const RegisterScreen = () => {
           <Button
             style={styles.card_button}
             uppercase={false}
-            onPress={handleRegister}
+            onPress={handkeAllreadyHaveAccount}
           >
             Allready have an account? Login
           </Button>

@@ -3,22 +3,25 @@ import { View, Image, SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 
-const LogInScreen = () => {
-  const { user_name, user_password, setUser } = userStore;
+const LogInScreen = ({ navigation }: any) => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
   const handleLogIn = () => {
-    setUser(inputUsername, inputPassword);
+    userStore.setUser(inputUsername, inputPassword);
     setInputUsername("");
     setInputPassword("");
+    alert(userStore.user_name + " " + userStore.user_password);
+    navigation.navigate("NavBar");
   };
 
   const handleForgotPassword = () => {};
   const handleLoginWithGoogle = () => {};
 
-  const handleLogout = () => {
-    setUser(null, null);
+  const handleCreateAccount = () => { 
+    setInputUsername("");
+    setInputPassword("");
+    navigation.navigate("Register");
   };
 
   return (
@@ -79,7 +82,7 @@ const LogInScreen = () => {
           <Button
             style={styles.card_button}
             uppercase={false}
-            onPress={handleForgotPassword}
+            onPress={handleCreateAccount}
           >
             {" "}
             Don't have an acount? Create one{" "}
