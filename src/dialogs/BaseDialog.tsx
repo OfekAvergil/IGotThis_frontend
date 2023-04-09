@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Dialog, Divider, Portal, Text, IconButton } from "react-native-paper";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 interface props {
   title: string;
@@ -41,7 +41,7 @@ const BasicDialog = (props: props) => {
             >
               <Button
                 onPress={() => {
-                  props.onCancle && props.onCancle();
+                  props.onCancle?.();
                 }}
               >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
@@ -57,7 +57,7 @@ const BasicDialog = (props: props) => {
             >
               <Button
                 onPress={() => {
-                  props.onOk && props.onOk();
+                  props.onOk?.();
                 }}
               >
                 Ok

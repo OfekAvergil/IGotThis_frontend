@@ -1,26 +1,26 @@
 import * as React from "react";
 import { Text } from "react-native-paper";
-import notesStore from "../stores/notesStore";
+import notesStore, { NotesDialogs, note } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 
 const ShowNoteDialog = () => {
-
+  const note: note = notesStore.selectedNote;
   return BasicDialog({
-    title: notesStore.selectedNote.name,
+    title: note.name,
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <Text>
-            {notesStore.selectedNote.content};
+            {note.content};
           </Text>
         </View>
       </View>
     ),
-    isVisible: notesStore.isNoteOpen,
+    isVisible: notesStore.isDialogOpen(NotesDialogs.ShowNoteDialog),
     enableActions: false,
     onDismiss: () =>{
-      notesStore.setVisible(false);
+      notesStore.closeAllDialogs();
     }
   });
 };
@@ -36,23 +36,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   form: {
-    marginBottom: 15,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  inputArea: {
-    height: 200,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    textAlignVertical: "top",
-  },
+    marginBottom: 15
+  }
 });

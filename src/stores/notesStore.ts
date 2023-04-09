@@ -8,6 +8,11 @@ export interface note{
     audio?: any;
 }
 
+export enum NotesDialogs{
+    AddNoteDialog,
+    ShowNoteDialog,
+}
+
 class NotesStore{
     notes: note[] = [
         {
@@ -26,23 +31,18 @@ class NotesStore{
             content: "hey I just metu"
         }
     ];
-    isDialogVisible: boolean = false;
-    isNoteOpen: boolean= false;
-    selectedNote: note = {
-        name: this.notes[0].name,
-        content: this.notes[0].content,
-        creationDate: this.notes[0].creationDate
-    };
+    currentOpenDialog: NotesDialogs | null = null;
+    selectedNote: note  = this.notes[0];
 
     constructor(){
         makeAutoObservable(this);
     }
     
-    setNotes(notes: note[]): void{
+    public setNotes(notes: note[]): void{
         this.notes = notes;
     }
     
-    addNote(noteName: string, contentToSet: string): void{
+    public addNote(noteName: string, contentToSet: string): void{
         const now: Date = new Date();
         this.notes = [...this.notes,
         {
@@ -53,21 +53,26 @@ class NotesStore{
         ];
     }
 
-    get count(): number{
+    public get count(): number{
         return this.notes.length;
     }
 
-    setVisible(isVisible: boolean): void {
-        this.isDialogVisible = isVisible;
+    public isDialogOpen(dialog: NotesDialogs): boolean {
+        return this.currentOpenDialog === dialog;
     }
 
-    openNote(isVisible: boolean): void {
-        this.isNoteOpen = isVisible;
+    public openDialog(dialog: NotesDialogs): void{
+        this.currentOpenDialog = dialog;
     }
 
-    setSelectedNote(note: note): void {
-        this.selectedNote = note;
+    public closeAllDialogs(): void{
+        this.currentOpenDialog = null;
     }
+
+    public setSelectedNote(item: note): void{
+        this.selectedNote = item;
+    }
+
 }
 
 const notesStore = new NotesStore();

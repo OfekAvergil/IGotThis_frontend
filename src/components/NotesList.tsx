@@ -1,8 +1,7 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Button, List, Card } from "react-native-paper";
-import notesStore, { note } from "../stores/notesStore";
-import { getNotes } from "../api/api";
+import notesStore, { NotesDialogs, note } from "../stores/notesStore";
 import userStore from "../stores/userStore";
 import { useEffect } from "react";
 
@@ -10,25 +9,12 @@ export default function NotesList() {
   //TODO: how to use the useStore hook?
   //const store = useStore();
 
-  const getSavedNotes = async () => {
-    getNotes(userStore.user_name)
-        .then(data => {
-            if (data) {
-              notesStore.setNotes(data);
-            }
-    }).catch(e => console.error(`failed to get notes for ${userStore.user_name}`, e));
-  };
-
-  useEffect(() => {
-    getSavedNotes();
-  }, [userStore.user_name])
-
   const renderItem = (item: note) => {
     return (
       <Card style={styles.listItem}>
         <TouchableOpacity onPress={()=>{
           notesStore.setSelectedNote(item);
-          notesStore.openNote(true);
+          notesStore.openDialog(NotesDialogs.ShowNoteDialog);
         }
         }>
         <View style={{ flex: 1, flexDirection: "row" }}>
@@ -58,7 +44,7 @@ export default function NotesList() {
           </View>
           <View>
             <Button
-              onPress={() => { notesStore.setVisible(true);}}>
+              onPress={() => { notesStore.openDialog(NotesDialogs.AddNoteDialog);}}>
               New Note +
             </Button>
           </View>
