@@ -8,6 +8,11 @@ export interface note{
     audio?: any;
 }
 
+export enum NotesDialogs{
+    AddNoteDialog,
+    ShowNoteDialog,
+}
+
 class NotesStore{
     notes: note[] = [
         {
@@ -26,13 +31,18 @@ class NotesStore{
             content: "hey I just metu"
         }
     ];
-    isDialogVisible: boolean = false;
+    currentOpenDialog: NotesDialogs | null = null;
+    selectedNote: note  = this.notes[0];
 
     constructor(){
         makeAutoObservable(this);
     }
     
-    addNote(noteName: string, contentToSet: string): void{
+    public setNotes(notes: note[]): void{
+        this.notes = notes;
+    }
+    
+    public addNote(noteName: string, contentToSet: string): void{
         const now: Date = new Date();
         this.notes = [...this.notes,
         {
@@ -43,13 +53,26 @@ class NotesStore{
         ];
     }
 
-    get count(): number{
+    public get count(): number{
         return this.notes.length;
     }
 
-    setVisible(isVisible: boolean): void {
-        this.isDialogVisible = isVisible;
+    public isDialogOpen(dialog: NotesDialogs): boolean {
+        return this.currentOpenDialog === dialog;
     }
+
+    public openDialog(dialog: NotesDialogs): void{
+        this.currentOpenDialog = dialog;
+    }
+
+    public closeAllDialogs(): void{
+        this.currentOpenDialog = null;
+    }
+
+    public setSelectedNote(item: note): void{
+        this.selectedNote = item;
+    }
+
 }
 
 const notesStore = new NotesStore();

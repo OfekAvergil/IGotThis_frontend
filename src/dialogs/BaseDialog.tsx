@@ -1,69 +1,70 @@
 import * as React from "react";
-import {
-  Button,
-  Dialog,
-  Divider,
-  Portal,
-  Text,
-} from "react-native-paper";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Button, Dialog, Divider, Portal, Text, IconButton } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
 
 interface props {
   title: string;
   content: JSX.Element;
   isVisible: boolean;
-  onOk: Function;
-  onCancle: Function;
-  onDismiss?: Function;
+  enableActions: boolean;
+  onOk?: Function;
+  onCancle?: Function;
+  onDismiss: ()=>void;
 }
 
 const BasicDialog = (props: props) => {
   return (
     <Portal>
-      <Dialog visible={props.isVisible}>
+      <Dialog visible={props.isVisible} onDismiss={props.onDismiss}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>New Note</Text>
+          <Text style={styles.headerTitle}>{props.title}</Text>
           <View style={styles.closeButton}>
-            <Button
+            <IconButton
               icon="close"
               onPress={() => {
-                props.onCancle();
-              }}>
-              </Button>
+                props.onDismiss();
+              }}
+              style={{ height:22, width:22 }}/>
           </View>
         </View>
         <Divider style={{ borderColor: "#fff" }}></Divider>
         {props.content}
-        <View style={styles.buttonsContainer}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-start",
-              flexDirection: "row",
-              paddingHorizontal: 15,
-            }}>
-            <Button
-              onPress={() => {
-                props.onCancle();
-              }}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
-            </Button>
+        {props.enableActions && (
+          <View style={styles.buttonsContainer}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "flex-start",
+                flexDirection: "row",
+                paddingHorizontal: 15,
+              }}
+            >
+              <Button
+                onPress={() => {
+                  props.onCancle?.();
+                }}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </Button>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "flex-end",
+                flexDirection: "row",
+                paddingHorizontal: 15,
+              }}
+            >
+              <Button
+                onPress={() => {
+                  props.onOk?.();
+                }}
+              >
+                Ok
+              </Button>
+            </View>
           </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-end",
-              flexDirection: "row",
-              paddingHorizontal: 15,
-            }}>
-            <Button
-              onPress={() => {
-                props.onOk();
-              }}>
-              Ok
-            </Button>
-          </View>
-        </View>
+        )}
       </Dialog>
     </Portal>
   );
@@ -79,12 +80,12 @@ const styles = StyleSheet.create({
     margin: 0,
     marginTop: 0,
     backgroundColor: "#6029D2",
-    paddingHorizontal: 20,
     paddingVertical: 15,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
   headerTitle: {
+    paddingHorizontal: 20,
     fontSize: 18,
     color: "white",
     flex: 3,
@@ -102,8 +103,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   closeButton: {
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
     flexDirection: "row",
-    justifyContent: "flex-end",
   },
 });

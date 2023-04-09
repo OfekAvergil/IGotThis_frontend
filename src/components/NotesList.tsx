@@ -1,12 +1,22 @@
 import * as React from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Button, List, Card } from "react-native-paper";
-import notesStore, { note } from "../stores/notesStore";
+import notesStore, { NotesDialogs, note } from "../stores/notesStore";
+import userStore from "../stores/userStore";
+import { useEffect } from "react";
 
 export default function NotesList() {
+  //TODO: how to use the useStore hook?
+  //const store = useStore();
+
   const renderItem = (item: note) => {
     return (
       <Card style={styles.listItem}>
+        <TouchableOpacity onPress={()=>{
+          notesStore.setSelectedNote(item);
+          notesStore.openDialog(NotesDialogs.ShowNoteDialog);
+        }
+        }>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 1 }}>
             <Text style={{ color: "white" }}>{item.name}</Text>
@@ -18,11 +28,10 @@ export default function NotesList() {
             </Text>
           </View>
         </View>
+        </TouchableOpacity>
       </Card>
     );
   };
-
-  const renderEmpty = () => <List.Item title="let's enter a new note!" />;
 
   return (
     <FlatList
@@ -35,11 +44,20 @@ export default function NotesList() {
           </View>
           <View>
             <Button
-              onPress={() => { notesStore.setVisible(true);}}>
+              onPress={() => { notesStore.openDialog(NotesDialogs.AddNoteDialog);}}>
               New Note +
             </Button>
           </View>
         </View>
+      }
+      ListEmptyComponent={
+        <Card style={styles.emptyListItem}>
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: "white" }}>{"Add new note +"}</Text>
+          </View>
+        </View>
+      </Card>
       }
     ></FlatList>
   );
@@ -54,7 +72,14 @@ const styles = StyleSheet.create({
 
   listItem: {
     backgroundColor: "#612CD4",
-
+    minHeight: 40,
+    height: "auto",
+    margin: 5,
+    padding: 10,
+    textAlignVertical: "center",
+  },
+  emptyListItem: {
+    backgroundColor: "#BFBFBF",
     minHeight: 40,
     height: "auto",
     margin: 5,

@@ -1,12 +1,17 @@
 import * as React from "react";
 import { Button, TextInput } from "react-native-paper";
-import notesStore from "../stores/notesStore";
+import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 
 const AddNoteDialog = () => {
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
+
+  function clearModal(): void{
+    setTitle("");
+    setContent("");
+  }
 
   return BasicDialog({
     title: "New Note",
@@ -37,20 +42,22 @@ const AddNoteDialog = () => {
         </View>
       </View>
     ),
-    isVisible: notesStore.isDialogVisible,
+    isVisible: notesStore.isDialogOpen(NotesDialogs.AddNoteDialog),
+    enableActions: true,
     onOk: () => {
       console.log("ok");
-      notesStore.setVisible(false);
+      notesStore.closeAllDialogs();
       notesStore.addNote(title, content);
+      clearModal()
     },
     onCancle: () => {
       console.log("cancle");
-      notesStore.setVisible(false);
-      setTitle("");
-      setContent("");
+      notesStore.closeAllDialogs();
+      clearModal()
     },
     onDismiss: () => {
-      notesStore.setVisible(false);
+      notesStore.closeAllDialogs();
+      clearModal()    
     },
   });
 };
