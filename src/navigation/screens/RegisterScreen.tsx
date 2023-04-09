@@ -18,8 +18,6 @@ const RegisterScreen = ({ navigation }: any) => {
     setPassword("");
     setEmail("");
     setPasswordRepeat("");
-    // alert
-    alert(userStore.user_name + " " + userStore.user_password);
     navigation.navigate("NavBar");
   };
 

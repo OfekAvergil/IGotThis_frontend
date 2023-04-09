@@ -11,7 +11,6 @@ const LogInScreen = ({ navigation }: any) => {
     userStore.setUser(inputUsername, inputPassword);
     setInputUsername("");
     setInputPassword("");
-    alert(userStore.user_name + " " + userStore.user_password);
     navigation.navigate("NavBar");
   };
 
