@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import LogoutButton from './LogoutButton';
 
 const Header = () => {
-  const navigation = useNavigation();
 
   return (
     <View style={styles.headerContainer}>
