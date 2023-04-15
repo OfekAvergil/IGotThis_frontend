@@ -13,7 +13,7 @@ const RegisterScreen = ({ navigation }: any) => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const handleRegister = () => {
-    userStore.setUser(username, password);
+    userStore.setUser(username, password, email, false);
     setUsername("");
     setPassword("");
     setEmail("");

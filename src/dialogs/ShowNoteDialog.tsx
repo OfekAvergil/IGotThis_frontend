@@ -5,7 +5,9 @@ import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 
 const ShowNoteDialog = () => {
-  const note: note = notesStore.selectedNote;
+  const note: note | null = notesStore.selectedNote;
+  if (!note)
+    return null
   return BasicDialog({
     title: note.name,
     content: (

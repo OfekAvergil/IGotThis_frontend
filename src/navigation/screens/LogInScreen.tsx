@@ -8,7 +8,7 @@ const LogInScreen = ({ navigation }: any) => {
   const [inputPassword, setInputPassword] = useState("");
 
   const handleLogIn = () => {
-    userStore.setUser(inputUsername, inputPassword);
+    userStore.loginUser(inputUsername, inputPassword);
     setInputUsername("");
     setInputPassword("");
     alert(userStore.user_name + " " + userStore.user_password);
