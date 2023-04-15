@@ -2,12 +2,26 @@ import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Button, List, Card } from "react-native-paper";
 import notesStore, { NotesDialogs, note } from "../stores/notesStore";
-import userStore from "../stores/userStore";
+import noteStore from "../stores/notesStore";
 import { useEffect } from "react";
+import userStore from "../stores/userStore";
+
 
 export default function NotesList() {
   //TODO: how to use the useStore hook?
   //const store = useStore();
+  useEffect(() => {
+    // This code will run after the component has been rendered to the screen
+    // You can perform initialization tasks or fetch data from an API here
+    console.log('userStore.secretKey' + userStore.secretKey)
+    noteStore.fetchNotes(userStore.secretKey);
+    console.log(noteStore.notes)
+
+    return () => {
+      // This cleanup function will run when the component is unmounted or when the dependencies change
+      // You can perform cleanup tasks or cancel any ongoing operations here
+    };
+  }, []);
 
   const renderItem = (item: note) => {
     return (
