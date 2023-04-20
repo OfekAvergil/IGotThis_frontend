@@ -54,16 +54,17 @@ const LogInScreen = ({ navigation }: any) => {
             right={<TextInput.Icon icon="eye" />}
             mode="outlined"
           />
+            <Button
+              uppercase={false}
+              onPress={handleForgotPassword}
+              mode="text"
+              style={{width:"150px"}}
+            >
+              <Text style={styles.forget_pass_button}>Forgot password?</Text>
+            </Button>
+          
           <Button
-            style={styles.card_button}
-            uppercase={false}
-            onPress={handleForgotPassword}
-          >
-            {" "}
-            Forgot password?{" "}
-          </Button>
-          <Button
-            style={styles.card_button}
+            style={{}}
             mode="contained"
             icon="account"
             onPress={handleLogIn}
@@ -112,6 +113,12 @@ const styles = StyleSheet.create({
   card_button: {
     margin: 2,
   },
+  forget_pass_button: {
+    color: "grey",
+    fontSize: 12,
+    padding: 0,
+    marginLeft: "-25px"
+  }
 });
 
 export default LogInScreen;

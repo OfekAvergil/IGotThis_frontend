@@ -21,6 +21,7 @@ const BasicDialog = (props: props) => {
           <View style={styles.closeButton}>
             <IconButton
               icon="close"
+              iconColor="#BFBFBF"
               onPress={() => {
                 props.onDismiss();
               }}
