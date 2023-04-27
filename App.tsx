@@ -4,7 +4,7 @@ import React from 'react';
 
 const theme = {
   ...MD3LightTheme, // or MD3DarkTheme
-  roundness: 2,
+  roundness: 5,
   colors: {
     ...MD3LightTheme.colors,
     primary: '#E5517E',

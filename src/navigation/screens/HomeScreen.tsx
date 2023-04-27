@@ -1,18 +1,18 @@
 import * as React from "react";
-import { Text } from "react-native";
-import { Button } from "react-native-paper";
-import userStore from "../../stores/userStore";
+import CalendarEvents from "../../components/CalendarEvents";
+import AddEventDialog from "../../dialogs/AddEventDialog";
+import { observer } from "mobx-react";
 
-export default function HomeScreen() {
-  
+const HomeScreen = () => {
+  const ObservedCalendar = observer(CalendarEvents);
+  const ObservedDialog = observer(AddEventDialog);
+
   return (
     <>
-      <Text
-        onPress={() => alert("This is the Home screen")}
-        style={{ fontSize: 30 }}
-      >
-        Home Screen
-      </Text>
+      <ObservedCalendar />
+      <ObservedDialog />
     </>
   );
-}
+};
+
+export default HomeScreen;
