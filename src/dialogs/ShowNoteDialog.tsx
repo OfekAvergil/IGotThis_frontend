@@ -23,6 +23,10 @@ const ShowNoteDialog = () => {
     enableActions: false,
     onDismiss: () =>{
       notesStore.closeAllDialogs();
+    },
+    editAction: () => {
+      notesStore.closeAllDialogs();
+      notesStore.openDialog(NotesDialogs.EditNoteDialog);
     }
   });
 };
@@ -31,7 +35,7 @@ export default ShowNoteDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 10,
     width: "100%",
     paddingVertical: 20,
