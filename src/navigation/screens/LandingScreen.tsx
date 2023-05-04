@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
+import { Colors } from "../../consts";
 
 const LandingScreen = ({ navigation }: any) => {
   return (
@@ -23,7 +24,7 @@ const LandingScreen = ({ navigation }: any) => {
           <Button
               mode="contained"
               onPress={() => navigation.navigate("Register")}
-              style={{ width:"250px", height:"60px", backgroundColor:"#6029D2", justifyContent:"center"}}
+              style={{ width:"250px", height:"60px", backgroundColor: Colors.secondary, justifyContent:"center"}}
           >
               <Text style={{color:"white", fontWeight:"600", fontSize:18}}>
                 SIGN ME IN !
@@ -35,9 +36,9 @@ const LandingScreen = ({ navigation }: any) => {
           <Button
               mode="outlined"
               onPress={() => navigation.navigate("Login")}
-              style={{ width:"250px", height:"60px", borderColor:"#6029D2" ,justifyContent:"center" }}
+              style={{ width:"250px", height:"60px", borderColor: Colors.secondary ,justifyContent:"center" }}
           >
-            <Text style={{color:"#6029D2",  fontSize:18}}>
+            <Text style={{color: Colors.secondary,  fontSize:18}}>
               Login
             </Text>
           </Button>

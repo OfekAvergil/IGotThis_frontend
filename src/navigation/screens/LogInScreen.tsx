@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, Image, SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
+import LoginHeader from "../../components/LoginHeader";
+import { Colors } from "../../consts";
 
 const LogInScreen = ({ navigation }: any) => {
   const [inputUsername, setInputUsername] = useState("");
@@ -25,26 +27,15 @@ const LogInScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <LoginHeader header="Login"/>
       <Card style={styles.card}>
-        <Card.Title title="Login" titleStyle={styles.card_title} />
         <Card.Content>
-          <Image
-            style={{
-              width: 200,
-              height: 200,
-              alignSelf: "center",
-              marginTop: 50,
-            }}
-            source={require("../../../assets/icon.png")}
-            resizeMode="contain"
-          />
           <TextInput
             value={inputUsername}
             onChangeText={setInputUsername}
             placeholder="User name"
             secureTextEntry={false}
             right={<TextInput.Icon icon="account" />}
-            mode="outlined"
           />
           <TextInput
             placeholder="Password"
@@ -52,15 +43,16 @@ const LogInScreen = ({ navigation }: any) => {
             onChangeText={setInputPassword}
             secureTextEntry={true}
             right={<TextInput.Icon icon="eye" />}
-            mode="outlined"
           />
             <Button
               uppercase={false}
               onPress={handleForgotPassword}
               mode="text"
-              style={{width:"150px"}}
+              labelStyle={{color: "grey", fontWeight:"400", fontSize: 12}}
+              style={{width:"150px",marginLeft: "-12px",
+            }}
             >
-              <Text style={styles.forget_pass_button}>Forgot password?</Text>
+              Forgot password?
             </Button>
           
           <Button
@@ -84,8 +76,9 @@ const LogInScreen = ({ navigation }: any) => {
             uppercase={false}
             onPress={handleCreateAccount}
           >
-            {" "}
-            Don't have an acount? Create one{" "}
+            <Text>
+            Don't have an acount?
+            </Text> Create one
           </Button>
         </Card.Content>
       </Card>
@@ -99,26 +92,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
   },
   card: {
     width: "100%",
-    height: "100%",
+    flex:3
   },
   card_title: {
     marginTop: 50,
-    color: "#E5517E",
+    color: Colors.primary,
     fontSize: 30,
   },
   card_button: {
-    margin: 2,
+    margin:7,
   },
-  forget_pass_button: {
-    color: "grey",
-    fontSize: 12,
-    padding: 0,
-    marginLeft: "-25px"
-  }
 });
 
 export default LogInScreen;
