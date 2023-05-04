@@ -11,6 +11,7 @@ import ToDoScreen from "./screens/ToDoScreen";
 import NotesScreen from "./screens/NotesScreen";
 import LogInScreen from "./screens/LogInScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import LandingScreen from "./screens/LandingScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -45,8 +46,9 @@ export default function MainContainer() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Landing" component={LandingScreen} />
         <Stack.Screen name="Login" component={LogInScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="NavBar" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

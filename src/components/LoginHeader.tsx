@@ -1,26 +1,26 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
+import { Text, Button, List, Card, IconButton } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import LogoutButton from './LogoutButton';
+import { Colors } from '../consts';
 
-const Header = () => {
+const LoginHeader = (props: { header: string }) => {
 
   return (
     <View style={styles.headerContainer}>
-        <View style={{flex: 3, justifyContent:"flex-start"}}>
+        <View style={{flex: 3, alignItems:"center"}}>
             <Image
-                style={{ width: 90, height: 60 }}
-                source={require("../../assets/logo-noback.png")}
+                style={{ width: 150, height: 135 }}
+                source={require("../../assets/whitelogo.png")}
             />
+            <Text style={{ color: "white", fontSize: 18 }}>{props.header}</Text>
         </View>
-      <View  style={{flex: 1, justifyContent:"flex-end"}}>
-         <LogoutButton />
-      </View>
     </View>
   );
 };
 
-export default Header;
+export default LoginHeader;
 
 const styles = StyleSheet.create({
     
@@ -30,8 +30,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'space-evenly',
       padding: 5,
-      backgroundColor: 'white',
+      backgroundColor: Colors.secondary,
       borderBottomWidth: 0,
       elevation: 0,
+      width: "100%",
     },
   });
