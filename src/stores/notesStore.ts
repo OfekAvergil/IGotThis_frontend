@@ -2,6 +2,7 @@ import { makeAutoObservable, observable, action, runInAction } from "mobx";
 import { formatDate } from "../common";
 import axios, * as others from 'axios';
 import userStore from "./userStore";
+import { Audio } from "expo-av";
 
 export interface note {
     id: number;
@@ -14,6 +15,7 @@ export interface note {
 export enum NotesDialogs {
     AddNoteDialog,
     ShowNoteDialog,
+    EditNoteDialog,
 }
 
 
@@ -41,22 +43,24 @@ class NotesStore {
         }
     }
 
-    public addNote = async (noteName: string, contentToSet: string) => {
+    public addNote = async (noteName: string, contentToSet: string, record?: Audio.Recording) => {
         try {
             const now: Date = new Date();
             let newNote = {
                 name: noteName,
                 creationDate: formatDate(now),
                 content: contentToSet,
-                audio: '',
+                audio: record,
             };
-            let newNotePushed = await axios.post(`http://localhost:4005/api/notes`,{         
-                data:{
-                    newNote
-                },       
+            let newNotePushed = await axios.post(
+                `http://localhost:4005/api/notes`, 
+                newNote,
+                {
                 headers: {
-                Authorization: userStore.secretKey 
-            },}); 
+                        Authorization: userStore.secretKey 
+                },
+                }
+            );         
             this.notes = [...this.notes, newNotePushed.data];
         } catch (error) {
             console.log(`Error in adding note: ${error}`);
@@ -69,27 +73,33 @@ class NotesStore {
                 headers: {
                 Authorization: userStore.secretKey 
             },})
-            const noteIndex = this.notes.findIndex((n) => n.id === noteId);
-            this.notes = this.notes.splice(noteIndex, 1);
+            this.notes = this.notes.filter((n) => n.id !== noteId);
         } catch (error) {
             console.log(`Error in deleting note: ${error}`);
         }
     }
 
-    public editNote =async (noteId:number, noteName: string, contentToSet: string, secretKey: string | null) => {
+    public editNote =async (noteId:number, noteName: string, contentToSet: string) => {
         try {
-            let res = await axios.put(`http://localhost:4005/api/notes?id=${noteId}`, { 
-                data: { 
+            const noteIndex = this.notes.findIndex((n) => n.id === noteId);
+            if (noteIndex === -1) {
+                throw new Error(`Note with ID ${noteId} not found`);
+            }
+            let res = await axios.put(
+                `http://localhost:4005/api/notes?id=${noteId}`, 
+                { 
                 name: noteName, 
                 content: contentToSet 
-                },  
+                },
+                {
                 headers: {
-                Authorization: userStore.secretKey 
+                    Authorization: userStore.secretKey 
                 }
-            })
-            const noteIndex = this.notes.findIndex((n) => n.id === noteId);
+                }
+            );
             this.notes[noteIndex].name = noteName;
             this.notes[noteIndex].content = contentToSet;
+            this.notes = [...this.notes];
         } catch (error) {
             console.log(`Error in editing note: ${error}`);
         }
