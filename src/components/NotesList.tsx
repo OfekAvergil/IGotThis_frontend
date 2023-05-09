@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Button, List, Card } from "react-native-paper";
+import { Text, Button, List, Card, IconButton } from "react-native-paper";
 import notesStore, { NotesDialogs, note } from "../stores/notesStore";
 import noteStore from "../stores/notesStore";
 import { useEffect } from "react";
@@ -26,22 +26,42 @@ export default function NotesList() {
   const renderItem = (item: note) => {
     return (
       <Card style={styles.listItem}>
-        <TouchableOpacity onPress={()=>{
-          notesStore.setSelectedNote(item);
-          notesStore.openDialog(NotesDialogs.ShowNoteDialog);
-        }
-        }>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: "white" }}>{item.name}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            notesStore.setSelectedNote(item);
+            notesStore.openDialog(NotesDialogs.ShowNoteDialog);
+          }}>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
+            <View style={{ flex: 3 }}>
+              <Text style={{ color: "white", fontSize: 20 }}>{item.name}</Text>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"
+           }}>
+              <IconButton
+                icon="lead-pencil"
+                onPress={() => {
+                  notesStore.setSelectedNote(item);
+                  notesStore.openDialog(NotesDialogs.ShowNoteDialog);
+                }}
+                iconColor="#BFBFBF"
+                style={{ height: 22, width: 22, margin: 10 }}
+              />
+              <IconButton
+                icon="delete"
+                onPress={() => {
+                  noteStore.deleteNote(item.id);
+                }}
+                iconColor="#BFBFBF"
+                style={{ height: 22, width: 22, margin: 10 }}
+              />
+            </View>
           </View>
           <View>
-            <Text style={{ color: "white", textAlign: "left", fontSize: 10 }}>
+            <Text style={{ color: "#BFBFBF", textAlign: "left", fontSize: 10 }}>
               {" "}
               {item.creationDate}
             </Text>
           </View>
-        </View>
         </TouchableOpacity>
       </Card>
     );
@@ -58,7 +78,10 @@ export default function NotesList() {
           </View>
           <View>
             <Button
-              onPress={() => { notesStore.openDialog(NotesDialogs.AddNoteDialog);}}>
+              onPress={() => {
+                notesStore.openDialog(NotesDialogs.AddNoteDialog);
+              }}
+            >
               New Note +
             </Button>
           </View>
@@ -66,12 +89,12 @@ export default function NotesList() {
       }
       ListEmptyComponent={
         <Card style={styles.emptyListItem}>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: "white" }}>{"Add new note +"}</Text>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "white" }}>{"Add new note +"}</Text>
+            </View>
           </View>
-        </View>
-      </Card>
+        </Card>
       }
     ></FlatList>
   );
@@ -86,7 +109,7 @@ const styles = StyleSheet.create({
 
   listItem: {
     backgroundColor: "#612CD4",
-    minHeight: 40,
+    minHeight: 50,
     height: "auto",
     margin: 5,
     padding: 10,

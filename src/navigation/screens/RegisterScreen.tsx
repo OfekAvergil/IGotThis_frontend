@@ -4,6 +4,8 @@ import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 
 import { useNavigation } from "@react-navigation/native";
+import LoginHeader from "../../components/LoginHeader";
+import { Colors } from "../../consts";
 
 const RegisterScreen = ({ navigation }: any) => {
 
@@ -13,7 +15,7 @@ const RegisterScreen = ({ navigation }: any) => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const handleRegister = () => {
-    userStore.setUser(username, password, email, false);
+    userStore.signupUser(username, password, email, false);
     setUsername("");
     setPassword("");
     setEmail("");
@@ -31,19 +33,9 @@ const RegisterScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <LoginHeader header="Sign in"/>
       <Card style={styles.card}>
-        <Card.Title titleStyle={styles.card_title} title="Register" />
         <Card.Content>
-          <Image
-            style={{
-              width: 200,
-              height: 200,
-              alignSelf: "center",
-              marginTop: 30,
-            }}
-            source={require("../../../assets/icon.png")}
-            resizeMode="contain"
-          />
           <TextInput
             placeholder="User name"
             value={username}
@@ -53,7 +45,7 @@ const RegisterScreen = ({ navigation }: any) => {
             mode="outlined"
           />
           <TextInput
-            placeholder="Eamil"
+            placeholder="Email"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
@@ -67,7 +59,6 @@ const RegisterScreen = ({ navigation }: any) => {
             onChangeText={setPassword}
             secureTextEntry={true}
             right={<TextInput.Icon icon="eye-off-outline" />}
-            mode="outlined"
           />
           <TextInput
             placeholder="Confirm Password"
@@ -75,7 +66,6 @@ const RegisterScreen = ({ navigation }: any) => {
             onChangeText={setPasswordRepeat}
             secureTextEntry={true}
             right={<TextInput.Icon icon="eye-off-outline" />}
-            mode="outlined"
           />
           <Button
             style={[styles.card_button, { marginTop: 10 }]}
@@ -97,7 +87,10 @@ const RegisterScreen = ({ navigation }: any) => {
             uppercase={false}
             onPress={handkeAllreadyHaveAccount}
           >
-            Allready have an account? Login
+            <Text>
+              Allready have an account?  
+            </Text> 
+            Login
           </Button>
         </Card.Content>
       </Card>
@@ -111,19 +104,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
   },
   card: {
     width: "100%",
-    height: "100%",
+    flex:3
   },
   card_title: {
     fontSize: 30,
     marginTop: 50,
-    color: "#E5517E",
+    color: Colors.primary,
   },
   card_button: {
-    margin: 2,
+    margin: 7,
   },
 });
 
