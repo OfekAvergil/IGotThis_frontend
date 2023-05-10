@@ -1,16 +1,22 @@
 import * as React from "react";
-import { Button, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
+import Recorder from "../components/DialogRecorder";
 
 const AddNoteDialog = () => {
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [recording, setRecording] = React.useState<string | null>(null);
 
-  function clearModal(): void{
+  function clearModal(): void {
     setTitle("");
     setContent("");
+  }
+
+  function getRecording(record?: string | null): void {
+    if (record) setRecording(record);
   }
 
   return BasicDialog({
@@ -32,13 +38,7 @@ const AddNoteDialog = () => {
             numberOfLines={5}
             style={styles.inputArea}
           />
-          <Button
-            icon="microphone"
-            mode="contained"
-            onPress={() => console.log("Pressed")}
-          >
-            Press me
-          </Button>
+          <Recorder addNewRec={getRecording} />
         </View>
       </View>
     ),
@@ -47,17 +47,17 @@ const AddNoteDialog = () => {
     onOk: () => {
       console.log("ok");
       notesStore.closeAllDialogs();
-      notesStore.addNote(title, content);
-      clearModal()
+      notesStore.addNote(title, content, recording ? recording : undefined);
+      clearModal();
     },
     onCancle: () => {
       console.log("cancle");
       notesStore.closeAllDialogs();
-      clearModal()
+      clearModal();
     },
     onDismiss: () => {
       notesStore.closeAllDialogs();
-      clearModal()    
+      clearModal();
     },
   });
 };
@@ -66,7 +66,7 @@ export default AddNoteDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 10,
     width: "100%",
     paddingVertical: 20,
