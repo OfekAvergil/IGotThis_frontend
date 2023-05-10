@@ -5,6 +5,7 @@ import notesStore, { NotesDialogs, note } from "../stores/notesStore";
 import noteStore from "../stores/notesStore";
 import { useEffect } from "react";
 import userStore from "../stores/userStore";
+import { Colors } from "../consts";
 
 
 export default function NotesList() {
@@ -41,9 +42,9 @@ export default function NotesList() {
                 icon="lead-pencil"
                 onPress={() => {
                   notesStore.setSelectedNote(item);
-                  notesStore.openDialog(NotesDialogs.ShowNoteDialog);
+                  notesStore.openDialog(NotesDialogs.EditNoteDialog);
                 }}
-                iconColor="#BFBFBF"
+                iconColor={Colors.basicGrey}
                 style={{ height: 22, width: 22, margin: 10 }}
               />
               <IconButton
@@ -51,13 +52,13 @@ export default function NotesList() {
                 onPress={() => {
                   noteStore.deleteNote(item.id);
                 }}
-                iconColor="#BFBFBF"
+                iconColor={Colors.basicGrey}
                 style={{ height: 22, width: 22, margin: 10 }}
               />
             </View>
           </View>
           <View>
-            <Text style={{ color: "#BFBFBF", textAlign: "left", fontSize: 10 }}>
+            <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 10 }}>
               {" "}
               {item.creationDate}
             </Text>
@@ -104,11 +105,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 0,
     padding: 2,
-    backgroundColor: "#612CD4",
+    backgroundColor: Colors.secondary,
   },
 
   listItem: {
-    backgroundColor: "#612CD4",
+    backgroundColor: Colors.secondary,
     minHeight: 50,
     height: "auto",
     margin: 5,
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   emptyListItem: {
-    backgroundColor: "#BFBFBF",
+    backgroundColor: Colors.basicGrey,
     minHeight: 40,
     height: "auto",
     margin: 5,
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   addButtonText: {
-    color: "#fff",
+    color: "white",
   },
   item: {
     borderWidth: 1,

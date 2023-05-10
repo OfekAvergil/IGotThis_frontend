@@ -9,7 +9,7 @@ export interface note {
     name: string;
     creationDate: string;
     content: string;
-    audio?: any;
+    audio?: string;
 }
 
 export enum NotesDialogs {
@@ -43,7 +43,7 @@ class NotesStore {
         }
     }
 
-    public addNote = async (noteName: string, contentToSet: string, record?: Audio.Recording) => {
+    public addNote = async (noteName: string, contentToSet: string, record?: string) => {
         try {
             const now: Date = new Date();
             let newNote = {
@@ -79,7 +79,7 @@ class NotesStore {
         }
     }
 
-    public editNote =async (noteId:number, noteName: string, contentToSet: string) => {
+    public editNote =async (noteId:number, noteName: string, contentToSet?: string, recording?: string) => {
         try {
             const noteIndex = this.notes.findIndex((n) => n.id === noteId);
             if (noteIndex === -1) {
@@ -89,7 +89,8 @@ class NotesStore {
                 `http://localhost:4005/api/notes?id=${noteId}`, 
                 { 
                 name: noteName, 
-                content: contentToSet 
+                content: contentToSet, 
+                audio: recording
                 },
                 {
                 headers: {
@@ -98,7 +99,8 @@ class NotesStore {
                 }
             );
             this.notes[noteIndex].name = noteName;
-            this.notes[noteIndex].content = contentToSet;
+            if(contentToSet) this.notes[noteIndex].content = contentToSet;
+            if(recording) this.notes[noteIndex].audio = recording;
             this.notes = [...this.notes];
         } catch (error) {
             console.log(`Error in editing note: ${error}`);
@@ -123,7 +125,7 @@ class NotesStore {
         this.currentOpenDialog = null;
     }
 
-    public setSelectedNote(item: note): void {
+    public setSelectedNote(item: note|null): void {
         this.selectedNote = item;
     }
 

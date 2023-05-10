@@ -3,10 +3,25 @@ import { Button, TextInput } from "react-native-paper";
 import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
+import Recorder from "../components/DialogRecorder";
+import { Audio } from "expo-av";
 
 const EditNoteDialog = () => {
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [recording, setRecording] = React.useState< string|null|undefined>(null);
+  
+  React.useEffect(()=>{
+    if(notesStore.selectedNote){
+      setTitle(notesStore.selectedNote?.name)
+      setContent(notesStore.selectedNote.content)
+      setRecording(notesStore.selectedNote.audio)
+    }
+  }, [notesStore.selectedNote])
+
+  function getRecording(record?:string|null): void{
+    if(record)setRecording(record)
+  }
 
   return BasicDialog({
     title: "Edit Note",
@@ -27,29 +42,27 @@ const EditNoteDialog = () => {
             numberOfLines={5}
             style={styles.inputArea}
           />
-          <Button
-            icon="microphone"
-            mode="contained"
-            onPress={() => console.log("Pressed")}
-          >
-            Press me
-          </Button>
+           <Recorder addNewRec= {getRecording}  existedRecord={recording}/>
+
         </View>
       </View>
     ),
-    isVisible: notesStore.isDialogOpen(NotesDialogs.AddNoteDialog),
+    isVisible: notesStore.isDialogOpen(NotesDialogs.EditNoteDialog),
     enableActions: true,
     onOk: () => {
       console.log("ok");
       notesStore.closeAllDialogs();
-      //notesStore.editNote(notesStore.selectedNote?.id||0 ,title, content);
+      notesStore.editNote(notesStore.selectedNote?.id||0 ,title, content, recording? recording: undefined);
+      notesStore.setSelectedNote(null);
     },
     onCancle: () => {
       console.log("cancle");
       notesStore.closeAllDialogs();
+      notesStore.setSelectedNote(null);
     },
     onDismiss: () => {
       notesStore.closeAllDialogs();
+      notesStore.setSelectedNote(null);
     },
   });
 };
@@ -58,7 +71,7 @@ export default EditNoteDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 10,
     width: "100%",
     paddingVertical: 20,

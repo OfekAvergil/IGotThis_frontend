@@ -5,6 +5,7 @@ class UserStore {
     user_name: string | null = null;
     user_password: string | null = null;
     secretKey: string | null = null;
+    audioPermissions: boolean = false;
 
     constructor() {
         makeAutoObservable(this, {
@@ -60,6 +61,10 @@ class UserStore {
             console.error('Error signing up user:', error);
         }
     };
+
+    setAudioPremissions(isPermit: boolean) {
+        this.audioPermissions = isPermit;
+    }
 
 }
 
