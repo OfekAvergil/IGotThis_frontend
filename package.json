@@ -24,13 +24,11 @@
     "mobx-react": "^7.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.71.6",
-    "react-native-calendars": "^1.1295.0",
-    "react-native-datepicker": "^1.7.2",
-    "react-native-modal-datetime-picker": "^15.0.0",
-    "react-native-paper-datetimepicker": "^0.0.2",
+    "react-native": "0.71.7",
     "react-native-web": "~0.18.10",
-    "transform-class-properties": "^1.0.0-beta"
+    "transform-class-properties": "^1.0.0-beta",
+    "expo-av": "~13.2.1",
+    "expo-file-system": "~15.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
