@@ -3,25 +3,40 @@ import { Button, TextInput } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import eventsStore from "../stores/eventsStore";
+import eventsStore, { EventsDialogs } from "../stores/eventsStore";
+import userStore from "../stores/userStore";
 
 const AddEventDialog = () => {
+
   const [title, setTitle] = React.useState("");
   const [datePick, setDatePick] = React.useState(new Date());
-  const [date, setDate] = React.useState("");
-  const [content, setContent] = React.useState("");
+  const [dateStart, setDateStart] = React.useState("");
+  const [dateEnd, setDateEnd] = React.useState("");
   const [startTime, setStartTime] = React.useState("");
   const [endTime, setEndTime] = React.useState("");
+  const [content, setContent] = React.useState("");
   const [show, setShow] = React.useState(false); //show the date or time picker (boolean)
   const [mode, setMode] = React.useState("date"); //date or time picker (string)
 
+  const isWeb = Platform.OS === "web";
+
+  const clearModal = () => {
+    setDatePick(new Date());
+    setTitle("");
+    setDateStart("");
+    setDateEnd("");
+    setContent("");
+    setStartTime("");
+    setEndTime("");
+  };
   const onChange = (event: any, selectedDate: any) => {
     // if mode == date setDate, if mode == startTime setStartTime etc.
     if (mode == "date") {
-      const currentDate = selectedDate || date;
+      const currentDate = selectedDate || dateStart;
       setShow(Platform.OS === "ios"); // ?
       let tempDate = new Date(currentDate).toISOString().slice(0, 10);
-      setDate(tempDate);
+      setDateStart(tempDate);
+      setDateEnd(tempDate);
       setShow(false);
     } else if (mode == "startTime") {
       const currentDate = selectedDate || startTime;
@@ -29,7 +44,7 @@ const AddEventDialog = () => {
       let tempTime = currentDate.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour24: true,
       });
       setStartTime(tempTime);
       setShow(false);
@@ -39,7 +54,7 @@ const AddEventDialog = () => {
       let tempTime = currentDate.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour24: true,
       });
       setEndTime(tempTime);
       setShow(false);
@@ -62,34 +77,65 @@ const AddEventDialog = () => {
             onChangeText={(title) => setTitle(title)}
             style={styles.input}
           />
-          <View style={{ margin: 10 }}>
-            <Button
-              icon="calendar"
-              mode="contained"
-              onPress={() => showMode("date")}
-            >
-              {date}
-            </Button>
-          </View>
-
-          <View style={{ margin: 10 }}>
-            <Button
-              icon="clock"
-              mode="contained"
-              onPress={() => showMode("startTime")}
-            >
-              start time : {startTime}
-            </Button>
-          </View>
-          <View style={{ margin: 10 }}>
-            <Button
-              icon="clock"
-              mode="contained"
-              onPress={() => showMode("endTime")}
-            >
-              end time : {endTime}
-            </Button>
-          </View>
+          {isWeb ? (
+            <>
+              <TextInput
+                value={dateStart}
+                onChangeText={(text) => setDateStart(text)}
+              />
+              <TextInput
+                value={dateEnd}
+                onChangeText={(text) => setDateEnd(text)}
+              />
+              <TextInput
+                value={startTime}
+                onChangeText={(text) => setStartTime(text)}
+              />
+              <TextInput
+                value={endTime}
+                onChangeText={(text) => setEndTime(text)}
+              />
+            </>
+          ) : (
+            <>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="calendar"
+                  mode="contained"
+                  onPress={() => showMode("date")}
+                >
+                  {dateStart}
+                </Button>
+              </View>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="calendar"
+                  mode="contained"
+                  onPress={() => showMode("date")}
+                >
+                  {dateEnd}
+                </Button>
+              </View>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="clock"
+                  mode="contained"
+                  onPress={() => showMode("startTime")}
+                >
+                  start time : {startTime}
+                </Button>
+              </View>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="clock"
+                  mode="contained"
+                  onPress={() => showMode("endTime")}
+                >
+                  end time : {endTime}
+                </Button>
+              </View>
+            </>
+          )}
 
           {show && (
             <DateTimePicker
@@ -113,29 +159,31 @@ const AddEventDialog = () => {
         </View>
       </View>
     ),
-    isVisible: eventsStore.isDialogVisible,
+    isVisible: eventsStore.isDialogOpen(EventsDialogs.AddEventDialog),
+    enableActions: false,
     onOk: () => {
-      eventsStore.setVisible(false);
-      eventsStore.addEvent(title, date, content, startTime, endTime);
+      eventsStore.closeAllDialogs();
+      let notifyTimeFrame = "30";
+      let newId = eventsStore.events.length + 1;
+      eventsStore.addEvent(
+        newId,
+        title,
+        dateStart,
+        dateEnd,
+        startTime,
+        endTime,
+        notifyTimeFrame,
+        content
+      );
       console.log(eventsStore.events);
-      setDatePick(new Date());
-      setTitle("");
-      setDate("");
-      setContent("");
-      setStartTime("");
-      setEndTime("");
+      clearModal();
     },
     onCancle: () => {
-      eventsStore.setVisible(false);
-      setDatePick(new Date());
-      setTitle("");
-      setDate("");
-      setContent("");
-      setStartTime("");
-      setEndTime("");
+      eventsStore.closeAllDialogs();
+      clearModal();
     },
     onDismiss: () => {
-      eventsStore.setVisible(false);
+      eventsStore.closeAllDialogs();
     },
   });
 };
