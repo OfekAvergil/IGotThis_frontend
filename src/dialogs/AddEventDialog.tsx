@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, TextInput } from "react-native-paper";
+import { Button, TextInput, Text } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -79,22 +79,40 @@ const AddEventDialog = () => {
           />
           {isWeb ? (
             <>
+            <Text>
+              start
+            </Text>
+            < View style={{flexDirection:"row"}}>
               <TextInput
-                value={dateStart}
-                onChangeText={(text) => setDateStart(text)}
-              />
-              <TextInput
-                value={dateEnd}
-                onChangeText={(text) => setDateEnd(text)}
-              />
-              <TextInput
+                label={"date"}
+                  value={dateStart}
+                  onChangeText={(text) => setDateStart(text)}
+                  style={styles.smallInput}
+                />
+                <TextInput
+                label={"time"}
+                style={styles.smallInput}
                 value={startTime}
                 onChangeText={(text) => setStartTime(text)}
               />
+            </View>
+             <Text>
+              end:
+              </Text> 
+              <View style={{flexDirection:"row"}}>
               <TextInput
+                  label={"date"}
+                  style={styles.smallInput}
+                  value={dateEnd}
+                  onChangeText={(text) => setDateEnd(text)}
+                />
+              <TextInput
+                label={"time"}
+                style={styles.smallInput}
                 value={endTime}
                 onChangeText={(text) => setEndTime(text)}
               />
+              </View>
             </>
           ) : (
             <>
@@ -160,7 +178,7 @@ const AddEventDialog = () => {
       </View>
     ),
     isVisible: eventsStore.isDialogOpen(EventsDialogs.AddEventDialog),
-    enableActions: false,
+    enableActions: true,
     onOk: () => {
       eventsStore.closeAllDialogs();
       let notifyTimeFrame = "30";
@@ -217,5 +235,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
     textAlignVertical: "top",
+  },
+  smallInput: {
+    height: 40,
+    width: 150,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    marginRight: 20,
+    marginBottom: 10,
   },
 });

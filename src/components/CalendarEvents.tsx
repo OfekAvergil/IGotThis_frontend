@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
-import { Button, Card, FAB } from "react-native-paper";
+import { Button, Card, FAB, IconButton } from "react-native-paper";
 import userStore from "../stores/userStore";
 
 const CalendarEvents = () => {

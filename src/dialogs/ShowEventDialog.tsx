@@ -4,8 +4,8 @@ import eventsStore, {  EventsDialogs, event } from "../stores/eventsStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 
-const ShowEventDialog = (selectedEvent: any) => {
-  const event: event = selectedEvent;
+const ShowEventDialog = () => {
+  const event: event |null = eventsStore.selectedEvent;
   console.log(event);
   if (!event)
     return null
