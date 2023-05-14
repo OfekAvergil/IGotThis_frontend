@@ -1,15 +1,17 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Button, List, Card, IconButton } from "react-native-paper";
-import notesStore, { NotesDialogs, note } from "../stores/notesStore";
+import { Text, Button, Card } from "react-native-paper";
 import noteStore from "../stores/notesStore";
 import { useEffect } from "react";
 import userStore from "../stores/userStore";
 import { Colors } from "../consts";
+import todosStore, { TodoDialogs, toDo } from "../stores/todosStore";
 import PopUpMenu from "./PopUpMenu";
+import Icon from 'react-native-paper/src/components/Icon'
 
 
-export default function NotesList() {
+
+export default function TodoList() {
   useEffect(() => {
     // This code will run after the component has been rendered to the screen
     console.log('userStore.secretKey' + userStore.secretKey)
@@ -18,38 +20,38 @@ export default function NotesList() {
 
     return () => {
       // This cleanup function will run when the component is unmounted or when the dependencies change
-      // You can perform cleanup tasks or cancel any ongoing operations here
     };
   }, []);
 
-  const renderItem = (item: note) => {
+  /**
+   * when todo is clicked - delete it from the todos list.
+   * @param item - the done todo item
+   */
+  function checkNote(item: toDo): void{
+
+  }
+  
+
+  const renderItem = (item: toDo) => {
     return (
       <Card style={styles.listItem}>
         <TouchableOpacity
-          onPress={() => {
-            notesStore.setSelectedNote(item);
-            notesStore.openDialog(NotesDialogs.ShowNoteDialog);
-          }}>
+          onPress={() => { checkNote(item)}}>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
-            <View style={{ flex: 3 }}>
-              <Text style={{ color: "white", fontSize: 20 }}>{item.name}</Text>
+            <View style={{ flex: 3, flexDirection: "row" }}>
+              <Icon source="checkbox-blank-circle-outline" size={24} color={Colors.primary} />
+              <Text style={{ color: "white", fontSize: 20, paddingLeft:10 }}>{item.content}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
               <PopUpMenu 
               onEdit = {() => {
-                notesStore.setSelectedNote(item);
-                notesStore.openDialog(NotesDialogs.EditNoteDialog);
+                todosStore.setSelectedTodo(item);
+                todosStore.openDialog(TodoDialogs.EditTodoDialog);
               }} 
               onDelete = {() => {
                 noteStore.deleteNote(item.id);
               }}/>
             </View>
-          </View>
-          <View>
-            <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 10 }}>
-              {" "}
-              {item.creationDate}
-            </Text>
           </View>
         </TouchableOpacity>
       </Card>
@@ -59,19 +61,19 @@ export default function NotesList() {
   return (
     <FlatList
       renderItem={({ item }) => renderItem(item)}
-      data={notesStore.notes}
+      data={todosStore.tasks}
       ListHeaderComponent={
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 1, padding: 10 }}>
-            <Text style={{ flex: 1 }}> Your Notes</Text>
+            <Text style={{ flex: 1 }}> Your Tasks</Text>
           </View>
           <View>
             <Button
               onPress={() => {
-                notesStore.openDialog(NotesDialogs.AddNoteDialog);
+                todosStore.openDialog(TodoDialogs.AddTodoDialog);
               }}
             >
-              New Note +
+              New Task +
             </Button>
           </View>
         </View>
@@ -80,11 +82,11 @@ export default function NotesList() {
         <Card style={styles.emptyListItem}>
           <TouchableOpacity
           onPress={() => {
-            notesStore.openDialog(NotesDialogs.AddNoteDialog);
+            todosStore.openDialog(TodoDialogs.AddTodoDialog);
           }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
-                <Text style={{ color: "white" }}>{"Add new note +"}</Text>
+                <Text style={{ color: "white" }}>{"Add new task +"}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -103,11 +105,10 @@ const styles = StyleSheet.create({
 
   listItem: {
     backgroundColor: Colors.secondary,
-    minHeight: 50,
+    minHeight: 30,
     height: "auto",
     margin: 5,
     padding: 10,
-    paddingLeft:20,
     textAlignVertical: "center",
   },
   emptyListItem: {
