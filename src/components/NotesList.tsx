@@ -14,9 +14,7 @@ export default function NotesList() {
   useEffect(() => {
     // This code will run after the component has been rendered to the screen
     // You can perform initialization tasks or fetch data from an API here
-    console.log('userStore.secretKey' + userStore.secretKey)
     noteStore.fetchNotes(userStore.secretKey);
-    console.log(noteStore.notes)
 
     return () => {
       // This cleanup function will run when the component is unmounted or when the dependencies change

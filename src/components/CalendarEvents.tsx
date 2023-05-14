@@ -8,10 +8,19 @@ import {
   FlatList,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
-import eventsStore, { event } from "../stores/eventsStore";
-import { Button, Card, FAB } from "react-native-paper";
+import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
+import { Button, Card, FAB, IconButton } from "react-native-paper";
+import userStore from "../stores/userStore";
 
 const CalendarEvents = () => {
+  React.useEffect(() => {
+    // This code will run after the component has been rendered to the screen
+    // You can perform initialization tasks or fetch data from an API here
+    if (userStore.secretKey) {
+      eventsStore.fetchEvents(userStore.secretKey);
+    }
+  }, [userStore.secretKey]);
+
   const [selectedDay, setSelectedDay] = React.useState(
     new Date().toISOString()
   );
@@ -21,12 +30,19 @@ const CalendarEvents = () => {
   };
   const renderItem = (item: event) => {
     return (
-      <TouchableOpacity onPress={onEventPress} style={{ margin: 15 }}>
+      <TouchableOpacity
+        onPress={() => {
+          eventsStore.setSelectedEvent(item);
+          eventsStore.openDialog(EventsDialogs.ShowEventDialog);         
+        }}
+        style={{ margin: 15 }}
+      >
         <Card>
           <Card.Title title={item.title} />
           <Card.Content>
             <Text>{item.content}</Text>
-            <Text>{item.date}</Text>
+            <Text>{item.dateStart}</Text>
+            <Text>{item.dateEnd}</Text>
             <Text>{item.startTime}</Text>
             <Text>{item.endTime}</Text>
           </Card.Content>
@@ -36,27 +52,25 @@ const CalendarEvents = () => {
   };
 
   const renderEventsForSelectedDay = (day: string) => {
-    if (day && eventsStore.events[day]) {
-      return (
-        <FlatList
-          data={eventsStore.events[day]}
-          renderItem={({ item }) => renderItem(item)}
-          ListHeaderComponent={
-            <View style={{ flex: 1, padding: 10, flexDirection: "row" }}>
-              <Text style={{ flex: 1 }}> Your Events for: {selectedDay}</Text>
-            </View>
-          }
-        />
-      );
-    } else {
-      return (
-        <View>
-          <Text>No events for selected day</Text>
-        </View>
-      );
-    }
+    // convert day to be only date string
+    const dayDate = day.split("T")[0];
+    return (
+      <FlatList
+        data={eventsStore.getEventsByDate(dayDate)}
+        renderItem={({ item }) => renderItem(item)}
+        ListHeaderComponent={
+          <View style={{ flex: 1, padding: 10, flexDirection: "row" }}>
+            <Text style={{ flex: 1 }}> Your Events for: {selectedDay}</Text>
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={{ flex: 1, padding: 10, flexDirection: "row" }}>
+            <Text style={{ flex: 1 }}>No events for this day</Text>
+          </View>
+        }
+      />
+    );
   };
-  const onEventPress = () => {};
 
   const getCurrentDate = () => {
     const date = new Date();
@@ -99,7 +113,7 @@ const CalendarEvents = () => {
         small
         icon="plus"
         onPress={() => {
-          eventsStore.setVisible(true);
+          eventsStore.openDialog(EventsDialogs.AddEventDialog);
         }}
       />
     </View>
