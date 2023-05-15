@@ -22,7 +22,7 @@ const CalendarEvents = () => {
   }, [userStore.secretKey]);
 
   const [selectedDay, setSelectedDay] = React.useState(
-    new Date().toISOString()
+    new Date().toISOString().split("T")[0]
   );
 
   const handleDayPress = (day: any) => {
@@ -33,7 +33,7 @@ const CalendarEvents = () => {
       <TouchableOpacity
         onPress={() => {
           eventsStore.setSelectedEvent(item);
-          eventsStore.openDialog(EventsDialogs.ShowEventDialog);         
+          eventsStore.openDialog(EventsDialogs.ShowEventDialog);
         }}
         style={{ margin: 15 }}
       >
@@ -77,25 +77,51 @@ const CalendarEvents = () => {
     return date.toISOString().split("T")[0];
   };
 
-  const eventsDates = eventsStore.getEventsDateList();
-  const marked = {
-    [selectedDay]: { selected: true, selectedColor: "#E5517E" },
-    // list of eventsDates with marked: true
-    ...eventsDates.reduce<{
-      [key: string]: { marked: boolean; dotColor: string };
-    }>((acc, curr) => {
-      acc[curr] = { marked: true, dotColor: "#E5517E" };
-      return acc;
-    }, {}),
-  };
-  console.log(marked);
+
+
+
+
+ 
+  const markedAndSelected: { [date: string]: any } = {};
+
+  // add single-day events to the marked dates object
+  const eventsOneDay = eventsStore.getEventsDateListWithoutRange();
+  eventsOneDay.forEach(date => {
+    markedAndSelected[date] = { marked: true, dotColor: '#E5517E' };
+  });
+
+
+  // add range-of-days events to the marked dates object
+  const eventRangeDates = eventsStore.getEventsDateListWithRange();
+  eventRangeDates.forEach((event) => {
+    const [dateStart, dateEnd] = event;
+    const range = { color: "blue", textColor: "white" };
+    markedAndSelected[dateStart] = { startingDay: true, ...range };
+    // mark all the days in the range
+    let currentDay = new Date(dateStart);
+    currentDay.setDate(currentDay.getDate() + 1);
+    while (currentDay < new Date(dateEnd)) {
+      const formattedDate = currentDay.toISOString().slice(0, 10);
+      if (formattedDate !== dateStart && formattedDate !== dateEnd) {
+        markedAndSelected[formattedDate] = { ...range };
+      }
+      currentDay.setDate(currentDay.getDate() + 1);
+    }
+    markedAndSelected[dateEnd] = { endingDay: true, ...range };
+  });
+
+  // selected day: 
+  markedAndSelected [selectedDay]= {... {startingDay: true, endingDay: true, color: "#E5517E",textColor: "white", }}
+   
+
   return (
     <View>
       <Calendar
         current={getCurrentDate()}
         items={eventsStore.events}
         onDayPress={handleDayPress}
-        markedDates={marked}
+        markingType="period"
+        markedDates={markedAndSelected}
         theme={{
           backgroundColor: "#ffffff",
           calendarBackground: "#ffffff",
@@ -106,6 +132,7 @@ const CalendarEvents = () => {
           dayTextColor: "#2d4150",
           textDisabledColor: "#d9",
         }}
+        hideArrows={false}
       />
       {selectedDay && renderEventsForSelectedDay(selectedDay)}
       <FAB

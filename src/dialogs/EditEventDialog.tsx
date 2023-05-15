@@ -1,16 +1,82 @@
 import * as React from "react";
-import { Button, TextInput } from "react-native-paper";
+import { Button, TextInput, Text } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
+import userStore from "../stores/userStore";
 
 const EditEventDialog = () => {
+  const selectedEvent = eventsStore.selectedEvent;
+  // selected event exists
   const [title, setTitle] = React.useState("");
+  const [datePick, setDatePick] = React.useState(new Date());
   const [dateStart, setDateStart] = React.useState("");
   const [dateEnd, setDateEnd] = React.useState("");
   const [startTime, setStartTime] = React.useState("");
   const [endTime, setEndTime] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [show, setShow] = React.useState(false); //show the date or time picker (boolean)
+  const [mode, setMode] = React.useState("date"); //date or time picker (string)
+
+  React.useEffect(() => {
+    if (selectedEvent) {
+      setTitle(selectedEvent.title);
+      setDateStart(selectedEvent.dateStart);
+      setDateEnd(selectedEvent.dateEnd);
+      setContent(selectedEvent.content);
+      setStartTime(selectedEvent.startTime);
+      setEndTime(selectedEvent.endTime);
+    }
+  }, [eventsStore.selectedEvent]);
+
+  const isWeb = Platform.OS === "web";
+
+  const clearModal = () => {
+    setDatePick(new Date());
+    setTitle("");
+    setDateStart("");
+    setDateEnd("");
+    setContent("");
+    setStartTime("");
+    setEndTime("");
+  };
+  const onChange = (event: any, selectedDate: any) => {
+    // if mode == date setDate, if mode == startTime setStartTime etc.
+    if (mode == "date") {
+      const currentDate = selectedDate || dateStart;
+      setShow(Platform.OS === "ios"); // ?
+      let tempDate = new Date(currentDate).toISOString().slice(0, 10);
+      setDateStart(tempDate);
+      setDateEnd(tempDate);
+      setShow(false);
+    } else if (mode == "startTime") {
+      const currentDate = selectedDate || startTime;
+      setShow(Platform.OS === "ios"); // ?
+      let tempTime = currentDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour24: true,
+      });
+      setStartTime(tempTime);
+      setShow(false);
+    } else if (mode == "endTime") {
+      const currentDate = selectedDate || endTime;
+      setShow(Platform.OS === "ios"); // ?
+      let tempTime = currentDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour24: true,
+      });
+      setEndTime(tempTime);
+      setShow(false);
+    }
+  };
+
+  const showMode = (currentMode: any) => {
+    setShow(true);
+    setMode(currentMode);
+  };
 
   return BasicDialog({
     title: "Edit Event",
@@ -23,6 +89,91 @@ const EditEventDialog = () => {
             onChangeText={(title) => setTitle(title)}
             style={styles.input}
           />
+          {isWeb ? (
+            <>
+              <Text>start</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput
+                  //label={"date"}
+                  value={dateStart}
+                  onChangeText={(text) => setDateStart(text)}
+                  style={styles.smallInput}
+                />
+                <TextInput
+                  //label={"time"}
+                  style={styles.smallInput}
+                  value={startTime}
+                  onChangeText={(text) => setStartTime(text)}
+                />
+              </View>
+              <Text>end:</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput
+                  //label={"date"}
+                  style={styles.smallInput}
+                  value={dateEnd}
+                  onChangeText={(text) => setDateEnd(text)}
+                />
+                <TextInput
+                  //label={"time"}
+                  style={styles.smallInput}
+                  value={endTime}
+                  onChangeText={(text) => setEndTime(text)}
+                />
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="calendar"
+                  mode="contained"
+                  onPress={() => showMode("date")}
+                >
+                  {dateStart}
+                </Button>
+              </View>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="calendar"
+                  mode="contained"
+                  onPress={() => showMode("date")}
+                >
+                  {dateEnd}
+                </Button>
+              </View>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="clock"
+                  mode="contained"
+                  onPress={() => showMode("startTime")}
+                >
+                  start time : {startTime}
+                </Button>
+              </View>
+              <View style={{ margin: 10 }}>
+                <Button
+                  icon="clock"
+                  mode="contained"
+                  onPress={() => showMode("endTime")}
+                >
+                  end time : {endTime}
+                </Button>
+              </View>
+            </>
+          )}
+
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={datePick}
+              mode={mode == "date" ? "date" : "time"} // if mode == date show date picker, if mode == time show time picker"}
+              is24Hour={true}
+              display="default"
+              onChange={onChange}
+            />
+          )}
+
           <TextInput
             label="content"
             value={content}
@@ -37,13 +188,22 @@ const EditEventDialog = () => {
     isVisible: eventsStore.isDialogOpen(EventsDialogs.EditEventDialog),
     enableActions: true,
     onOk: () => {
-      console.log("ok");
       eventsStore.closeAllDialogs();
-      eventsStore.editEvent();
+      let id = selectedEvent ? selectedEvent.id : -1;
+      eventsStore.editEvent(
+        id,
+        title,
+        dateStart,
+        dateEnd,
+        startTime,
+        endTime,
+        content
+      );
+      clearModal();
     },
     onCancle: () => {
-      console.log("cancle");
       eventsStore.closeAllDialogs();
+      clearModal();
     },
     onDismiss: () => {
       eventsStore.closeAllDialogs();
@@ -80,5 +240,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
     textAlignVertical: "top",
+  },
+  smallInput: {
+    height: 40,
+    width: 150,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    marginRight: 20,
+    marginBottom: 10,
   },
 });
