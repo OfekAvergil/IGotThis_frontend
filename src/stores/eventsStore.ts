@@ -105,7 +105,6 @@ class EventsStore {
     eventDateEnd: string,
     eventSatrtTime: string,
     eventEndTime: string,
-    eventNotifyTimeFrame: string,
     eventContent: string
   ) => {
     try {
@@ -121,7 +120,6 @@ class EventsStore {
           dateEnd: eventDateEnd,
           startTime: eventSatrtTime,
           endTime: eventEndTime,
-          notifyTimeFrame: eventNotifyTimeFrame,
           content: eventContent,
         },
         {
@@ -135,7 +133,6 @@ class EventsStore {
       this.events[eventIndex].dateEnd = eventDateEnd;
       this.events[eventIndex].startTime = eventSatrtTime;
       this.events[eventIndex].endTime = eventEndTime;
-      this.events[eventIndex].notifyTimeFrame = eventNotifyTimeFrame;
       this.events[eventIndex].content = eventContent;
       this.events = [...this.events];
     } catch (error) {
@@ -162,8 +159,11 @@ class EventsStore {
   public closeAllDialogs(): void {
     this.currentOpenDialog = null;
   }
-  getEventsDateList(): string[] {
-    return Object.keys(this.events);
+  getEventsDateListWithoutRange(): string[] {
+    return [...new Set(this.events.filter(item => item.dateStart === item.dateEnd).map(item => item.dateStart))];;
+  }
+  getEventsDateListWithRange(): string[][] {
+    return [...new Set(this.events.filter(item => item.dateStart !== item.dateEnd).map(item => [item.dateStart, item.dateEnd]))];;
   }
   public setSelectedEvent(item: event): void {
     this.selectedEvent = item;
