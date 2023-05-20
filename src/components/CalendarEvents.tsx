@@ -11,6 +11,7 @@ import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
 import { Button, Card, FAB, IconButton } from "react-native-paper";
 import userStore from "../stores/userStore";
+import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
 
 const CalendarEvents = () => {
   React.useEffect(() => {
@@ -25,8 +26,18 @@ const CalendarEvents = () => {
     new Date().toISOString().split("T")[0]
   );
 
-  const handleDayPress = (day: any) => {
+  const [pathToAudioFile, setPathToAudioFile] = React.useState(
+    "C:\\Users\\reutd\\Desktop\\IGotThis\\audioSample.mp3"
+  );
+
+  const [text, setText] = React.useState(
+    "Hey Reut, how are you today? I hope you are doing well. I have a task for you: please send me the report by the end of the day. Thanks! Also don't forget to call me at 050-1234567. Bye!"
+  );
+
+  const handleDayPress = async (day: any) => {
     setSelectedDay(day.dateString);
+    //handleExtractTasks(text);
+    handleSpeechToText(pathToAudioFile);
   };
   const renderItem = (item: event) => {
     return (
@@ -77,19 +88,13 @@ const CalendarEvents = () => {
     return date.toISOString().split("T")[0];
   };
 
-
-
-
-
- 
   const markedAndSelected: { [date: string]: any } = {};
 
   // add single-day events to the marked dates object
   const eventsOneDay = eventsStore.getEventsDateListWithoutRange();
-  eventsOneDay.forEach(date => {
-    markedAndSelected[date] = { marked: true, dotColor: '#E5517E' };
+  eventsOneDay.forEach((date) => {
+    markedAndSelected[date] = { marked: true, dotColor: "#E5517E" };
   });
-
 
   // add range-of-days events to the marked dates object
   const eventRangeDates = eventsStore.getEventsDateListWithRange();
@@ -110,9 +115,15 @@ const CalendarEvents = () => {
     markedAndSelected[dateEnd] = { endingDay: true, ...range };
   });
 
-  // selected day: 
-  markedAndSelected [selectedDay]= {... {startingDay: true, endingDay: true, color: "#E5517E",textColor: "white", }}
-   
+  // selected day:
+  markedAndSelected[selectedDay] = {
+    ...{
+      startingDay: true,
+      endingDay: true,
+      color: "#E5517E",
+      textColor: "white",
+    },
+  };
 
   return (
     <View>
