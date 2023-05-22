@@ -1,9 +1,7 @@
 import * as React from "react";
 import { TextInput } from "react-native-paper";
-import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
-import Recorder from "../components/DialogRecorder";
 import todosStore, { TodoDialogs } from "../stores/todosStore";
 
 const AddTodoDialog = () => {
@@ -32,7 +30,7 @@ const AddTodoDialog = () => {
     onOk: () => {
       console.log("ok");
       todosStore.closeAllDialogs();
-      //todosStore.addNote(title, content, recording ? recording : undefined);
+      todosStore.addTodo(content);
       clearModal();
     },
     onCancle: () => {

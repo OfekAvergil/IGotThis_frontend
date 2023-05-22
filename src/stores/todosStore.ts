@@ -1,8 +1,6 @@
-import { makeAutoObservable, observable, action, runInAction } from "mobx";
-import { formatDate } from "../common";
+import { makeAutoObservable, runInAction } from "mobx";
 import axios, * as others from 'axios';
 import userStore from "./userStore";
-import { Audio } from "expo-av";
 
 export interface toDo {
     id: number;
@@ -26,14 +24,14 @@ class TodoStore {
         makeAutoObservable(this);
     }
 
-    public fetchNotes = async (secretKey: string | null) => {
+    public fetchTodos = async (secretKey: string | null) => {
         try {
             console.log(secretKey)
-            const response = await axios.get('http://localhost:4005/api/notes',{                headers: {
+            const response = await axios.get('http://localhost:4005/api/todos',{                headers: {
                 Authorization: `${secretKey}` // Include the token in the Authorization header
             },}); // replace with your API endpoint
             runInAction(() => {
-                this.tasks = response.data.notes; // assuming the API returns an array of notes
+                this.tasks = response.data.todos; // assuming the API returns an array of notes
             });
         } catch (error) {
             // Handle error here
@@ -41,54 +39,48 @@ class TodoStore {
         }
     }
 
-    public addNote = async (noteName: string, contentToSet: string, record?: string) => {
+    public addTodo = async ( contentToSet: string) => {
         try {
-            const now: Date = new Date();
-            let newNote = {
-                name: noteName,
-                creationDate: formatDate(now),
+            let newTodo = {
                 content: contentToSet,
-                audio: record,
             };
-            let newNotePushed = await axios.post(
-                `http://localhost:4005/api/notes`, 
-                newNote,
+            let newTodoPushed = await axios.post(
+                `http://localhost:4005/api/todos`, 
+                newTodo,
                 {
                 headers: {
                         Authorization: userStore.secretKey 
                 },
                 }
             );         
-            this.tasks = [...this.tasks, newNotePushed.data];
+            this.tasks = [...this.tasks, newTodoPushed.data];
         } catch (error) {
             console.log(`Error in adding note: ${error}`);
         }
     }
 
-    public deleteNote = async (noteId: number) => {
+    public deleteTodo = async (todoId: number) => {
         try {
-            let res = await axios.delete(`http://localhost:4005/api/notes?id=${noteId}`,{                
+            let res = await axios.delete(`http://localhost:4005/api/todos?id=${todoId}`,{                
                 headers: {
                 Authorization: userStore.secretKey 
             },})
-            this.tasks = this.tasks.filter((n) => n.id !== noteId);
+            this.tasks = this.tasks.filter((n) => n.id !== todoId);
         } catch (error) {
             console.log(`Error in deleting note: ${error}`);
         }
     }
 
-    public editNote =async (noteId:number, noteName: string, contentToSet?: string, recording?: string) => {
+    public editTodo =async (taskId:number, contentToSet: string) => {
         try {
-            const noteIndex = this.tasks.findIndex((n) => n.id === noteId);
-            if (noteIndex === -1) {
-                throw new Error(`Note with ID ${noteId} not found`);
+            const todoIndex = this.tasks.findIndex((n) => n.id === taskId);
+            if (todoIndex === -1) {
+                throw new Error(`Note with ID ${taskId} not found`);
             }
             let res = await axios.put(
-                `http://localhost:4005/api/notes?id=${noteId}`, 
+                `http://localhost:4005/api/notes?id=${taskId}`, 
                 { 
-                name: noteName, 
                 content: contentToSet, 
-                audio: recording
                 },
                 {
                 headers: {
@@ -96,7 +88,7 @@ class TodoStore {
                 }
                 }
             );
-            if(contentToSet) this.tasks[noteIndex].content = contentToSet;
+            this.tasks[todoIndex].content = contentToSet;
             this.tasks = [...this.tasks];
         } catch (error) {
             console.log(`Error in editing note: ${error}`);

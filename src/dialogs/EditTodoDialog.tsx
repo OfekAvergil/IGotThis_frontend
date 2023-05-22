@@ -1,18 +1,16 @@
 import * as React from "react";
-import { Button, TextInput } from "react-native-paper";
-import notesStore, { NotesDialogs } from "../stores/notesStore";
+import { TextInput } from "react-native-paper";
+import notesStore from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
-import Recorder from "../components/DialogRecorder";
-import { Audio } from "expo-av";
 import todosStore, { TodoDialogs } from "../stores/todosStore";
 
 const EditTodoDialog = () => {
   const [content, setContent] = React.useState("");
   
   React.useEffect(()=>{
-    if(notesStore.selectedNote){
-      setContent(notesStore.selectedNote.content)
+    if(todosStore.selectedTodo){
+      setContent(todosStore.selectedTodo.content)
     }
   }, [todosStore.selectedTodo])
 
@@ -35,7 +33,7 @@ const EditTodoDialog = () => {
     onOk: () => {
       console.log("ok");
       todosStore.closeAllDialogs();
-      //todosStore.editTask(notesStore.selectedNote?.id||0 ,title, content, recording? recording: undefined);
+      todosStore.editTodo(notesStore.selectedNote?.id||0 , content);
       todosStore.setSelectedTodo(null);
     },
     onCancle: () => {

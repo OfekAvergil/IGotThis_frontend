@@ -4,11 +4,11 @@ import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
-import todosStore from "../stores/todosStore";
+import userStore from "../stores/userStore";
 
-
-const AddEventDialog = () => {
-
+const EditEventDialog = () => {
+  const selectedEvent = eventsStore.selectedEvent;
+  // selected event exists
   const [title, setTitle] = React.useState("");
   const [datePick, setDatePick] = React.useState(new Date());
   const [dateStart, setDateStart] = React.useState("");
@@ -18,6 +18,17 @@ const AddEventDialog = () => {
   const [content, setContent] = React.useState("");
   const [show, setShow] = React.useState(false); //show the date or time picker (boolean)
   const [mode, setMode] = React.useState("date"); //date or time picker (string)
+
+  React.useEffect(() => {
+    if (selectedEvent) {
+      setTitle(selectedEvent.title);
+      setDateStart(selectedEvent.dateStart);
+      setDateEnd(selectedEvent.dateEnd);
+      setContent(selectedEvent.content);
+      setStartTime(selectedEvent.startTime);
+      setEndTime(selectedEvent.endTime);
+    }
+  }, [eventsStore.selectedEvent]);
 
   const isWeb = Platform.OS === "web";
 
@@ -30,7 +41,6 @@ const AddEventDialog = () => {
     setStartTime("");
     setEndTime("");
   };
-
   const onChange = (event: any, selectedDate: any) => {
     // if mode == date setDate, if mode == startTime setStartTime etc.
     if (mode == "date") {
@@ -68,20 +78,8 @@ const AddEventDialog = () => {
     setMode(currentMode);
   };
 
-  // to support adding event from todo
-  React.useEffect(()=>{
-    setTitle(todosStore.selectedTodo?.content || "")
-  }, [todosStore.selectedTodo])
-
-  // to support adding event at chosen date
-  React.useEffect(()=>{
-    setDateStart(eventsStore.selectedDate || "");
-    setDateEnd(eventsStore.selectedDate || "")
-
-  }, [eventsStore.selectedDate])
-
   return BasicDialog({
-    title: "New Event",
+    title: "Edit Event",
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
@@ -93,39 +91,35 @@ const AddEventDialog = () => {
           />
           {isWeb ? (
             <>
-            <Text>
-              start
-            </Text>
-            < View style={{flexDirection:"row"}}>
-              <TextInput
-                label={"date"}
+              <Text>start</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput
+                  //label={"date"}
                   value={dateStart}
                   onChangeText={(text) => setDateStart(text)}
                   style={styles.smallInput}
                 />
                 <TextInput
-                label={"time"}
-                style={styles.smallInput}
-                value={startTime}
-                onChangeText={(text) => setStartTime(text)}
-              />
-            </View>
-             <Text>
-              end:
-              </Text> 
-              <View style={{flexDirection:"row"}}>
-              <TextInput
-                  label={"date"}
+                  //label={"time"}
+                  style={styles.smallInput}
+                  value={startTime}
+                  onChangeText={(text) => setStartTime(text)}
+                />
+              </View>
+              <Text>end:</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TextInput
+                  //label={"date"}
                   style={styles.smallInput}
                   value={dateEnd}
                   onChangeText={(text) => setDateEnd(text)}
                 />
-              <TextInput
-                label={"time"}
-                style={styles.smallInput}
-                value={endTime}
-                onChangeText={(text) => setEndTime(text)}
-              />
+                <TextInput
+                  //label={"time"}
+                  style={styles.smallInput}
+                  value={endTime}
+                  onChangeText={(text) => setEndTime(text)}
+                />
               </View>
             </>
           ) : (
@@ -191,23 +185,20 @@ const AddEventDialog = () => {
         </View>
       </View>
     ),
-    isVisible: eventsStore.isDialogOpen(EventsDialogs.AddEventDialog),
+    isVisible: eventsStore.isDialogOpen(EventsDialogs.EditEventDialog),
     enableActions: true,
     onOk: () => {
       eventsStore.closeAllDialogs();
-      let notifyTimeFrame = "30";
-      let newId = eventsStore.events.length + 1;
-      eventsStore.addEvent(
-        newId,
+      let id = selectedEvent ? selectedEvent.id : -1;
+      eventsStore.editEvent(
+        id,
         title,
         dateStart,
         dateEnd,
         startTime,
         endTime,
-        notifyTimeFrame,
         content
       );
-      console.log(eventsStore.events);
       clearModal();
     },
     onCancle: () => {
@@ -220,7 +211,7 @@ const AddEventDialog = () => {
   });
 };
 
-export default AddEventDialog;
+export default EditEventDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {

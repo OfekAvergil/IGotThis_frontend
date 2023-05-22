@@ -1,6 +1,6 @@
 import { makeAutoObservable, observable, action, runInAction } from "mobx";
 import { formatDate } from "../common";
-import axios, * as others from 'axios';
+import axios, * as others from "axios";
 import userStore from "./userStore";
 import { Audio } from "expo-av";
 
@@ -13,35 +13,35 @@ export interface note {
 }
 
 export enum NotesDialogs {
-    AddNoteDialog,
-    ShowNoteDialog,
-    EditNoteDialog,
+  AddNoteDialog,
+  ShowNoteDialog,
+  EditNoteDialog,
 }
 
-
 class NotesStore {
-    notes: note[] = [];
-    currentOpenDialog: NotesDialogs | null = null;
-    selectedNote: note | null= null;
+  notes: note[] = [];
+  currentOpenDialog: NotesDialogs | null = null;
+  selectedNote: note | null = null;
 
-    constructor() {
-        makeAutoObservable(this);
-    }
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-    public fetchNotes = async (secretKey: string | null) => {
-        try {
-            console.log(secretKey)
-            const response = await axios.get('http://localhost:4005/api/notes',{                headers: {
-                Authorization: `${secretKey}` // Include the token in the Authorization header
-            },}); // replace with your API endpoint
-            runInAction(() => {
-                this.notes = response.data.notes; // assuming the API returns an array of notes
-            });
-        } catch (error) {
-            // Handle error here
-            console.error('Failed to fetch notes:', error);
-        }
+  public fetchNotes = async (secretKey: string | null) => {
+    try {
+      const response = await axios.get("http://localhost:4005/api/notes", {
+        headers: {
+          Authorization: `${secretKey}`, // Include the token in the Authorization header
+        },
+      }); // replace with your API endpoint
+      runInAction(() => {
+        this.notes = response.data.notes; // assuming the API returns an array of notes
+      });
+    } catch (error) {
+      // Handle error here
+      console.error("Failed to fetch notes:", error);
     }
+  };
 
     public addNote = async (noteName: string, contentToSet: string, record?: string) => {
         try {
@@ -67,17 +67,21 @@ class NotesStore {
         }
     }
 
-    public deleteNote = async (noteId: number) => {
-        try {
-            let res = await axios.delete(`http://localhost:4005/api/notes?id=${noteId}`,{                
-                headers: {
-                Authorization: userStore.secretKey 
-            },})
-            this.notes = this.notes.filter((n) => n.id !== noteId);
-        } catch (error) {
-            console.log(`Error in deleting note: ${error}`);
+  public deleteNote = async (noteId: number) => {
+    try {
+      let res = await axios.delete(
+        `http://localhost:4005/api/notes?id=${noteId}`,
+        {
+          headers: {
+            Authorization: userStore.secretKey,
+          },
         }
+      );
+      this.notes = this.notes.filter((n) => n.id !== noteId);
+    } catch (error) {
+      console.log(`Error in deleting note: ${error}`);
     }
+  };
 
     public editNote =async (noteId:number, noteName: string, contentToSet?: string, recording?: string) => {
         try {
@@ -113,17 +117,17 @@ class NotesStore {
         return this.notes.length;
     }
 
-    public isDialogOpen(dialog: NotesDialogs): boolean {
-        return this.currentOpenDialog === dialog;
-    }
+  public isDialogOpen(dialog: NotesDialogs): boolean {
+    return this.currentOpenDialog === dialog;
+  }
 
-    public openDialog(dialog: NotesDialogs): void {
-        this.currentOpenDialog = dialog;
-    }
+  public openDialog(dialog: NotesDialogs): void {
+    this.currentOpenDialog = dialog;
+  }
 
-    public closeAllDialogs(): void {
-        this.currentOpenDialog = null;
-    }
+  public closeAllDialogs(): void {
+    this.currentOpenDialog = null;
+  }
 
     public setSelectedNote(item: note|null): void {
         this.selectedNote = item;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Button, Card } from "react-native-paper";
+import { Text, Button, Card, Menu } from "react-native-paper";
 import noteStore from "../stores/notesStore";
 import { useEffect } from "react";
 import userStore from "../stores/userStore";
@@ -8,14 +8,13 @@ import { Colors } from "../consts";
 import todosStore, { TodoDialogs, toDo } from "../stores/todosStore";
 import PopUpMenu from "./PopUpMenu";
 import Icon from 'react-native-paper/src/components/Icon'
-
-
+import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 
 export default function TodoList() {
   useEffect(() => {
     // This code will run after the component has been rendered to the screen
     console.log('userStore.secretKey' + userStore.secretKey)
-    noteStore.fetchNotes(userStore.secretKey);
+    todosStore.fetchTodos(userStore.secretKey);
     console.log(noteStore.notes)
 
     return () => {
@@ -28,9 +27,8 @@ export default function TodoList() {
    * @param item - the done todo item
    */
   function checkNote(item: toDo): void{
-
+    todosStore.deleteTodo(item.id)
   }
-  
 
   const renderItem = (item: toDo) => {
     return (
@@ -44,13 +42,20 @@ export default function TodoList() {
             </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
               <PopUpMenu 
-              onEdit = {() => {
+              menuItems={
+                <>
+                  <Menu.Item title="Add To Calnader" leadingIcon="calendar-plus" onPress={() => {
+                    todosStore.setSelectedTodo(item);
+                    eventsStore.openDialog(EventsDialogs.AddEventDialog);
+                  }}/>
+                  <Menu.Item title="Edit" leadingIcon="lead-pencil"  onPress={() => {
                 todosStore.setSelectedTodo(item);
-                todosStore.openDialog(TodoDialogs.EditTodoDialog);
-              }} 
-              onDelete = {() => {
-                noteStore.deleteNote(item.id);
-              }}/>
+                    todosStore.openDialog(TodoDialogs.EditTodoDialog);
+                  }}/>
+                  <Menu.Item title="Delete" leadingIcon="delete" onPress={()=>checkNote(item)}  />
+                </>
+              }
+              />
             </View>
           </View>
         </TouchableOpacity>

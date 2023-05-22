@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import ShowEventDialog from "../../dialogs/ShowEventDialog";
 import EditEventDialog from "../../dialogs/EditEventDialog";
 
-const HomeScreen = () => {
+const CalenderScreen = () => {
   const ObservedCalendar = observer(CalendarEvents);
   const ObservedDialog = observer(AddEventDialog);
   const ObservedShowEvent = observer(ShowEventDialog);
@@ -21,4 +21,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default CalenderScreen;

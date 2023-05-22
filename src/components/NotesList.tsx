@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Button, List, Card, IconButton } from "react-native-paper";
+import { Text, Button,  Card,  Menu } from "react-native-paper";
 import notesStore, { NotesDialogs, note } from "../stores/notesStore";
 import noteStore from "../stores/notesStore";
 import { useEffect } from "react";
@@ -14,7 +14,6 @@ export default function NotesList() {
     // This code will run after the component has been rendered to the screen
     console.log('userStore.secretKey' + userStore.secretKey)
     noteStore.fetchNotes(userStore.secretKey);
-    console.log(noteStore.notes)
 
     return () => {
       // This cleanup function will run when the component is unmounted or when the dependencies change
@@ -36,13 +35,16 @@ export default function NotesList() {
             </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
               <PopUpMenu 
-              onEdit = {() => {
+              menuItems={
+                <>
+                  <Menu.Item onPress={() => {
                 notesStore.setSelectedNote(item);
-                notesStore.openDialog(NotesDialogs.EditNoteDialog);
-              }} 
-              onDelete = {() => {
-                noteStore.deleteNote(item.id);
-              }}/>
+                    notesStore.openDialog(NotesDialogs.EditNoteDialog);}} 
+                    title="Edit" leadingIcon="lead-pencil"/>
+                  <Menu.Item onPress={() => noteStore.deleteNote(item.id)} title="Delete" leadingIcon="delete"/>
+                </>
+              }
+              />
             </View>
           </View>
           <View>
