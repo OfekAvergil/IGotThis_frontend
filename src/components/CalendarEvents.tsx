@@ -40,7 +40,7 @@ const CalendarEvents = () => {
     setSelectedDay(day.dateString);
     eventsStore.setSelectedDate(day.dateString);
     //handleExtractTasks(text);
-    handleSpeechToText(pathToAudioFile);
+    //handleSpeechToText(pathToAudioFile);
   };
   const renderItem = (item: event) => {
     return (
