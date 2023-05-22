@@ -12,6 +12,8 @@ import NotesScreen from "./screens/NotesScreen";
 import LogInScreen from "./screens/LogInScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import LandingScreen from "./screens/LandingScreen";
+import CurrentEventScreen from "./screens/CurrentEventScreen";
+import CalenderScreen from "./screens/CalendarScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -25,6 +27,8 @@ function TabNavigator () {
             let iconName: string = "";
             if (route.name === "Home") {
               iconName = focused ? "home" : "home-outline";
+            } else if (route.name === "Calender") {
+              iconName = focused ? "calendar-outline" : "calendar-outline";
             } else if (route.name === "ToDo") {
               iconName = focused ? "list" : "list-outline";
             } else if (route.name === "Notes") {
@@ -36,6 +40,7 @@ function TabNavigator () {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Calendar" component={CalenderScreen} />
         <Tab.Screen name="ToDo" component={ToDoScreen} />
         <Tab.Screen name="Notes" component={NotesScreen} />
       </Tab.Navigator>
@@ -50,6 +55,7 @@ export default function MainContainer() {
         <Stack.Screen name="Login" component={LogInScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="NavBar" component={TabNavigator} />
+        <Stack.Screen name="CurrentEvent" component={CurrentEventScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     

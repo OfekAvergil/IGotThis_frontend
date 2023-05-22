@@ -1,5 +1,4 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { formatDate } from "../common";
 import axios, * as others from "axios";
 import userStore from "./userStore";
 
@@ -17,13 +16,16 @@ export interface event {
 export enum EventsDialogs {
   AddEventDialog,
   ShowEventDialog,
-  EditEventDialog
+  EditEventDialog,
+  TasksFromEventDialog,
 }
 
 class EventsStore {
   events: event[] = [];
   currentOpenDialog: EventsDialogs | null = null;
   selectedEvent: event | null = null;
+  selectedDate: string | null = null;
+  currentEventId: number | undefined = 1;
 
   constructor() {
     makeAutoObservable(this);
@@ -160,13 +162,40 @@ class EventsStore {
     this.currentOpenDialog = null;
   }
   getEventsDateListWithoutRange(): string[] {
-    return [...new Set(this.events.filter(item => item.dateStart === item.dateEnd).map(item => item.dateStart))];;
+    return [
+      ...new Set(
+        this.events
+          .filter((item) => item.dateStart === item.dateEnd)
+          .map((item) => item.dateStart)
+      ),
+    ];
   }
   getEventsDateListWithRange(): string[][] {
-    return [...new Set(this.events.filter(item => item.dateStart !== item.dateEnd).map(item => [item.dateStart, item.dateEnd]))];;
+    return [
+      ...new Set(
+        this.events
+          .filter((item) => item.dateStart !== item.dateEnd)
+          .map((item) => [item.dateStart, item.dateEnd])
+      ),
+    ];
   }
   public setSelectedEvent(item: event): void {
     this.selectedEvent = item;
+  }
+
+  public setSelectedDate(date: string): void {
+    this.selectedDate = date;
+  }
+
+  public setCurrentEvent(id: number | undefined): void {
+    this.currentEventId = id;
+  }
+
+  public findCurrentEvent(): event | undefined{
+    if(this.currentEventId){
+      return this.events.find(item => item.id === this.currentEventId);
+    }
+    return undefined;
   }
 }
 

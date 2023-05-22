@@ -4,7 +4,8 @@ import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
-import userStore from "../stores/userStore";
+import todosStore from "../stores/todosStore";
+
 
 const AddEventDialog = () => {
 
@@ -29,6 +30,7 @@ const AddEventDialog = () => {
     setStartTime("");
     setEndTime("");
   };
+
   const onChange = (event: any, selectedDate: any) => {
     // if mode == date setDate, if mode == startTime setStartTime etc.
     if (mode == "date") {
@@ -65,6 +67,18 @@ const AddEventDialog = () => {
     setShow(true);
     setMode(currentMode);
   };
+
+  // to support adding event from todo
+  React.useEffect(()=>{
+    setTitle(todosStore.selectedTodo?.content || "")
+  }, [todosStore.selectedTodo])
+
+  // to support adding event at chosen date
+  React.useEffect(()=>{
+    setDateStart(eventsStore.selectedDate || "");
+    setDateEnd(eventsStore.selectedDate || "")
+
+  }, [eventsStore.selectedDate])
 
   return BasicDialog({
     title: "New Event",

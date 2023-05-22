@@ -1,23 +1,62 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import CurrentEventHeader from "../../components/CurrentEventHeader";
 import { Audio } from "expo-av";
 import { Colors } from "../../consts";
 import EventRecorder from "../../components/CurrentEventRecorder";
+import notesStore from "../../stores/notesStore";
+import eventsStore, { EventsDialogs, event } from "../../stores/eventsStore";
+import TasksFromEventDialog from "../../dialogs/TasksFromEventDialog";
+import { observer } from "mobx-react";
+
+
 const CurrentEventScreen = ({ navigation }: any) => {
   const [content, setContent] = React.useState("");
-  const [recording, setRecording] = React.useState<Audio.Recording | null>(
-    null
-  );
+  const [recording, setRecording] = React.useState<Audio.Recording | null>(null);
+  const [currentEvent, setCurrentEvent] = React.useState<event | undefined>(undefined);
 
-  function handleExit(): void {}
+  const ObservedShowEvent = observer(TasksFromEventDialog);
+
+
+  React.useEffect(()=>{
+    if(eventsStore.currentEventId){
+      setCurrentEvent(eventsStore.findCurrentEvent());
+    }
+  }, [eventsStore.currentEventId])
+
+  function handleExit(): void {
+    eventsStore.setCurrentEvent(undefined);
+    // if the user entered data to remember, pop the option to create tasks.
+    if(content || recording){
+      eventsStore.openDialog(EventsDialogs.TasksFromEventDialog);
+    } else {
+      console.log(navigation);
+      navigation.navigate('NavBar');      
+    }
+  };
+
+  /**
+   * when the event is over, creates new note with the written and recorded notes from the event.
+   */
+  function endEvent(): void {
+    if(currentEvent){
+      let uri: string | null | undefined = undefined;
+      if(recording){
+        uri = recording?.getURI();
+      }
+    notesStore.addNote(currentEvent.title, content, uri ? uri : undefined);
+    }
+    handleExit();
+  }
+
+  let time = currentEvent?.startTime + '-' + currentEvent?.endTime;
 
   return (
     <SafeAreaView style={styles.container}>
       <CurrentEventHeader
-        header="Appointment to Dr Ofek"
-        hour="14:00-15:00"
+        header={currentEvent?.title || ""}
+        hour={time}
         note="you are going to check your ears"
         handleExit={handleExit}
       />
@@ -53,13 +92,14 @@ const CurrentEventScreen = ({ navigation }: any) => {
               style={{}}
               mode="contained"
               icon="check"
-              onPress={handleExit}
+              onPress={endEvent}
             >
               Done!
             </Button>
           </View>
         </Card.Content>
       </Card>
+      <ObservedShowEvent/>
     </SafeAreaView>
   );
 };

@@ -3,15 +3,17 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   FlatList,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
-import { Button, Card, FAB, IconButton } from "react-native-paper";
+import { Card, FAB, Menu } from "react-native-paper";
 import userStore from "../stores/userStore";
-import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
+import { handleSpeechToText } from "../api/OpenaiAPI";
+import { Colors } from "../consts";
+import PopUpMenu from "./PopUpMenu";
+
 
 const CalendarEvents = () => {
   React.useEffect(() => {
@@ -36,29 +38,46 @@ const CalendarEvents = () => {
 
   const handleDayPress = async (day: any) => {
     setSelectedDay(day.dateString);
+    eventsStore.setSelectedDate(day.dateString);
     //handleExtractTasks(text);
     //handleSpeechToText(pathToAudioFile);
   };
   const renderItem = (item: event) => {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          eventsStore.setSelectedEvent(item);
-          eventsStore.openDialog(EventsDialogs.ShowEventDialog);
-        }}
-        style={{ margin: 15 }}
-      >
-        <Card>
-          <Card.Title title={item.title} />
-          <Card.Content>
-            <Text>{item.content}</Text>
-            <Text>{item.dateStart}</Text>
-            <Text>{item.dateEnd}</Text>
-            <Text>{item.startTime}</Text>
-            <Text>{item.endTime}</Text>
-          </Card.Content>
+        <Card style={styles.listItem}>
+          <TouchableOpacity
+            onPress={() => {
+              eventsStore.setSelectedEvent(item);
+              eventsStore.openDialog(EventsDialogs.ShowEventDialog);
+            }}
+            style={{height: 'auto'}}>
+            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
+              <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
+                <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
+              </View>
+              <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
+                <PopUpMenu 
+                menuItems={
+                  <>
+                    <Menu.Item onPress={() => {}}
+                      title="Edit" leadingIcon="lead-pencil"/>
+                    <Menu.Item onPress={() =>{}} title="Delete" leadingIcon="delete"/>
+                  </>
+                }
+                />
+              </View>
+            </View>
+
+            <View style={{ flex: 1}}>
+            <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
+              from : {item.dateStart} at {item.startTime}
+            </Text>
+            <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
+              to : {item.dateEnd} at {item.endTime}
+            </Text>
+          </View>
+          </TouchableOpacity>
         </Card>
-      </TouchableOpacity>
     );
   };
 
@@ -84,8 +103,10 @@ const CalendarEvents = () => {
   };
 
   const getCurrentDate = () => {
-    const date = new Date();
-    return date.toISOString().split("T")[0];
+    const date: Date = new Date();
+    const current: string = date.toISOString().split("T")[0];
+    eventsStore.setSelectedDate(current);
+    return current;
   };
 
   const markedAndSelected: { [date: string]: any } = {};
@@ -168,13 +189,11 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
-    borderRadius: 5,
     padding: 10,
     marginRight: 10,
     marginTop: 17,
   },
   addButton: {
-    backgroundColor: "#007AFF",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
@@ -187,5 +206,15 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+    backgroundColor: Colors.primary,
+    borderRadius: 50,
   },
+  listItem: {
+    backgroundColor: Colors.secondary,
+    minHeight: 130,
+    height: "auto",
+    margin: 10,
+    padding: 20,
+    textAlignVertical: "center",
+  }
 });
