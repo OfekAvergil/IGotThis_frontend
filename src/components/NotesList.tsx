@@ -38,7 +38,7 @@ export default function NotesList() {
               menuItems={
                 <>
                   <Menu.Item onPress={() => {
-                notesStore.setSelectedNote(item);
+                    notesStore.setSelectedNote(item);
                     notesStore.openDialog(NotesDialogs.EditNoteDialog);}} 
                     title="Edit" leadingIcon="lead-pencil"/>
                   <Menu.Item onPress={() => noteStore.deleteNote(item.id)} title="Delete" leadingIcon="delete"/>

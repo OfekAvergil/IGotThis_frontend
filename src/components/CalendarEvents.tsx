@@ -59,9 +59,12 @@ const CalendarEvents = () => {
                 <PopUpMenu 
                 menuItems={
                   <>
-                    <Menu.Item onPress={() => {}}
+                    <Menu.Item onPress={() => {
+                      // ???
+                      eventsStore.setSelectedEvent(item);
+                      eventsStore.openDialog(EventsDialogs.EditEventDialog);}}
                       title="Edit" leadingIcon="lead-pencil"/>
-                    <Menu.Item onPress={() =>{}} title="Delete" leadingIcon="delete"/>
+                    <Menu.Item onPress={() =>eventsStore.deleteEvent(item.id)} title="Delete" leadingIcon="delete"/>
                   </>
                 }
                 />
