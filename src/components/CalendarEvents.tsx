@@ -37,7 +37,7 @@ const CalendarEvents = () => {
   const handleDayPress = async (day: any) => {
     setSelectedDay(day.dateString);
     //handleExtractTasks(text);
-    handleSpeechToText(pathToAudioFile);
+    //handleSpeechToText(pathToAudioFile);
   };
   const renderItem = (item: event) => {
     return (
