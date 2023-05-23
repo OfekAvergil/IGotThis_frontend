@@ -49,7 +49,6 @@ export default function NotesList() {
           </View>
           <View>
             <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 10 }}>
-              {" "}
               {item.creationDate}
             </Text>
           </View>
@@ -84,10 +83,8 @@ export default function NotesList() {
           onPress={() => {
             notesStore.openDialog(NotesDialogs.AddNoteDialog);
           }}>
-            <View style={{ flex: 1, flexDirection: "row" }}>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: "white" }}>{"Add new note +"}</Text>
-              </View>
+            <View style={{ flex: 1, justifyContent:"center" }}>
+              <Text style={{ color: "white", fontSize:18 }}>{"Add new note +"}</Text>
             </View>
           </TouchableOpacity>
         </Card>
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
   },
   emptyListItem: {
     backgroundColor: Colors.basicGrey,
-    minHeight: 40,
+    minHeight: 50,
     height: "auto",
     margin: 5,
     padding: 10,
