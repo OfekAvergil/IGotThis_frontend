@@ -18,8 +18,12 @@ export async function handleExtractTasks(text) {
     });
 
     const data = await response.json();
-    const result = data.message;
-    console.log("result: ", result);
+    const tasks_list = data.message;
+    for (let i = 0; i < tasks_list.length; i++) {
+      const task = tasks_list[i];
+      console.log("task ", task);
+      addTodo(task);
+    }
   } catch (error) {
     console.error("Couldn't extract task", error);
     // Handle the error case as needed
