@@ -14,7 +14,6 @@ import { handleSpeechToText } from "../api/OpenaiAPI";
 import { Colors } from "../consts";
 import PopUpMenu from "./PopUpMenu";
 
-
 const CalendarEvents = () => {
   React.useEffect(() => {
     // This code will run after the component has been rendered to the screen
@@ -44,43 +43,81 @@ const CalendarEvents = () => {
   };
   const renderItem = (item: event) => {
     return (
-        <Card style={styles.listItem}>
-          <TouchableOpacity
-            onPress={() => {
-              eventsStore.setSelectedEvent(item);
-              eventsStore.openDialog(EventsDialogs.ShowEventDialog);
+      <Card style={styles.listItem}>
+        <TouchableOpacity
+          onPress={() => {
+            eventsStore.setSelectedEvent(item);
+            eventsStore.openDialog(EventsDialogs.ShowEventDialog);
+          }}
+          style={{ height: "auto" }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              margin: 2,
             }}
-            style={{height: 'auto'}}>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
-              <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
-                <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
-              </View>
-              <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
-                <PopUpMenu 
+          >
+            <View
+              style={{ flex: 2, flexDirection: "row", alignItems: "center" }}
+            >
+              <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <PopUpMenu
                 menuItems={
                   <>
-                    <Menu.Item onPress={() => {
-                      // ???
-                      eventsStore.setSelectedEvent(item);
-                      eventsStore.openDialog(EventsDialogs.EditEventDialog);}}
-                      title="Edit" leadingIcon="lead-pencil"/>
-                    <Menu.Item onPress={() =>eventsStore.deleteEvent(item.id)} title="Delete" leadingIcon="delete"/>
+                    <Menu.Item
+                      onPress={() => {
+                        // ???
+                        eventsStore.setSelectedEvent(item);
+                        eventsStore.openDialog(EventsDialogs.EditEventDialog);
+                        // close pop up menu
+                      }}
+                      title="Edit"
+                      leadingIcon="lead-pencil"
+                    />
+                    <Menu.Item
+                      onPress={() => eventsStore.deleteEvent(item.id)}
+                      title="Delete"
+                      leadingIcon="delete"
+                    />
                   </>
                 }
-                />
-              </View>
+              />
             </View>
+          </View>
 
-            <View style={{ flex: 1}}>
-            <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: Colors.basicGrey,
+                textAlign: "left",
+                fontSize: 14,
+              }}
+            >
               from : {item.dateStart} at {item.startTime}
             </Text>
-            <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
+            <Text
+              style={{
+                color: Colors.basicGrey,
+                textAlign: "left",
+                fontSize: 14,
+              }}
+            >
               to : {item.dateEnd} at {item.endTime}
             </Text>
           </View>
-          </TouchableOpacity>
-        </Card>
+        </TouchableOpacity>
+      </Card>
     );
   };
 
@@ -117,7 +154,12 @@ const CalendarEvents = () => {
   // add single-day events to the marked dates object
   const eventsOneDay = eventsStore.getEventsDateListWithoutRange();
   eventsOneDay.forEach((date) => {
-    markedAndSelected[date] = { marked: true, dotColor: "#E5517E" };
+    // TODO!!!
+    if (date === selectedDay) {
+      markedAndSelected[date] = { selected: true, marked:true, dotColor: "blue" };
+    } else {
+      markedAndSelected[date] = { marked: true, dotColor: "#E5517E" };
+    }
   });
 
   // add range-of-days events to the marked dates object
@@ -219,5 +261,5 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 20,
     textAlignVertical: "center",
-  }
+  },
 });
