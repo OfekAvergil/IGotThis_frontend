@@ -28,7 +28,7 @@ class UserStore {
             this.user_name = user_name;
             this.user_password = user_password;
             const response = await axios.post('http://localhost:4005/api/user/login', {
-                    name: user_name,
+                    email: user_name,
                     password: user_password
                 });
             const data = response.data;
