@@ -4,12 +4,15 @@ import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import { useNavigation } from "@react-navigation/native";
-import notesStore from "../stores/notesStore";
+import notesStore, { note } from "../stores/notesStore";
 import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
+import userStore from "../stores/userStore";
 
 const TasksFromEventDialog = () => {
   const navigation = useNavigation();
-
+  const [lastNote, setLastNote] = React.useState<null | note>(null);
+  const [pathToAudioFile, setPathToAudioFile] = React.useState<string>("");
+  const [text, setText] = React.useState<string>("");
 
   return BasicDialog({
     title: "notice",
@@ -17,34 +20,32 @@ const TasksFromEventDialog = () => {
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <Text>
-              Would you like to create tasks from the notes taken in this event?
+            Would you like to create tasks from the notes taken in this event?
           </Text>
         </View>
       </View>
     ),
     isVisible: eventsStore.isDialogOpen(EventsDialogs.TasksFromEventDialog),
     enableActions: true,
-    onDismiss: () =>{
+    onDismiss: () => {
       eventsStore.closeAllDialogs();
       console.log(navigation);
-      navigation.navigate('NavBar');      
+      navigation.navigate("NavBar");
     },
     onCancle: () => {
       eventsStore.closeAllDialogs();
       console.log(navigation);
-      navigation.navigate('NavBar'); 
+      navigation.navigate("NavBar");
     },
     // chatGPT connection here!
     onOk: () => {
-      const note = notesStore.getLastNote();
-      handleExtractTasks(note?.content);
-      if (note?.audio)
-        handleSpeechToText(note?.audio);
-      eventsStore.closeAllDialogs();
-      console.log(navigation);
-      navigation.navigate('NavBar'); 
-    },
+      handleExtractTasks();
+      //handleSpeechToText();
 
+      eventsStore.closeAllDialogs();
+      navigation.navigate("NavBar");
+      
+    },
   });
 };
 
@@ -59,6 +60,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   form: {
-    marginBottom: 15
-  }
+    marginBottom: 15,
+  },
 });

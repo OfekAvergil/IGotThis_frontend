@@ -11,6 +11,7 @@ export interface event {
   endTime: string;
   notifyTimeFrame: string;
   content: string;
+  tasks: string[];
 }
 
 export enum EventsDialogs {
@@ -78,7 +79,9 @@ class EventsStore {
           },
         }
       );
+      console.log("new event: ", newEventPushed.data);
       this.events.push(newEventPushed.data);
+      console.log("events: ", this.events);
     } catch (error) {
       console.error("Failed to add event:", error);
     }
@@ -107,7 +110,8 @@ class EventsStore {
     eventDateEnd: string,
     eventSatrtTime: string,
     eventEndTime: string,
-    eventContent: string
+    eventContent: string,
+    eventTasks: string[]
   ) => {
     try {
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
@@ -191,9 +195,9 @@ class EventsStore {
     this.currentEventId = id;
   }
 
-  public findCurrentEvent(): event | undefined{
-    if(this.currentEventId){
-      return this.events.find(item => item.id === this.currentEventId);
+  public findCurrentEvent(): event | undefined {
+    if (this.currentEventId) {
+      return this.events.find((item) => item.id === this.currentEventId);
     }
     return undefined;
   }

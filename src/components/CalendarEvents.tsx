@@ -10,7 +10,7 @@ import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
 import { Card, FAB, Menu } from "react-native-paper";
 import userStore from "../stores/userStore";
-import { handleSpeechToText } from "../api/OpenaiAPI";
+import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
 import { Colors } from "../consts";
 import PopUpMenu from "./PopUpMenu";
 
@@ -38,7 +38,7 @@ const CalendarEvents = () => {
   const handleDayPress = async (day: any) => {
     setSelectedDay(day.dateString);
     eventsStore.setSelectedDate(day.dateString);
-    //handleExtractTasks(text);
+    //handleExtractTasks();
     //handleSpeechToText(pathToAudioFile);
   };
   const renderItem = (item: event) => {
@@ -115,6 +115,7 @@ const CalendarEvents = () => {
             >
               to : {item.dateEnd} at {item.endTime}
             </Text>
+            
           </View>
         </TouchableOpacity>
       </Card>

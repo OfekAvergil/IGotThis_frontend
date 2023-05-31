@@ -22,6 +22,8 @@ class NotesStore {
   notes: note[] = [];
   currentOpenDialog: NotesDialogs | null = null;
   selectedNote: note | null = null;
+  textCurrentEventNote: string | null = null;
+  recordingCurrentEventNote: string | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -65,6 +67,9 @@ class NotesStore {
           },
         }
       );
+      
+      console.groupCollapsed("new note response:", newNotePushed.data);
+
       this.notes = [...this.notes, newNotePushed.data];
     } catch (error) {
       console.log(`Error in adding note: ${error}`);
@@ -140,12 +145,13 @@ class NotesStore {
     this.selectedNote = item;
   }
 
-  public getLastNote(): note | null {
-    if (this.notes.length > 0) {
-      return this.notes[this.notes.length - 1];
-    }
-    return null;
-  }
+  setRecordingCurrentEventNote = (recording: string | null) => {
+    this.recordingCurrentEventNote = recording;
+  };
+
+  setTextCurrentEventNote = (text: string | null) => {
+    this.textCurrentEventNote = text;
+  };
 }
 
 const notesStore = new NotesStore();
