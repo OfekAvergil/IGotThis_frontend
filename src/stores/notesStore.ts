@@ -5,11 +5,11 @@ import userStore from "./userStore";
 import { Audio } from "expo-av";
 
 export interface note {
-    id: number;
-    name: string;
-    creationDate: string;
-    content: string;
-    audio?: string;
+  id: number;
+  name: string;
+  creationDate: string;
+  content: string;
+  audio?: string;
 }
 
 export enum NotesDialogs {
@@ -43,29 +43,33 @@ class NotesStore {
     }
   };
 
-    public addNote = async (noteName: string, contentToSet: string, record?: string) => {
-        try {
-            const now: Date = new Date();
-            let newNote = {
-                name: noteName,
-                creationDate: formatDate(now),
-                content: contentToSet,
-                audio: record,
-            };
-            let newNotePushed = await axios.post(
-                `http://localhost:4005/api/notes`, 
-                newNote,
-                {
-                headers: {
-                        Authorization: userStore.secretKey 
-                },
-                }
-            );         
-            this.notes = [...this.notes, newNotePushed.data];
-        } catch (error) {
-            console.log(`Error in adding note: ${error}`);
+  public addNote = async (
+    noteName: string,
+    contentToSet: string,
+    record?: string
+  ) => {
+    try {
+      const now: Date = new Date();
+      let newNote = {
+        name: noteName,
+        creationDate: formatDate(now),
+        content: contentToSet,
+        audio: record,
+      };
+      let newNotePushed = await axios.post(
+        `http://localhost:4005/api/notes`,
+        newNote,
+        {
+          headers: {
+            Authorization: userStore.secretKey,
+          },
         }
+      );
+      this.notes = [...this.notes, newNotePushed.data];
+    } catch (error) {
+      console.log(`Error in adding note: ${error}`);
     }
+  };
 
   public deleteNote = async (noteId: number) => {
     try {
@@ -83,39 +87,42 @@ class NotesStore {
     }
   };
 
-    public editNote =async (noteId:number, noteName: string, contentToSet?: string, recording?: string) => {
-        try {
-            const noteIndex = this.notes.findIndex((n) => n.id === noteId);
-            if (noteIndex === -1) {
-                throw new Error(`Note with ID ${noteId} not found`);
-            }
-            let res = await axios.put(
-                `http://localhost:4005/api/notes?id=${noteId}`, 
-                { 
-                name: noteName, 
-                content: contentToSet, 
-                audio: recording
-                },
-                {
-                headers: {
-                    Authorization: userStore.secretKey 
-                }
-                }
-            );
-            this.notes[noteIndex].name = noteName;
-            if(contentToSet) this.notes[noteIndex].content = contentToSet;
-            if(recording) this.notes[noteIndex].audio = recording;
-            this.notes = [...this.notes];
-        } catch (error) {
-            console.log(`Error in editing note: ${error}`);
+  public editNote = async (
+    noteId: number,
+    noteName: string,
+    contentToSet?: string,
+    recording?: string
+  ) => {
+    try {
+      const noteIndex = this.notes.findIndex((n) => n.id === noteId);
+      if (noteIndex === -1) {
+        throw new Error(`Note with ID ${noteId} not found`);
+      }
+      let res = await axios.put(
+        `http://localhost:4005/api/notes?id=${noteId}`,
+        {
+          name: noteName,
+          content: contentToSet,
+          audio: recording,
+        },
+        {
+          headers: {
+            Authorization: userStore.secretKey,
+          },
         }
-        
+      );
+      this.notes[noteIndex].name = noteName;
+      if (contentToSet) this.notes[noteIndex].content = contentToSet;
+      if (recording) this.notes[noteIndex].audio = recording;
+      this.notes = [...this.notes];
+    } catch (error) {
+      console.log(`Error in editing note: ${error}`);
     }
+  };
 
-
-    public get count(): number {
-        return this.notes.length;
-    }
+  public get count(): number {
+    return this.notes.length;
+  }
 
   public isDialogOpen(dialog: NotesDialogs): boolean {
     return this.currentOpenDialog === dialog;
@@ -129,10 +136,16 @@ class NotesStore {
     this.currentOpenDialog = null;
   }
 
-    public setSelectedNote(item: note|null): void {
-        this.selectedNote = item;
-    }
+  public setSelectedNote(item: note | null): void {
+    this.selectedNote = item;
+  }
 
+  public getLastNote(): note | null {
+    if (this.notes.length > 0) {
+      return this.notes[this.notes.length - 1];
+    }
+    return null;
+  }
 }
 
 const notesStore = new NotesStore();

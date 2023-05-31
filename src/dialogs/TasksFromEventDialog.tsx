@@ -4,6 +4,8 @@ import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import { useNavigation } from "@react-navigation/native";
+import notesStore from "../stores/notesStore";
+import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
 
 const TasksFromEventDialog = () => {
   const navigation = useNavigation();
@@ -34,6 +36,10 @@ const TasksFromEventDialog = () => {
     },
     // chatGPT connection here!
     onOk: () => {
+      const note = notesStore.getLastNote();
+      handleExtractTasks(note?.content);
+      if (note?.audio)
+        handleSpeechToText(note?.audio);
       eventsStore.closeAllDialogs();
       console.log(navigation);
       navigation.navigate('NavBar'); 
