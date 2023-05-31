@@ -4,7 +4,6 @@ import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
-import userStore from "../stores/userStore";
 
 const EditEventDialog = () => {
   const selectedEvent = eventsStore.selectedEvent;

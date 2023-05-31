@@ -1,14 +1,9 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Button, Card, Menu } from "react-native-paper";
-import noteStore from "../stores/notesStore";
-import { useEffect } from "react";
-import userStore from "../stores/userStore";
+import { Text, Card} from "react-native-paper";
 import { Colors } from "../consts";
-import todosStore, { TodoDialogs, toDo } from "../stores/todosStore";
-import PopUpMenu from "./PopUpMenu";
+import todosStore, { toDo } from "../stores/todosStore";
 import Icon from 'react-native-paper/src/components/Icon'
-import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 
 const NextTasks = () => {
   const [todos, setTodos] = React.useState<toDo[]>([]);

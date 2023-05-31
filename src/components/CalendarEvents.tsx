@@ -49,8 +49,7 @@ const CalendarEvents = () => {
             onPress={() => {
               eventsStore.setSelectedEvent(item);
               eventsStore.openDialog(EventsDialogs.ShowEventDialog);
-            }}
-            style={{height: 'auto'}}>
+            }}>
             <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
               <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
                 <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
@@ -158,11 +157,11 @@ const CalendarEvents = () => {
           backgroundColor: "#ffffff",
           calendarBackground: "#ffffff",
           textSectionTitleColor: "#b6c1cd",
-          selectedDayBackgroundColor: "#E5517E",
+          selectedDayBackgroundColor: Colors.primary,
           selectedDayTextColor: "#ffffff",
-          todayTextColor: "#E5517E",
+          todayTextColor: Colors.primary,
           dayTextColor: "#2d4150",
-          textDisabledColor: "#d9",
+          textDisabledColor: Colors.basicGrey,
         }}
         hideArrows={false}
       />

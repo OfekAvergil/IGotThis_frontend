@@ -1,4 +1,4 @@
-import { action, computed, makeAutoObservable, makeObservable, observable } from "mobx";
+import { action, makeAutoObservable, observable } from "mobx";
 import axios, * as others from 'axios';
 
 class UserStore {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
@@ -49,7 +49,7 @@ const LogInScreen = ({ navigation }: any) => {
               onPress={handleForgotPassword}
               mode="text"
               labelStyle={{color: "grey", fontWeight:"400", fontSize: 12}}
-              style={{width:"150px",marginLeft: "-12px",
+              style={{width:150 ,marginLeft: -12,
             }}
             >
               Forgot password?
