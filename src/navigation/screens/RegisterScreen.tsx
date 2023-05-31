@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { View, Image, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
-
-import { useNavigation } from "@react-navigation/native";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors } from "../../consts";
 

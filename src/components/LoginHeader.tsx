@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { Text, Button, List, Card, IconButton } from "react-native-paper";
-import { useNavigation } from '@react-navigation/native';
-import LogoutButton from './LogoutButton';
+import { Text } from "react-native-paper";
 import { Colors } from '../consts';
 
 const LoginHeader = (props: { header: string }) => {

@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Button, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import Recorder from "../components/DialogRecorder";
-import { Audio } from "expo-av";
 
 const EditNoteDialog = () => {
   const [title, setTitle] = React.useState("");

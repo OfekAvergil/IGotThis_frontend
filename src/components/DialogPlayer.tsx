@@ -1,9 +1,7 @@
 import { Audio } from "expo-av";
-import * as FileSystem from "expo-file-system";
-import { useState } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Text, Button, List, Card, IconButton } from "react-native-paper";
-import { Colors } from "../consts";
+import { Text, IconButton } from "react-native-paper";
 
 export interface playerProps {
   recording?: string | null

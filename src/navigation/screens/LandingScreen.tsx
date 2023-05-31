@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
-  Image,
   SafeAreaView,
   StyleSheet,
   ImageBackground,
-  Dimensions
 } from "react-native";
-import { Text, Button, TextInput, Card } from "react-native-paper";
-import userStore from "../../stores/userStore";
+import { Text, Button } from "react-native-paper";
 import { Colors } from "../../consts";
 
 const LandingScreen = ({ navigation }: any) => {
@@ -19,29 +16,36 @@ const LandingScreen = ({ navigation }: any) => {
       source={require("../../../assets/landingBack.png")}
     >
       <View style={styles.container}>
-        <View style={{marginBottom:"80px",  height:"auto", alignItems:"center",}}>
-          <View style={{ padding: "10px", height:"auto"}}>
-          <Button
-              mode="contained"
-              onPress={() => navigation.navigate("Register")}
-              style={{ width:"250px", height:"60px", backgroundColor: Colors.secondary, justifyContent:"center"}}
-          >
-              <Text style={{color:"white", fontWeight:"600", fontSize:18}}>
-                SIGN ME IN !
-              </Text>
-          </Button>
+        <View style={{marginBottom:80, alignItems:"center",}}>
+          <View style={{ padding: 10}}>
+            <Button
+                mode="contained"
+                onPress={() => navigation.navigate("Register")}
+                style={{ 
+                  width:250, 
+                  height:60, 
+                  backgroundColor: Colors.secondary, 
+                  justifyContent:"center"
+                }}>
+                <Text style={{color:"white", fontWeight:"600", fontSize:18}}>
+                  SIGN ME IN !
+                </Text>
+            </Button>
           </View>
-          <View style={{ padding: "10px", height:"auto"}}>
-
-          <Button
-              mode="outlined"
-              onPress={() => navigation.navigate("Login")}
-              style={{ width:"250px", height:"60px", borderColor: Colors.secondary ,justifyContent:"center" }}
-          >
-            <Text style={{color: Colors.secondary,  fontSize:18}}>
-              Login
-            </Text>
-          </Button>
+          <View style={{ padding: 10}}>
+            <Button
+                mode="outlined"
+                onPress={() => navigation.navigate("Login")}
+                style={{ 
+                  width:250, 
+                  height:60, 
+                  borderColor: Colors.secondary,
+                  justifyContent:"center" 
+                }}>
+                <Text style={{color: Colors.secondary,  fontSize:18}}>
+                  Login
+                </Text>
+            </Button>
           </View>
 
         </View>
