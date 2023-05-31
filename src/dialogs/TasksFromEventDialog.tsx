@@ -10,9 +10,6 @@ import userStore from "../stores/userStore";
 
 const TasksFromEventDialog = () => {
   const navigation = useNavigation();
-  const [lastNote, setLastNote] = React.useState<null | note>(null);
-  const [pathToAudioFile, setPathToAudioFile] = React.useState<string>("");
-  const [text, setText] = React.useState<string>("");
 
   return BasicDialog({
     title: "notice",
@@ -40,11 +37,11 @@ const TasksFromEventDialog = () => {
     // chatGPT connection here!
     onOk: () => {
       handleExtractTasks();
-      //handleSpeechToText();
+      handleSpeechToText();
 
       eventsStore.closeAllDialogs();
       navigation.navigate("NavBar");
-      
+
     },
   });
 };

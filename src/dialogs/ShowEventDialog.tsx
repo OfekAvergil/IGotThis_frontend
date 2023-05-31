@@ -1,46 +1,39 @@
 import * as React from "react";
 import { Text } from "react-native-paper";
-import eventsStore, {  EventsDialogs, event } from "../stores/eventsStore";
+import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
 import BasicDialog from "./BaseDialog";
-import { StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 const ShowEventDialog = () => {
-  const event: event |null = eventsStore.selectedEvent;
+  const event: event | null = eventsStore.selectedEvent;
   console.log(event);
-  if (!event)
-    return null
+  if (!event) return null;
   return BasicDialog({
     title: event.title,
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
-        <Text>
-            {event.dateStart};
-          </Text>
-          <Text>
-            {event.dateEnd};
-          </Text>
-          <Text>
-            {event.startTime};
-          </Text>
-          <Text>
-            {event.endTime};
-          </Text>
-          <Text>
-            {event.content};
-          </Text>
+          <Text>{event.dateStart};</Text>
+          <Text>{event.dateEnd};</Text>
+          <Text>{event.startTime};</Text>
+          <Text>{event.endTime};</Text>
+          <Text>{event.content};</Text>
+          <FlatList
+            renderItem={({ item }) => <Text>{item}</Text>}
+            data={event.tasks}
+          />
         </View>
       </View>
     ),
     isVisible: eventsStore.isDialogOpen(EventsDialogs.ShowEventDialog),
     enableActions: false,
-    onDismiss: () =>{
+    onDismiss: () => {
       eventsStore.closeAllDialogs();
     },
     editAction: () => {
       eventsStore.closeAllDialogs();
       eventsStore.openDialog(EventsDialogs.EditEventDialog);
-    }
+    },
   });
 };
 
@@ -55,6 +48,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   form: {
-    marginBottom: 15
-  }
+    marginBottom: 15,
+  },
 });

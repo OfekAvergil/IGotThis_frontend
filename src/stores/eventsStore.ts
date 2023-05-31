@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import axios, * as others from "axios";
 import userStore from "./userStore";
+import { toDo } from "./todosStore";
 
 export interface event {
   id: number;
@@ -11,7 +12,7 @@ export interface event {
   endTime: string;
   notifyTimeFrame: string;
   content: string;
-  tasks: string[];
+  tasks: toDo[];
 }
 
 export enum EventsDialogs {
@@ -79,9 +80,19 @@ class EventsStore {
           },
         }
       );
-      console.log("new event: ", newEventPushed.data);
-      this.events.push(newEventPushed.data);
-      console.log("events: ", this.events);
+      // converting tasks from string[] to toDo[]
+      let newEventFromServer: event = {
+        id: newEventPushed.data.id,
+        title: newEventPushed.data.title,
+        dateStart: newEventPushed.data.dateStart,
+        dateEnd: newEventPushed.data.dateEnd,
+        startTime: newEventPushed.data.startTime,
+        endTime: newEventPushed.data.endTime,
+        notifyTimeFrame: newEventPushed.data.notifyTimeFrame,
+        content: newEventPushed.data.content,
+        tasks: newEventPushed.data.tasks as toDo[],
+      };
+      this.events.push(newEventFromServer);
     } catch (error) {
       console.error("Failed to add event:", error);
     }
@@ -110,8 +121,7 @@ class EventsStore {
     eventDateEnd: string,
     eventSatrtTime: string,
     eventEndTime: string,
-    eventContent: string,
-    eventTasks: string[]
+    eventContent: string
   ) => {
     try {
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
@@ -140,7 +150,6 @@ class EventsStore {
       this.events[eventIndex].startTime = eventSatrtTime;
       this.events[eventIndex].endTime = eventEndTime;
       this.events[eventIndex].content = eventContent;
-      this.events = [...this.events];
     } catch (error) {
       console.log(`Error in editing event: ${error}`);
     }
