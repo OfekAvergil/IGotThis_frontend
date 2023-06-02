@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import axios, * as others from "axios";
 import userStore from "./userStore";
+import { toDo } from "./todosStore";
 
 export interface event {
   id: number;
@@ -11,7 +12,7 @@ export interface event {
   endTime: string;
   notifyTimeFrame: string;
   content: string;
-  tasks: string[];
+  tasks: toDo[];
 }
 
 export enum EventsDialogs {
@@ -34,7 +35,7 @@ class EventsStore {
 
   public fetchEvents = async (secretKey: string | null) => {
     try {
-      const response = await axios.get("http://localhost:4005/api/events", {
+      const response = await axios.get("http://192.168.62.170:4005/api/events", {
         headers: {
           Authorization: `${secretKey}`, // Include the token in the Authorization header
         },
@@ -71,7 +72,7 @@ class EventsStore {
         content: eventContent,
       };
       let newEventPushed = await axios.post(
-        `http://localhost:4005/api/events`,
+        `http://192.168.62.170:4005/api/events`,
         newEvent,
         {
           headers: {
@@ -90,7 +91,7 @@ class EventsStore {
   public deleteEvent = async (eventId: number) => {
     try {
       let res = await axios.delete(
-        `http://localhost:4005/api/events?id=${eventId}`,
+        `http://192.168.62.170:4005/api/events?id=${eventId}`,
         {
           headers: {
             Authorization: userStore.secretKey,
@@ -111,7 +112,7 @@ class EventsStore {
     eventSatrtTime: string,
     eventEndTime: string,
     eventContent: string,
-    eventTasks: string[]
+    eventTasks: toDo[]
   ) => {
     try {
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
@@ -119,7 +120,7 @@ class EventsStore {
         throw new Error(`Event with ID ${eventId} not found`);
       }
       let res = await axios.put(
-        `http://localhost:4005/api/events?id=${eventId}`,
+        `http://192.168.62.170:4005/api/events?id=${eventId}`,
         {
           title: eventTitle,
           dateStart: eventDateStart,

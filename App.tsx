@@ -5,14 +5,13 @@ import {Audio} from 'expo-av'
 import userStore from './src/stores/userStore';
 import { Colors } from './src/consts';
 
-
 const theme = {
   ...MD3LightTheme, // or MD3DarkTheme
   roundness: 5,
   colors: {
     ...MD3LightTheme.colors,
     primary: Colors.primary,
-    secondary: Colors.secondary,
+    secondary: Colors.secondery,
   },
 };
 
@@ -46,4 +45,3 @@ export default function App() {
     </PaperProvider>
   );
 }
-

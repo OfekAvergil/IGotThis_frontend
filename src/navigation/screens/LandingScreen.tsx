@@ -24,7 +24,7 @@ const LandingScreen = ({ navigation }: any) => {
                 style={{ 
                   width:250, 
                   height:60, 
-                  backgroundColor: Colors.secondary, 
+                  backgroundColor: Colors.secondery, 
                   justifyContent:"center"
                 }}>
                 <Text style={{color:"white", fontWeight:"600", fontSize:18}}>
@@ -39,10 +39,10 @@ const LandingScreen = ({ navigation }: any) => {
                 style={{ 
                   width:250, 
                   height:60, 
-                  borderColor: Colors.secondary,
+                  borderColor: Colors.secondery,
                   justifyContent:"center" 
                 }}>
-                <Text style={{color: Colors.secondary,  fontSize:18}}>
+                <Text style={{color: Colors.secondery,  fontSize:18}}>
                   Login
                 </Text>
             </Button>

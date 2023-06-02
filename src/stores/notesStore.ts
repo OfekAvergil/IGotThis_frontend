@@ -31,7 +31,7 @@ class NotesStore {
 
   public fetchNotes = async (secretKey: string | null) => {
     try {
-      const response = await axios.get("http://localhost:4005/api/notes", {
+      const response = await axios.get("http://192.168.62.170:4005/api/notes", {
         headers: {
           Authorization: `${secretKey}`, // Include the token in the Authorization header
         },
@@ -59,7 +59,7 @@ class NotesStore {
         audio: record,
       };
       let newNotePushed = await axios.post(
-        `http://localhost:4005/api/notes`,
+        `http://192.168.62.170:4005/api/notes`,
         newNote,
         {
           headers: {
@@ -79,7 +79,7 @@ class NotesStore {
   public deleteNote = async (noteId: number) => {
     try {
       let res = await axios.delete(
-        `http://localhost:4005/api/notes?id=${noteId}`,
+        `http://192.168.62.170:4005/api/notes?id=${noteId}`,
         {
           headers: {
             Authorization: userStore.secretKey,
@@ -104,7 +104,7 @@ class NotesStore {
         throw new Error(`Note with ID ${noteId} not found`);
       }
       let res = await axios.put(
-        `http://localhost:4005/api/notes?id=${noteId}`,
+        `http://192.168.62.170:4005/api/notes?id=${noteId}`,
         {
           name: noteName,
           content: contentToSet,

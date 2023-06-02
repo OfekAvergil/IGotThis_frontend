@@ -37,8 +37,8 @@ export default function TodoList() {
           onPress={() => { checkNote(item)}}>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
             <View style={{ flex: 3, flexDirection: "row" }}>
-              <Icon source="checkbox-blank-circle-outline" size={24} color={Colors.primary} />
-              <Text style={{ color: "white", fontSize: 20, paddingLeft:10 }}>{item.content}</Text>
+              <Icon source="checkbox-blank-circle-outline" size={16} color={Colors.primary} />
+              <Text style={{ color: "white", fontSize: 16, paddingLeft:10 }}>{item.content}</Text>
             </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
               <PopUpMenu 
@@ -105,11 +105,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 0,
     padding: 2,
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.secondery,
   },
 
   listItem: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.secondery,
     minHeight: 30,
     height: "auto",
     margin: 5,

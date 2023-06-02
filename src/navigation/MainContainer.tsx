@@ -14,6 +14,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import LandingScreen from "./screens/LandingScreen";
 import CurrentEventScreen from "./screens/CurrentEventScreen";
 import CalenderScreen from "./screens/CalendarScreen";
+import SettingsPage from "./screens/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -56,6 +57,7 @@ export default function MainContainer() {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="NavBar" component={TabNavigator} />
         <Stack.Screen name="CurrentEvent" component={CurrentEventScreen} />
+        <Stack.Screen name="Settings" component={SettingsPage} />
       </Stack.Navigator>
     </NavigationContainer>
     

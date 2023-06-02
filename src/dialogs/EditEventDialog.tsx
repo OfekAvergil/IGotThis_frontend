@@ -4,6 +4,7 @@ import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
+import { Colors } from "../consts";
 
 const EditEventDialog = () => {
   const selectedEvent = eventsStore.selectedEvent;
@@ -214,7 +215,7 @@ export default EditEventDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
     borderRadius: 10,
     width: "100%",
     paddingVertical: 20,
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
   },
   inputArea: {
     height: 200,
-    borderColor: "gray",
+    borderColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
   smallInput: {
     height: 40,
     width: 150,
-    borderColor: "gray",
+    borderColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     marginRight: 20,

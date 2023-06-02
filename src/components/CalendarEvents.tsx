@@ -139,9 +139,9 @@ const CalendarEvents = () => {
   eventsOneDay.forEach((date) => {
     // TODO!!!
     if (date === selectedDay) {
-      markedAndSelected[date] = { selected: true, marked:true, dotColor: "blue" };
+      markedAndSelected[date] = { selected: true, marked:true, dotColor: Colors.secondery };
     } else {
-      markedAndSelected[date] = { marked: true, dotColor: "#E5517E" };
+      markedAndSelected[date] = { marked: true, dotColor: Colors.primary };
     }
   });
 
@@ -149,7 +149,7 @@ const CalendarEvents = () => {
   const eventRangeDates = eventsStore.getEventsDateListWithRange();
   eventRangeDates.forEach((event) => {
     const [dateStart, dateEnd] = event;
-    const range = { color: "blue", textColor: "white" };
+    const range = { color: Colors.secondery, textColor: "white" };
     markedAndSelected[dateStart] = { startingDay: true, ...range };
     // mark all the days in the range
     let currentDay = new Date(dateStart);
@@ -169,7 +169,7 @@ const CalendarEvents = () => {
     ...{
       startingDay: true,
       endingDay: true,
-      color: "#E5517E",
+      color: Colors.primary,
       textColor: "white",
     },
   };
@@ -183,8 +183,8 @@ const CalendarEvents = () => {
         markingType="period"
         markedDates={markedAndSelected}
         theme={{
-          backgroundColor: "#ffffff",
-          calendarBackground: "#ffffff",
+          backgroundColor: Colors.background,
+          calendarBackground: Colors.background,
           textSectionTitleColor: "#b6c1cd",
           selectedDayBackgroundColor: Colors.primary,
           selectedDayTextColor: "#ffffff",
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   listItem: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.secondery,
     minHeight: 130,
     height: "auto",
     margin: 10,

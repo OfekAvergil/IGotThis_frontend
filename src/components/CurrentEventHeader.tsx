@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
       alignItems: "left",
       justifyContent: 'space-evenly',
       padding: 20,
-      backgroundColor: Colors.secondary,
+      backgroundColor: Colors.secondery,
       borderBottomWidth: 0,
       elevation: 0,
       width: "100%",
