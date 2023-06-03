@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
@@ -13,8 +14,11 @@ import userStore from "../stores/userStore";
 import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
 import { Colors } from "../consts";
 import PopUpMenu from "./PopUpMenu";
+import { useNavigation } from "@react-navigation/native";
 
 const CalendarEvents = () => {
+  const navigation = useNavigation();
+
   React.useEffect(() => {
     // This code will run after the component has been rendered to the screen
     // You can perform initialization tasks or fetch data from an API here
@@ -81,6 +85,16 @@ const CalendarEvents = () => {
                     <Menu.Item
                       onPress={() => {
                         // ???
+                        eventsStore.setCurrentEvent(item.id);
+                        navigation.navigate('GettingReady');
+                        // close pop up menu
+                      }}
+                      title="Start now!"
+                      leadingIcon="play"
+                    />
+                    <Menu.Item
+                      onPress={() => {
+                        // ???
                         eventsStore.setSelectedEvent(item);
                         eventsStore.openDialog(EventsDialogs.EditEventDialog);
                         // close pop up menu
@@ -121,6 +135,7 @@ const CalendarEvents = () => {
             <Text style={{ flex: 1 }}>No events for this day</Text>
           </View>
         }
+        contentContainerStyle={{ flexGrow: 1 }}
       />
     );
   };
@@ -175,7 +190,7 @@ const CalendarEvents = () => {
   };
 
   return (
-    <View>
+    <ScrollView>
       <Calendar
         current={getCurrentDate()}
         items={eventsStore.events}
@@ -203,7 +218,7 @@ const CalendarEvents = () => {
           eventsStore.openDialog(EventsDialogs.AddEventDialog);
         }}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -233,7 +248,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     margin: 16,
     right: 0,
-    bottom: 0,
+    top: 280,
     backgroundColor: Colors.pink,
     borderRadius: 50,
   },

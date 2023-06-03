@@ -20,7 +20,7 @@ const GettingReadyTasks = () => {
   // set the current event's todos.
   React.useEffect(()=>{
     if(eventsStore.currentEventId){
-      setTodos(eventsStore.findCurrentEvent()?.tasks);
+      setTodos(eventsStore.findCurrentEvent()?.tasks || []);
     }
   }, [eventsStore.currentEventId])
 
@@ -28,7 +28,7 @@ const GettingReadyTasks = () => {
     <Card style={styles.emptyListItem}>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: "white" }}>{"no tasks planned"}</Text>
+            <Text style={{ color: "white", fontSize: 20, paddingLeft:10  }}>{"no tasks planned"}</Text>
           </View>
         </View>
     </Card>
@@ -57,8 +57,8 @@ const GettingReadyTasks = () => {
         data={todos}
         ListHeaderComponent={
           <View style={{ flex: 1, flexDirection: "row" }}>
-            <View style={{ flex: 1, padding: 10 }}>
-              <Text style={{ flex: 1 }}> Your Next Task: Getting ready</Text>
+            <View style={{ flex: 1, paddingBottom: 10 }}>
+              <Text style={{ flex: 1 , fontSize: 16}}> Your Next Tasks: </Text>
             </View>
           </View>
         }
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 
   listItem: {
     backgroundColor: Colors.secondery,
-    minHeight: 30,
+    minHeight: 50,
     height: "auto",
     margin: 10,
     padding: 10,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   emptyListItem: {
     backgroundColor: Colors.basicGrey,
-    minHeight: 40,
+    minHeight: 50,
     height: "auto",
     margin: 5,
     padding: 10,

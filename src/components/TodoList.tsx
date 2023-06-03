@@ -16,10 +16,6 @@ export default function TodoList() {
     console.log('userStore.secretKey' + userStore.secretKey)
     todosStore.fetchTodos(userStore.secretKey);
     console.log(noteStore.notes)
-
-    return () => {
-      // This cleanup function will run when the component is unmounted or when the dependencies change
-    };
   }, []);
 
   /**
@@ -97,6 +93,7 @@ export default function TodoList() {
           </TouchableOpacity>
         </Card>
       }
+      contentContainerStyle={{ flexGrow: 1 }}
     ></FlatList>
   );
 }
