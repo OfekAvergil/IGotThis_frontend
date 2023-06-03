@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet, Linking } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import CurrentEventHeader from "../../components/CurrentEventHeader";
 import { Audio } from "expo-av";
@@ -17,12 +17,12 @@ const GettingReadyScreen = ({ navigation }: any) => {
 
   const ObservedShowEvent = observer(TasksFromEventDialog);
 
-
   React.useEffect(()=>{
     if(eventsStore.currentEventId){
+      console.log("ehy", eventsStore.currentEventId)
       setCurrentEvent(eventsStore.findCurrentEvent());
     }
-  }, [eventsStore.currentEventId])
+  }, [eventsStore.currentEventId, ])
 
   /**
    * exit the current event mode
@@ -38,8 +38,17 @@ const GettingReadyScreen = ({ navigation }: any) => {
    */
   function startEvent(): void {
     console.log(navigation);
-    navigation.navigate('CurrentEventScreen');    
+    navigation.navigate('CurrentEvent');    
   }
+
+  /**
+   * open google maps on public transformation tab with the event's location
+   * @param address 
+   */
+  const navigate = (address: string) => {
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&dir_action=navigate&travelmode=transit`;
+    Linking.openURL(googleMapsUrl);
+  };
 
   let time = currentEvent?.startTime + '-' + currentEvent?.endTime;
 
@@ -48,13 +57,31 @@ const GettingReadyScreen = ({ navigation }: any) => {
       <CurrentEventHeader
         header={currentEvent?.title || ""}
         hour={time}
-        note="you are going to check your ears"
+        note={currentEvent?.content || ""}
+        location={currentEvent?.location}
         handleExit={handleExit}
       />
       <Card style={styles.card}>
         <Card.Content>
-          <View style={{ paddingTop: 20 }}>
+          <View style={{ paddingTop: 10 }}>
             <GettingReadyTasks />
+          </View>
+          <View style={{flexDirection:"row", alignItems:"center"}}>
+            <Text>
+              Need directions?
+            </Text>
+             <Button
+                icon = "navigation"
+                mode="outlined"
+                onPress={() => {navigate(currentEvent?.location || "")}}
+                labelStyle={{ fontSize: 16, color:Colors.secondery }}
+                style={{ borderColor: Colors.secondery ,justifyContent:"center" , margin:10}}
+                disabled={currentEvent?.location? false: true}
+                >
+              <Text style={{color: Colors.secondery,  fontSize:18}}>
+                Navigate 
+              </Text>
+            </Button>
           </View>
           <View
             style={{ width: "100%", paddingTop: 30, alignItems: "flex-end" }}

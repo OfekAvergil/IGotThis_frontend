@@ -10,13 +10,13 @@ import { Colors } from "../../consts";
 
 const LandingScreen = ({ navigation }: any) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
     <ImageBackground
-      style={{ flex: 1 }}
+      style={styles.backgroundImage}
       source={require("../../../assets/landingBack.png")}
     >
-      <View style={styles.container}>
-        <View style={{marginBottom:80, alignItems:"center",}}>
+      <View style={styles.buttonsContainer}>
+        <View style={{ alignItems:"center",}}>
           <View style={{ padding: 10}}>
             <Button
                 mode="contained"
@@ -51,7 +51,7 @@ const LandingScreen = ({ navigation }: any) => {
         </View>
       </View>
     </ImageBackground>
-  </SafeAreaView>
+      </View>
   );
 };
 
@@ -60,8 +60,17 @@ export default LandingScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    justifyContent:"flex-end"
+
+  },
+  buttonsContainer: {
+    height:"100%",
+    justifyContent:"flex-end",
+    paddingBottom:50
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
   },
   titleStyle: {
     fontSize: 28,

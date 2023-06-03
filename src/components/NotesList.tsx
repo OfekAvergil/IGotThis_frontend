@@ -89,6 +89,7 @@ export default function NotesList() {
           </TouchableOpacity>
         </Card>
       }
+      contentContainerStyle={{ flexGrow: 1 }}
     ></FlatList>
   );
 }

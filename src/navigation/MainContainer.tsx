@@ -15,6 +15,8 @@ import LandingScreen from "./screens/LandingScreen";
 import CurrentEventScreen from "./screens/CurrentEventScreen";
 import CalenderScreen from "./screens/CalendarScreen";
 import SettingsPage from "./screens/SettingsScreen";
+import { Colors } from "../consts";
+import GettingReadyScreen from "./screens/GettingReadyScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,7 +37,7 @@ function TabNavigator () {
             } else if (route.name === "Notes") {
               iconName = focused ? "book" : "book-outline";
             }
-            return <Ionicons name={iconName} size={size} color={"#E45082"} />;
+            return <Ionicons name={iconName} size={size} color={Colors.secondery} />;
           },
           header: () => (<Header />),
         })}
@@ -56,6 +58,7 @@ export default function MainContainer() {
         <Stack.Screen name="Login" component={LogInScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="NavBar" component={TabNavigator} />
+        <Stack.Screen name="GettingReady" component={GettingReadyScreen} />
         <Stack.Screen name="CurrentEvent" component={CurrentEventScreen} />
         <Stack.Screen name="Settings" component={SettingsPage} />
       </Stack.Navigator>

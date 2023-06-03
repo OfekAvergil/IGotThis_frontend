@@ -9,8 +9,26 @@ import {
 import { Button } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import { Colors } from "../../consts";
+import { observer } from "mobx-react";
+import eventsStore from "../../stores/eventsStore";
+import todosStore from "../../stores/todosStore";
+
 
 const HomeScreen = () => {
+
+  const TasksListener = observer(NextTasks);
+  const EventsListener = observer(NextEvent);
+
+  React.useEffect(() => {
+    // This code will run after the component has been rendered to the screen
+    console.log('userStore.secretKey' + userStore.secretKey)
+    if (userStore.secretKey) {
+      eventsStore.fetchEvents(userStore.secretKey);
+      todosStore.fetchTodos(userStore.secretKey);
+    }
+
+  }, [userStore.secretKey]);
+
 
   const navigateHome = () => {
     const address = 'Yordei Hasira 47 Petach Tikva'; // Replace with your actual home address
@@ -29,8 +47,8 @@ const HomeScreen = () => {
           Hello {userStore.user_name} !
         </Text>
       </View>
-      <NextEvent />
-      <NextTasks />
+      <EventsListener />
+      <TasksListener />
       <View>
         <View style={{ marginBottom:10, padding: 10, }}>
             <Text> Need some help?</Text>
