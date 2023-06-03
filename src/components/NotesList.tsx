@@ -97,11 +97,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 0,
     padding: 2,
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.secondery,
   },
 
   listItem: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.secondery,
     minHeight: 50,
     height: "auto",
     margin: 5,

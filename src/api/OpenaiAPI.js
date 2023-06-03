@@ -12,14 +12,14 @@ export async function handleExtractTasks() {
         throw new Error("Uh oh, no text was provided");
       }
 
-      const response = await fetch("http://192.168.62.9:4005/extract-task", {
-        method: "POST",
-        headers: {
-          Authorization: userStore.secretKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text }),
-      });
+    const response = await fetch("http://localhost:4005/extract-task", {
+      method: "POST",
+      headers: {
+        Authorization: userStore.secretKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
 
       const data = await response.json();
       const completion = data.message;
@@ -40,14 +40,14 @@ export async function handleSpeechToText() {
         throw new Error("Uh oh, no path was provided");
       }
 
-      const response = await fetch("http://192.168.62.9:4005/speech-to-text", {
-        method: "POST",
-        headers: {
-          Authorization: userStore.secretKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ path_to_audio: pathToAudioFile }),
-      });
+    const response = await fetch("http://localhost:4005/speech-to-text", {
+      method: "POST",
+      headers: {
+        Authorization: userStore.secretKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ path_to_audio: pathToAudioFile }),
+    });
 
       const data = await response.json();
       const result = data.message;

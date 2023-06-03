@@ -1,10 +1,11 @@
 import * as React from "react";
-import { Button, TextInput, Text } from "react-native-paper";
+import { Button, TextInput, Text, IconButton } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import todosStore from "../stores/todosStore";
+import { Colors } from "../consts";
 
 
 const AddEventDialog = () => {
@@ -29,8 +30,8 @@ const AddEventDialog = () => {
     setDateEnd("");
     setContent("");
     setLocation("");
-    setStartTime("");
-    setEndTime("");
+    setStartTime("08:00");
+    setEndTime("08:30");
   };
 
   const onChange = (event: any, selectedDate: any) => {
@@ -40,14 +41,9 @@ const AddEventDialog = () => {
       setShow(Platform.OS === "ios"); // ?
       let tempDate = new Date(currentDate).toISOString().slice(0, 10);
       setDateStart(tempDate);
-      setShow(false);
-    } else if (mode == "dateEnd") {
-      const currentDate = selectedDate || dateEnd;
-      setShow(Platform.OS === "ios"); // ?
-      let tempDate = new Date(currentDate).toISOString().slice(0, 10);
       setDateEnd(tempDate);
       setShow(false);
-    } else if (mode == "startTime") {
+    }else if (mode == "startTime") {
       const currentDate = selectedDate || startTime;
       setShow(Platform.OS === "ios"); // ?
       let tempTime = currentDate.toLocaleTimeString([], {
@@ -137,42 +133,61 @@ const AddEventDialog = () => {
             </>
           ) : (
             <>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="calendar"
-                  mode="contained"
-                  onPress={() => showMode("dateStart")}
-                >
-                  {dateStart}
-                </Button>
+                          <Text style={{marginBottom: 5}}>
+                  starting date
+                </Text>
+              <View style={{flexDirection:"row"}}>
+  
+                <TextInput
+                  label="date"
+                  value={dateStart}
+                  onChangeText={(dateStart) => setDateStart(dateStart)}
+                  style={styles.input}
+                  right= {<TextInput.Icon
+                    icon="calendar"
+                    onPress={() => showMode("dateStart")}/>}
+                />
+                <View style={styles.smallInput}>
+                  <TextInput
+                    label="hour"
+                    value={endTime}
+                    onChangeText={(startTime) => setStartTime(startTime)}
+                    style={styles.input}
+                    right= {<TextInput.Icon
+                      icon="clock"
+                      onPress={() => showMode("startTime")}/>}
+                      />
+                </View>
               </View>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="calendar"
-                  mode="contained"
-                  onPress={() => showMode("dateEnd")}
-                >
-                  {dateEnd}
-                </Button>
+              
+              <Text style={{marginBottom: 5}}>
+                  ending date
+                </Text>
+              <View style={{flexDirection:"row"}}>
+     
+                <TextInput
+                  label="date"
+                  value={dateEnd}
+                  onChangeText={(dateEnd) => setDateEnd(dateEnd)}
+                  style={styles.input}
+                  right= {<TextInput.Icon
+                    icon="calendar"
+                    onPress={() => showMode("dateEnd")}/>}
+                />
+                <View style={styles.smallInput}>
+                  <TextInput
+                    label="hour"
+                    value={endTime}
+                    onChangeText={(endTime) => setEndTime(endTime)}
+                    style={styles.input}
+                  right= {<TextInput.Icon
+                      icon="clock"
+                      onPress={() => showMode("endTime")}/>}
+                      />
+                </View>
               </View>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="clock"
-                  mode="contained"
-                  onPress={() => showMode("startTime")}
-                >
-                  start time : {startTime}
-                </Button>
-              </View>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="clock"
-                  mode="contained"
-                  onPress={() => showMode("endTime")}
-                >
-                  end time : {endTime}
-                </Button>
-              </View>
+
+              
             </>
           )}
 
@@ -180,7 +195,7 @@ const AddEventDialog = () => {
             <DateTimePicker
               testID="dateTimePicker"
               value={datePick}
-              mode={mode == "date" ? "date" : "time"} // if mode == date show date picker, if mode == time show time picker"}
+              mode={mode == "dateStart" || mode == "dateEnd" ? "date" : "time"} // if mode == date show date picker, if mode == time show time picker"}
               is24Hour={true}
               display="default"
               onChange={onChange}
@@ -193,11 +208,11 @@ const AddEventDialog = () => {
                 style={styles.input}
               />
           <TextInput
-            label="content"
+            label="write some notes"
             value={content}
             onChangeText={(content) => setContent(content)}
             multiline={true}
-            numberOfLines={5}
+            numberOfLines={3}
             style={styles.inputArea}
           />
 
@@ -238,7 +253,7 @@ export default AddEventDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
     borderRadius: 10,
     width: "100%",
     paddingVertical: 20,
@@ -248,16 +263,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   input: {
-    height: 40,
-    borderColor: "gray",
+    height: 50,
+    borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
   },
   inputArea: {
-    height: 200,
-    borderColor: "gray",
+    height: 150,
+    borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -265,12 +282,14 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   smallInput: {
-    height: 40,
-    width: 150,
-    borderColor: "gray",
+    height: 50,
+    width:200,
+    borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
-    marginRight: 20,
+    paddingHorizontal: 10,
     marginBottom: 10,
+    marginLeft:10,
   },
 });

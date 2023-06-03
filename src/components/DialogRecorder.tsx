@@ -3,6 +3,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, IconButton } from "react-native-paper";
 import { Colors } from "../consts";
+import React from "react";
 
 export interface recorderProps {
   addNewRec: (record: string|null|undefined) => void;

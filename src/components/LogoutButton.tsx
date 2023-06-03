@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import userStore from "../stores/userStore";
 
 
@@ -15,16 +15,17 @@ const LogoutButton = () => {
     navigation.navigate('Login');
   };
 
-  return <Button onPress={handleLogout}>Log Out</Button>;
+  return <Button style={styles.logOutButton} onPress={handleLogout}>
+    <Text>
+      Log Out
+    </Text>
+  </Button>;
 };
 
 export default LogoutButton;
 
 const styles = StyleSheet.create({
   logOutButton: {
-    width: 30,
-  },
-  logOutButtonText: {
-    color: "grey",
+      height: 45    
   },
 });

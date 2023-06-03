@@ -28,9 +28,9 @@ const NextEvent = () => {
 
   return (
       <View style={styles.container}>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 3, padding: 10 }}>
-            <Text style={{ flex: 1 }}> Your Next Event</Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ padding: 10 }}>
+            <Text> Your Next Event</Text>
           </View>
         </View>
         {!event ? emptyState :
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   container: {
     //flex: 1,
     //justifyContent: "flex-end",
-    marginBottom: 16,
-    marginTop: 16,
+    marginBottom: 5,
+    marginTop:5,
     backgroundColor: 'transparent'
   },
   item: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   listItem: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.secondery,
     minHeight: 130,
     height: "auto",
     margin: 10,

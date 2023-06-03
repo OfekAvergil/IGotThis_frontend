@@ -4,6 +4,8 @@ import AddEventDialog from "../../dialogs/AddEventDialog";
 import { observer } from "mobx-react";
 import ShowEventDialog from "../../dialogs/ShowEventDialog";
 import EditEventDialog from "../../dialogs/EditEventDialog";
+import { View, StyleSheet, Platform } from 'react-native';
+
 
 const CalenderScreen = () => {
   const ObservedCalendar = observer(CalendarEvents);
@@ -12,13 +14,15 @@ const CalenderScreen = () => {
   const ObservedEditEvent = observer(EditEventDialog);
 
   return (
-    <>
+    <View >
       <ObservedCalendar />
       <ObservedDialog />
       <ObservedShowEvent />
       <ObservedEditEvent/>
-    </>
+    </View>
   );
 };
 
 export default CalenderScreen;
+
+

@@ -4,6 +4,8 @@ import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import Recorder from "../components/DialogRecorder";
+import { Colors } from "../consts";
+
 
 const AddNoteDialog = () => {
   const [title, setTitle] = React.useState("");
@@ -76,8 +78,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   input: {
-    height: 40,
-    borderColor: "gray",
+    height: 50,
+    borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -85,7 +88,8 @@ const styles = StyleSheet.create({
   },
   inputArea: {
     height: 200,
-    borderColor: "gray",
+    borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
