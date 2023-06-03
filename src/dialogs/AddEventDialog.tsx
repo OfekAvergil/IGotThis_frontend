@@ -16,6 +16,7 @@ const AddEventDialog = () => {
   const [startTime, setStartTime] = React.useState("");
   const [endTime, setEndTime] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [location, setLocation] = React.useState("");
   const [show, setShow] = React.useState(false); //show the date or time picker (boolean)
   const [mode, setMode] = React.useState("date"); //date or time picker (string)
 
@@ -27,17 +28,23 @@ const AddEventDialog = () => {
     setDateStart("");
     setDateEnd("");
     setContent("");
+    setLocation("");
     setStartTime("");
     setEndTime("");
   };
 
   const onChange = (event: any, selectedDate: any) => {
     // if mode == date setDate, if mode == startTime setStartTime etc.
-    if (mode == "date") {
+    if (mode == "dateStart") {
       const currentDate = selectedDate || dateStart;
       setShow(Platform.OS === "ios"); // ?
       let tempDate = new Date(currentDate).toISOString().slice(0, 10);
       setDateStart(tempDate);
+      setShow(false);
+    } else if (mode == "dateEnd") {
+      const currentDate = selectedDate || dateEnd;
+      setShow(Platform.OS === "ios"); // ?
+      let tempDate = new Date(currentDate).toISOString().slice(0, 10);
       setDateEnd(tempDate);
       setShow(false);
     } else if (mode == "startTime") {
@@ -134,7 +141,7 @@ const AddEventDialog = () => {
                 <Button
                   icon="calendar"
                   mode="contained"
-                  onPress={() => showMode("date")}
+                  onPress={() => showMode("dateStart")}
                 >
                   {dateStart}
                 </Button>
@@ -143,7 +150,7 @@ const AddEventDialog = () => {
                 <Button
                   icon="calendar"
                   mode="contained"
-                  onPress={() => showMode("date")}
+                  onPress={() => showMode("dateEnd")}
                 >
                   {dateEnd}
                 </Button>
@@ -179,7 +186,12 @@ const AddEventDialog = () => {
               onChange={onChange}
             />
           )}
-
+           <TextInput
+                label="location"
+                value={location}
+                onChangeText={(location) => setLocation(location)}
+                style={styles.input}
+              />
           <TextInput
             label="content"
             value={content}
@@ -188,6 +200,7 @@ const AddEventDialog = () => {
             numberOfLines={5}
             style={styles.inputArea}
           />
+
         </View>
       </View>
     ),
@@ -205,7 +218,8 @@ const AddEventDialog = () => {
         startTime,
         endTime,
         notifyTimeFrame,
-        content
+        content,
+        location
       );
       console.log(eventsStore.events);
       clearModal();

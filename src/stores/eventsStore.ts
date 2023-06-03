@@ -12,6 +12,7 @@ export interface event {
   endTime: string;
   notifyTimeFrame: string;
   content: string;
+  location: string;
   tasks: toDo[];
 }
 
@@ -57,7 +58,8 @@ class EventsStore {
     eventSatrtTime: string,
     eventEndTime: string,
     eventNotifyTimeFrame: string,
-    eventContent: string
+    eventContent: string,
+    eventLocation: string
   ) => {
     try {
       // Add the new event object to the array
@@ -70,6 +72,7 @@ class EventsStore {
         endTime: eventEndTime,
         notifyTimeFrame: eventNotifyTimeFrame,
         content: eventContent,
+        location: eventLocation,
       };
       let newEventPushed = await axios.post(
         `http://localhost:4005/api/events`,
@@ -90,6 +93,7 @@ class EventsStore {
         endTime: newEventPushed.data.endTime,
         notifyTimeFrame: newEventPushed.data.notifyTimeFrame,
         content: newEventPushed.data.content,
+        location: newEventPushed.data.location,
         tasks: newEventPushed.data.tasks as toDo[],
       };
       this.events.push(newEventFromServer);
@@ -121,7 +125,8 @@ class EventsStore {
     eventDateEnd: string,
     eventSatrtTime: string,
     eventEndTime: string,
-    eventContent: string
+    eventContent: string,
+    eventLocation: string
   ) => {
     try {
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
@@ -137,6 +142,7 @@ class EventsStore {
           startTime: eventSatrtTime,
           endTime: eventEndTime,
           content: eventContent,
+          location: eventLocation,
         },
         {
           headers: {
@@ -150,6 +156,7 @@ class EventsStore {
       this.events[eventIndex].startTime = eventSatrtTime;
       this.events[eventIndex].endTime = eventEndTime;
       this.events[eventIndex].content = eventContent;
+      this.events[eventIndex].location = eventLocation;
     } catch (error) {
       console.log(`Error in editing event: ${error}`);
     }

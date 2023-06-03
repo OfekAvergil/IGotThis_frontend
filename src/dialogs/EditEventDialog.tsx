@@ -15,6 +15,7 @@ const EditEventDialog = () => {
   const [startTime, setStartTime] = React.useState("");
   const [endTime, setEndTime] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [location, setLocation] = React.useState("");
   const [show, setShow] = React.useState(false); //show the date or time picker (boolean)
   const [mode, setMode] = React.useState("date"); //date or time picker (string)
 
@@ -24,6 +25,7 @@ const EditEventDialog = () => {
       setDateStart(selectedEvent.dateStart);
       setDateEnd(selectedEvent.dateEnd);
       setContent(selectedEvent.content);
+      setLocation(selectedEvent.location);
       setStartTime(selectedEvent.startTime);
       setEndTime(selectedEvent.endTime);
     }
@@ -172,7 +174,12 @@ const EditEventDialog = () => {
               onChange={onChange}
             />
           )}
-
+          <TextInput
+            label="location"
+            value={location}
+            onChangeText={(location) => setLocation(location)}
+            style={styles.input}
+          />
           <TextInput
             label="content"
             value={content}
@@ -181,6 +188,7 @@ const EditEventDialog = () => {
             numberOfLines={5}
             style={styles.inputArea}
           />
+          
         </View>
       </View>
     ),
@@ -196,7 +204,8 @@ const EditEventDialog = () => {
         dateEnd,
         startTime,
         endTime,
-        content
+        content,
+        location
       );
       clearModal();
     },
