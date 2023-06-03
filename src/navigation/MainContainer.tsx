@@ -15,6 +15,7 @@ import LandingScreen from "./screens/LandingScreen";
 import CurrentEventScreen from "./screens/CurrentEventScreen";
 import CalenderScreen from "./screens/CalendarScreen";
 import SettingsPage from "./screens/SettingsScreen";
+import { Colors } from "../consts";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,7 +36,7 @@ function TabNavigator () {
             } else if (route.name === "Notes") {
               iconName = focused ? "book" : "book-outline";
             }
-            return <Ionicons name={iconName} size={size} color={"#E45082"} />;
+            return <Ionicons name={iconName} size={size} color={Colors.secondery} />;
           },
           header: () => (<Header />),
         })}

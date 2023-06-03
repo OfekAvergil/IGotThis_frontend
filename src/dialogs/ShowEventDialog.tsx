@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Text } from "react-native-paper";
-import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
+import { Divider, Text } from "react-native-paper";
+import eventsStore, {  EventsDialogs, event } from "../stores/eventsStore";
 import BasicDialog from "./BaseDialog";
 import { FlatList, StyleSheet, View } from "react-native";
+import { Colors } from "../consts";
 
 const ShowEventDialog = () => {
   const event: event | null = eventsStore.selectedEvent;
@@ -13,12 +14,33 @@ const ShowEventDialog = () => {
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
-          <Text>{event.dateStart};</Text>
-          <Text>{event.dateEnd};</Text>
-          <Text>{event.startTime};</Text>
-          <Text>{event.endTime};</Text>
-          <Text>{event.content};</Text>
-          <Text>{event.location};</Text>
+          <View>
+              <Text
+                style={{
+                  color: "black",
+                  textAlign: "left",
+                  fontSize: 14,
+                }}
+              >
+                from : {event.dateStart} at {event.startTime}
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  textAlign: "left",
+                  fontSize: 14,
+                }}
+              >
+                to : {event.dateEnd} at {event.endTime}
+              </Text> 
+              <Text>at: {event.location}</Text>
+          </View>
+          <Divider style={{borderColor:"black", marginVertical: 5}}/>
+          <View> 
+            <Text>
+              {event.content}
+            </Text>
+          </View>
           <FlatList
             renderItem={({ item }) => <Text>{item.content}</Text>}
             data={event.tasks}

@@ -49,6 +49,27 @@ const CalendarEvents = () => {
               eventsStore.setSelectedEvent(item);
               eventsStore.openDialog(EventsDialogs.ShowEventDialog);
             }}>
+              
+          <View style={{ flexDirection:"row"}}>
+            <Text
+              style={{
+                color: Colors.basicGrey,
+                textAlign: "left",
+                fontSize: 14,
+              }}
+            >
+            {item.startTime} - 
+            </Text>
+            <Text
+              style={{
+                color: Colors.basicGrey,
+                textAlign: "left",
+                fontSize: 14,
+              }}
+            >
+            {item.endTime}
+            </Text>
+          </View>
             <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
               <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
                 <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
@@ -78,27 +99,6 @@ const CalendarEvents = () => {
             </View>
           </View>
 
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                color: Colors.basicGrey,
-                textAlign: "left",
-                fontSize: 14,
-              }}
-            >
-              from : {item.dateStart} at {item.startTime}
-            </Text>
-            <Text
-              style={{
-                color: Colors.basicGrey,
-                textAlign: "left",
-                fontSize: 14,
-              }}
-            >
-              to : {item.dateEnd} at {item.endTime}
-            </Text>
-            
-          </View>
         </TouchableOpacity>
       </Card>
     );
@@ -234,12 +234,12 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.pink,
     borderRadius: 50,
   },
   listItem: {
     backgroundColor: Colors.secondery,
-    minHeight: 130,
+    minHeight: 70,
     height: "auto",
     margin: 10,
     padding: 20,
