@@ -27,7 +27,7 @@ class UserStore {
         try {
             this.user_name = user_name;
             this.user_password = user_password;
-            const response = await axios.post('http://192.168.62.170:4005/api/user/login', {
+            const response = await axios.post('http://localhost:4005/api/user/login', {
                     email: user_name,
                     password: user_password
                 });
@@ -46,7 +46,7 @@ class UserStore {
         try {
             this.user_name = user_name;
             this.user_password = user_password;
-            const response = await axios.post('http://192.168.62.170:4005/api/user/signup', {
+            const response = await axios.post('http://localhost:4005/api/user/signup', {
                 name: user_name,
                 password: user_password,
                 email,

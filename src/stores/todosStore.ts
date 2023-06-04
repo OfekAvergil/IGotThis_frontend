@@ -27,7 +27,7 @@ class TodoStore {
     public fetchTodos = async (secretKey: string | null) => {
         try {
             console.log(secretKey)
-            const response = await axios.get('http://192.168.62.170:4005/api/todos',{                headers: {
+            const response = await axios.get('http://localhost:4005/api/todos',{                headers: {
                 Authorization: `${secretKey}` // Include the token in the Authorization header
             },}); // replace with your API endpoint
             runInAction(() => {
@@ -45,7 +45,7 @@ class TodoStore {
                 content: contentToSet,
             };
             let newTodoPushed = await axios.post(
-                `http://192.168.62.170:4005/api/todos`, 
+                `http://localhost:4005/api/todos`, 
                 newTodo,
                 {
                 headers: {
@@ -61,7 +61,7 @@ class TodoStore {
 
     public deleteTodo = async (todoId: number) => {
         try {
-            let res = await axios.delete(`http://192.168.62.170:4005/api/todos?id=${todoId}`,{                
+            let res = await axios.delete(`http://localhost:4005/api/todos?id=${todoId}`,{                
                 headers: {
                 Authorization: userStore.secretKey 
             },})
@@ -78,7 +78,7 @@ class TodoStore {
                 throw new Error(`Note with ID ${taskId} not found`);
             }
             let res = await axios.put(
-                `http://192.168.62.170:4005/api/notes?id=${taskId}`, 
+                `http://localhost:4005/api/notes?id=${taskId}`, 
                 { 
                 content: contentToSet, 
                 },

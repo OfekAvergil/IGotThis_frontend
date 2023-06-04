@@ -12,7 +12,8 @@ export interface event {
   endTime: string;
   notifyTimeFrame: string;
   content: string;
-  tasks: string[];
+  location: string;
+  tasks: toDo[];
 }
 
 export enum EventsDialogs {
@@ -35,7 +36,7 @@ class EventsStore {
 
   public fetchEvents = async (secretKey: string | null) => {
     try {
-      const response = await axios.get("http://192.168.62.170:4005/api/events", {
+      const response = await axios.get("http://localhost:4005/api/events", {
         headers: {
           Authorization: `${secretKey}`, // Include the token in the Authorization header
         },
@@ -74,7 +75,7 @@ class EventsStore {
         location: eventLocation,
       };
       let newEventPushed = await axios.post(
-        `http://192.168.62.170:4005/api/events`,
+        `http://localhost:4005/api/events`,
         newEvent,
         {
           headers: {
@@ -104,7 +105,7 @@ class EventsStore {
   public deleteEvent = async (eventId: number) => {
     try {
       let res = await axios.delete(
-        `http://192.168.62.170:4005/api/events?id=${eventId}`,
+        `http://localhost:4005/api/events?id=${eventId}`,
         {
           headers: {
             Authorization: userStore.secretKey,
@@ -125,7 +126,7 @@ class EventsStore {
     eventSatrtTime: string,
     eventEndTime: string,
     eventContent: string,
-    eventTasks: string[]
+    eventLocation: string
   ) => {
     try {
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
@@ -133,7 +134,7 @@ class EventsStore {
         throw new Error(`Event with ID ${eventId} not found`);
       }
       let res = await axios.put(
-        `http://192.168.62.170:4005/api/events?id=${eventId}`,
+        `http://localhost:4005/api/events?id=${eventId}`,
         {
           title: eventTitle,
           dateStart: eventDateStart,
