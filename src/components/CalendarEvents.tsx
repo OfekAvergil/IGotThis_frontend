@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
@@ -13,8 +14,11 @@ import userStore from "../stores/userStore";
 import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
 import { Colors } from "../consts";
 import PopUpMenu from "./PopUpMenu";
+import { useNavigation } from "@react-navigation/native";
 
 const CalendarEvents = () => {
+  const navigation = useNavigation();
+
   React.useEffect(() => {
     // This code will run after the component has been rendered to the screen
     // You can perform initialization tasks or fetch data from an API here
@@ -49,6 +53,27 @@ const CalendarEvents = () => {
               eventsStore.setSelectedEvent(item);
               eventsStore.openDialog(EventsDialogs.ShowEventDialog);
             }}>
+              
+          <View style={{ flexDirection:"row"}}>
+            <Text
+              style={{
+                color: Colors.basicGrey,
+                textAlign: "left",
+                fontSize: 14,
+              }}
+            >
+            {item.startTime} - 
+            </Text>
+            <Text
+              style={{
+                color: Colors.basicGrey,
+                textAlign: "left",
+                fontSize: 14,
+              }}
+            >
+            {item.endTime}
+            </Text>
+          </View>
             <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
               <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
                 <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
@@ -57,6 +82,16 @@ const CalendarEvents = () => {
                 <PopUpMenu 
                 menuItems={
                   <>
+                    <Menu.Item
+                      onPress={() => {
+                        // ???
+                        eventsStore.setCurrentEvent(item.id);
+                        navigation.navigate('GettingReady');
+                        // close pop up menu
+                      }}
+                      title="Start now!"
+                      leadingIcon="play"
+                    />
                     <Menu.Item
                       onPress={() => {
                         // ???
@@ -78,27 +113,6 @@ const CalendarEvents = () => {
             </View>
           </View>
 
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                color: Colors.basicGrey,
-                textAlign: "left",
-                fontSize: 14,
-              }}
-            >
-              from : {item.dateStart} at {item.startTime}
-            </Text>
-            <Text
-              style={{
-                color: Colors.basicGrey,
-                textAlign: "left",
-                fontSize: 14,
-              }}
-            >
-              to : {item.dateEnd} at {item.endTime}
-            </Text>
-            
-          </View>
         </TouchableOpacity>
       </Card>
     );
@@ -121,6 +135,7 @@ const CalendarEvents = () => {
             <Text style={{ flex: 1 }}>No events for this day</Text>
           </View>
         }
+        contentContainerStyle={{ flexGrow: 1 }}
       />
     );
   };
@@ -175,7 +190,7 @@ const CalendarEvents = () => {
   };
 
   return (
-    <View>
+    <ScrollView>
       <Calendar
         current={getCurrentDate()}
         items={eventsStore.events}
@@ -203,7 +218,7 @@ const CalendarEvents = () => {
           eventsStore.openDialog(EventsDialogs.AddEventDialog);
         }}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -233,13 +248,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     margin: 16,
     right: 0,
-    bottom: 0,
-    backgroundColor: Colors.primary,
+    top: 280,
+    backgroundColor: Colors.pink,
     borderRadius: 50,
   },
   listItem: {
     backgroundColor: Colors.secondery,
-    minHeight: 130,
+    minHeight: 70,
     height: "auto",
     margin: 10,
     padding: 20,

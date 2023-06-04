@@ -26,7 +26,7 @@ const EditEventDialog = () => {
       setDateStart(selectedEvent.dateStart);
       setDateEnd(selectedEvent.dateEnd);
       setContent(selectedEvent.content);
-      setLocation(selectedEvent.location);
+      setLocation(selectedEvent.location || "");
       setStartTime(selectedEvent.startTime);
       setEndTime(selectedEvent.endTime);
     }
@@ -80,6 +80,108 @@ const EditEventDialog = () => {
     setMode(currentMode);
   };
 
+  const startingDateFields = (
+<View>
+  <Text style={{ marginBottom: 5 }}>starting date</Text>
+  {/* for web users*/}
+  {isWeb && 
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          label={"date"}
+          value={dateStart}
+          onChangeText={(text) => setDateStart(text)}
+          style={styles.smallInput}
+        />
+        <TextInput
+          label={"time"}
+          style={styles.smallInput}
+          value={startTime}
+          onChangeText={(text) => setStartTime(text)}
+        />
+      </View>}
+  {/* for android users*/}
+  {!isWeb && 
+    <View style={{ flexDirection: "row" }}>
+      <TextInput
+        label="date"
+        value={dateStart}
+        onChangeText={(dateStart) => setDateStart(dateStart)}
+        style={styles.input}
+        right={
+          <TextInput.Icon
+            icon="calendar"
+            onPress={() => showMode("dateStart")}
+          />
+        }
+      />
+      <View>
+        <TextInput
+          label="hour"
+          value={startTime}
+          onChangeText={(startTime) => setStartTime(startTime)}
+          style={styles.smallInput}
+          right={
+            <TextInput.Icon
+              icon="clock"
+              onPress={() => showMode("startTime")}
+            />
+          }
+        />
+      </View>
+    </View>}
+  </View>);
+
+  const endingDateFields = (
+  <View>
+    <Text style={{ marginBottom: 5 }}>ending date</Text>
+    {/* for web users*/}
+    {isWeb && 
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            label={"date"}
+            value={dateEnd}
+            onChangeText={(text) => setDateEnd(text)}
+            style={styles.smallInput}
+          />
+          <TextInput
+            label={"time"}
+            style={styles.smallInput}
+            value={endTime}
+            onChangeText={(text) => setEndTime(text)}
+          />
+        </View>}
+    {/* for android users*/}
+    {!isWeb && 
+      <View style={{ flexDirection: "row" }}>
+        <TextInput
+          label="date"
+          value={dateEnd}
+          onChangeText={(dateEnd) => setDateEnd(dateEnd)}
+          style={styles.input}
+          right={
+            <TextInput.Icon
+              icon="calendar"
+              onPress={() => showMode("dateEnd")}
+            />
+          }
+        />
+        <View>
+          <TextInput
+            label="hour"
+            value={endTime}
+            onChangeText={(endTime) => setEndTime(endTime)}
+            style={styles.smallInput}
+            right={
+              <TextInput.Icon
+                icon="clock"
+                onPress={() => showMode("endTime")}
+              />
+            }
+          />
+        </View>
+      </View>}
+  </View>);
+
   return BasicDialog({
     title: "Edit Event",
     content: (
@@ -91,90 +193,8 @@ const EditEventDialog = () => {
             onChangeText={(title) => setTitle(title)}
             style={styles.input}
           />
-          {isWeb ? (
-            <>
-              <Text>start</Text>
-              <View style={{ flexDirection: "row" }}>
-                <TextInput
-                  //label={"date"}
-                  value={dateStart}
-                  onChangeText={(text) => setDateStart(text)}
-                  style={styles.smallInput}
-                />
-                <TextInput
-                  //label={"time"}
-                  style={styles.smallInput}
-                  value={startTime}
-                  onChangeText={(text) => setStartTime(text)}
-                />
-              </View>
-              <Text>end:</Text>
-              <View style={{ flexDirection: "row" }}>
-                <TextInput
-                  //label={"date"}
-                  style={styles.smallInput}
-                  value={dateEnd}
-                  onChangeText={(text) => setDateEnd(text)}
-                />
-                <TextInput
-                  //label={"time"}
-                  style={styles.smallInput}
-                  value={endTime}
-                  onChangeText={(text) => setEndTime(text)}
-                />
-              </View>
-            </>
-          ) : (
-            <>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="calendar"
-                  mode="contained"
-                  onPress={() => showMode("date")}
-                >
-                  {dateStart}
-                </Button>
-              </View>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="calendar"
-                  mode="contained"
-                  onPress={() => showMode("date")}
-                >
-                  {dateEnd}
-                </Button>
-              </View>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="clock"
-                  mode="contained"
-                  onPress={() => showMode("startTime")}
-                >
-                  start time : {startTime}
-                </Button>
-              </View>
-              <View style={{ margin: 10 }}>
-                <Button
-                  icon="clock"
-                  mode="contained"
-                  onPress={() => showMode("endTime")}
-                >
-                  end time : {endTime}
-                </Button>
-              </View>
-            </>
-          )}
-
-          {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={datePick}
-              mode={mode == "date" ? "date" : "time"} // if mode == date show date picker, if mode == time show time picker"}
-              is24Hour={true}
-              display="default"
-              onChange={onChange}
-            />
-          )}
+          {startingDateFields}
+          {endingDateFields}
           <TextInput
             label="location"
             value={location}
@@ -189,8 +209,17 @@ const EditEventDialog = () => {
             numberOfLines={5}
             style={styles.inputArea}
           />
-          
         </View>
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={datePick}
+              mode={mode == "date" ? "date" : "time"} // if mode == date show date picker, if mode == time show time picker"}
+              is24Hour={true}
+              display="default"
+              onChange={onChange}
+            />
+          )}
       </View>
     ),
     isVisible: eventsStore.isDialogOpen(EventsDialogs.EditEventDialog),
@@ -234,16 +263,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   input: {
-    height: 40,
+    height: 50,
     borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
   },
   inputArea: {
-    height: 200,
+    height: 150,
     borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -251,12 +282,14 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   smallInput: {
-    height: 40,
-    width: 150,
+    height: 50,
+    width: 140,
     borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
-    marginRight: 20,
+    paddingHorizontal: 10,
     marginBottom: 10,
+    marginLeft: 10,
   },
 });
