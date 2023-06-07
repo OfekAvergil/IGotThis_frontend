@@ -31,19 +31,9 @@ const CalendarEvents = () => {
     new Date().toISOString().split("T")[0]
   );
 
-  const [pathToAudioFile, setPathToAudioFile] = React.useState(
-    "C:\\Users\\reutd\\Desktop\\IGotThis\\audioSample.mp3"
-  );
-
-  const [text, setText] = React.useState(
-    "Hey Reut, how are you today? I hope you are doing well. I have a task for you: please send me the report by the end of the day. Thanks! Also don't forget to call me at 050-1234567. Bye!"
-  );
-
   const handleDayPress = async (day: any) => {
     setSelectedDay(day.dateString);
     eventsStore.setSelectedDate(day.dateString);
-    //handleExtractTasks();
-    //handleSpeechToText(pathToAudioFile);
   };
   const renderItem = (item: event) => {
     return (
