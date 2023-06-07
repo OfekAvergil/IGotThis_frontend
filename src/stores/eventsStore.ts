@@ -36,7 +36,7 @@ class EventsStore {
 
   public fetchEvents = async (secretKey: string | null) => {
     try {
-      const response = await axios.get("http://192.168.62.170:4005/api/events", {
+      const response = await axios.get("http://localhost:4005/api/events", {
         headers: {
           Authorization: `${secretKey}`, // Include the token in the Authorization header
         },
