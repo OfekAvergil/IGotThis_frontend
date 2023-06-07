@@ -12,7 +12,7 @@ export interface event {
   endTime: string;
   notifyTimeFrame: string;
   content: string;
-  location: string;
+  location?: string;
   tasks: toDo[];
 }
 
@@ -109,7 +109,7 @@ class EventsStore {
         {
           headers: {
             Authorization: userStore.secretKey,
-          },
+          }, 
         }
       );
       this.events = this.events.filter((n) => n.id !== eventId);
@@ -126,7 +126,8 @@ class EventsStore {
     eventSatrtTime: string,
     eventEndTime: string,
     eventContent: string,
-    eventLocation: string
+    eventLocation: string,
+    eventTasks?: string[],
   ) => {
     try {
       const eventIndex = this.events.findIndex((n) => n.id === eventId);

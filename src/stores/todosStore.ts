@@ -14,9 +14,7 @@ export enum TodoDialogs {
 
 
 class TodoStore {
-    tasks: toDo[] = [
-        {id: 1, content: "task 1111"}
-    ];
+    tasks: toDo[] = [];
     currentOpenDialog: TodoDialogs | null = null;
     selectedTodo: toDo | null= null;
 

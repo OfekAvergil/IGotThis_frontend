@@ -15,11 +15,18 @@ const NextTasks = () => {
   function checkNote(item: toDo): void {
     todosStore.deleteTodo(item.id);
   }
+  
+  /**
+   * Get the top 3 tasks from todosStore.tasks
+   */
+  const getTopThreeTasks = () => {
+    const sliced = todosStore.tasks.slice(0, 3);
+    setTodos(sliced);
+  };
 
   // always get 3 first todos
   React.useEffect(() => {
-    const sliced = todosStore.tasks.slice(0, 3);
-    setTodos(sliced);
+    getTopThreeTasks();
   }, [todosStore.tasks]);
 
   const emptyItem = (
