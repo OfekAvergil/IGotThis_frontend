@@ -13,12 +13,17 @@ const RegisterScreen = ({ navigation }: any) => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const handleRegister = () => {
-    userStore.signupUser(username, password, email, false);
+    userStore.setUser({
+      user_name: username,
+      password: password,
+      mail: email,
+      isSuperviosr: false
+    })
     setUsername("");
     setPassword("");
     setEmail("");
     setPasswordRepeat("");
-    navigation.navigate("NavBar");
+    navigation.navigate("Info");
   };
 
   const handkeAllreadyHaveAccount = () => {
@@ -35,35 +40,36 @@ const RegisterScreen = ({ navigation }: any) => {
       <Card style={styles.card}>
         <Card.Content>
           <TextInput
-            placeholder="User name"
+            label="User name"
             value={username}
             onChangeText={setUsername}
             secureTextEntry={false}
             right={<TextInput.Icon icon="account" />}
-            mode="outlined"
+            style={styles.input}
           />
           <TextInput
-            placeholder="Email"
+            label="Email"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
             secureTextEntry={false}
             right={<TextInput.Icon icon="email" />}
-            mode="outlined"
-          />
+            style={styles.input}          />
           <TextInput
-            placeholder="Password"
+            label="Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
             right={<TextInput.Icon icon="eye-off-outline" />}
+            style={styles.input}
           />
           <TextInput
-            placeholder="Confirm Password"
+            label="Confirm Password"
             value={passwordRepeat}
             onChangeText={setPasswordRepeat}
             secureTextEntry={true}
             right={<TextInput.Icon icon="eye-off-outline" />}
+            style={styles.input}
           />
           <Button
             style={[styles.card_button, { marginTop: 10 }]}
@@ -115,6 +121,15 @@ const styles = StyleSheet.create({
   card_button: {
     margin: 7,
   },
+  input: {
+    height: 50,
+    borderColor: Colors.basicGrey,
+    backgroundColor: Colors.basicGrey,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    },
 });
 
 export default RegisterScreen;

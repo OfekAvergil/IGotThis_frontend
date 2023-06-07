@@ -12,7 +12,7 @@ export async function handleExtractTasks() {
         throw new Error("Uh oh, no text was provided");
       }
 
-    const response = await fetch("http://192.168.1.36:4005/extract-task", {
+    const response = await fetch("http://localhost:4005/extract-task", {
       method: "POST",
       headers: {
         Authorization: userStore.secretKey,
@@ -40,7 +40,7 @@ export async function handleSpeechToText() {
         throw new Error("Uh oh, no path was provided");
       }
 
-    const response = await fetch("http://192.168.1.36:4005/speech-to-text", {
+    const response = await fetch("http://localhost:4005/speech-to-text", {
       method: "POST",
       headers: {
         Authorization: userStore.secretKey,

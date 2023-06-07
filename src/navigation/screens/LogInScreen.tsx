@@ -4,15 +4,23 @@ import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors } from "../../consts";
+import eventsStore from "../../stores/eventsStore";
+import todosStore from "../../stores/todosStore";
+import notesStore from "../../stores/notesStore";
 
 const LogInScreen = ({ navigation }: any) => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
-  const handleLogIn = () => {
-    userStore.loginUser(inputUsername, inputPassword);
+  async function handleLogIn() {
+    await userStore.loginUser({user_name: inputUsername, password: inputPassword});
     setInputUsername("");
     setInputPassword("");
+    if (userStore.secretKey) {
+      await eventsStore.fetchEvents(userStore.secretKey);
+      await todosStore.fetchTodos(userStore.secretKey);
+      await notesStore.fetchNotes(userStore.secretKey);
+    }
     navigation.navigate("NavBar");
   };
 
@@ -36,13 +44,16 @@ const LogInScreen = ({ navigation }: any) => {
             placeholder="User name"
             secureTextEntry={false}
             right={<TextInput.Icon icon="account" />}
+            style={styles.input}
           />
           <TextInput
             placeholder="Password"
             value={inputPassword}
             onChangeText={setInputPassword}
             secureTextEntry={true}
-            right={<TextInput.Icon icon="eye" />}
+            style={styles.input}
+            right={<TextInput.Icon icon="eye-off-outline" />}
+            
           />
             <Button
               uppercase={false}
@@ -96,6 +107,15 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     flex:3
+  },
+  input: {
+  height: 50,
+  borderColor: Colors.basicGrey,
+  backgroundColor: Colors.basicGrey,
+  borderWidth: 1,
+  borderRadius: 5,
+  paddingHorizontal: 10,
+  marginBottom: 10,
   },
   card_title: {
     marginTop: 50,

@@ -12,7 +12,8 @@ export interface event {
   endTime: string;
   notifyTimeFrame: string;
   content: string;
-  tasks: string[];
+  location?: string;
+  tasks: toDo[];
 }
 
 export enum EventsDialogs {
@@ -74,7 +75,7 @@ class EventsStore {
         location: eventLocation,
       };
       let newEventPushed = await axios.post(
-        `http://192.168.62.170:4005/api/events`,
+        `http://localhost:4005/api/events`,
         newEvent,
         {
           headers: {
@@ -104,11 +105,11 @@ class EventsStore {
   public deleteEvent = async (eventId: number) => {
     try {
       let res = await axios.delete(
-        `http://192.168.62.170:4005/api/events?id=${eventId}`,
+        `http://localhost:4005/api/events?id=${eventId}`,
         {
           headers: {
             Authorization: userStore.secretKey,
-          },
+          }, 
         }
       );
       this.events = this.events.filter((n) => n.id !== eventId);
@@ -125,7 +126,8 @@ class EventsStore {
     eventSatrtTime: string,
     eventEndTime: string,
     eventContent: string,
-    eventTasks: string[]
+    eventLocation: string,
+    eventTasks?: string[],
   ) => {
     try {
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
@@ -133,7 +135,7 @@ class EventsStore {
         throw new Error(`Event with ID ${eventId} not found`);
       }
       let res = await axios.put(
-        `http://192.168.62.170:4005/api/events?id=${eventId}`,
+        `http://localhost:4005/api/events?id=${eventId}`,
         {
           title: eventTitle,
           dateStart: eventDateStart,

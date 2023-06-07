@@ -31,20 +31,27 @@ const HomeScreen = () => {
 
 
   const navigateHome = () => {
-    const address = 'Yordei Hasira 47 Petach Tikva'; // Replace with your actual home address
-  
-    // Construct the Google Maps URL with the directions mode set to "transit" (bus)
-    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&dir_action=navigate&travelmode=transit`;
-  
-    // Open the Google Maps URL using the Linking module
-    Linking.openURL(googleMapsUrl);
+    const address = userStore.user?.homeAddress;
+    if(address){
+        // Construct the Google Maps URL with the directions mode set to "transit" (bus)
+        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}&dir_action=navigate&travelmode=transit`;
+        // Open the Google Maps URL using the Linking module
+        Linking.openURL(googleMapsUrl);
+    }
+  };
+
+  const handlePhoneCall = () => {
+    const phoneNumber = userStore.user?.contactNumber;
+    if(phoneNumber){
+      Linking.openURL(`tel:${phoneNumber}`);
+    }
   };
 
   return (
     <View style={{height:"100%"}}>
       <View style={{ padding: 10 }}>
         <Text style={{ color: "black", fontSize: 25, fontWeight:"500" }}>
-          Hello {userStore.user_name} !
+          Hello {userStore.user?.user_name} !
         </Text>
       </View>
       <EventsListener />
@@ -58,7 +65,7 @@ const HomeScreen = () => {
             <Button
                 icon = "phone"
                 mode="contained"
-                onPress={() =>{}}
+                onPress={() =>{handlePhoneCall()}}
                 labelStyle={{ fontSize: 16 }}
                 style={{ width:175, height:80, backgroundColor: Colors.secondery, justifyContent:"center"}}>
                 <Text style={{color:"white", fontSize:18}}>

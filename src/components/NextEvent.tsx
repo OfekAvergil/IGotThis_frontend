@@ -7,15 +7,42 @@ import {
 import { Card } from 'react-native-paper';
 import { Colors } from '../consts';
 import eventsStore, { event } from '../stores/eventsStore';
+import { useNavigation } from '@react-navigation/native';
 
 const NextEvent = () => {
-  const [event, setEvent] = React.useState<event>();
+  const navigation = useNavigation();
 
+  const [nextEvent, setNextEvent] = React.useState<event>();
+
+  const getNextEvent = () => {
+    // Get the current date and time
+    const currentDate: string = new Date().toISOString().slice(0, 10);
+    const currentTime: string = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const sortedEvents = eventsStore.events.sort((a, b) => {
+      const dateA = new Date(a.dateStart);
+      const dateB = new Date(b.dateStart);
+      return dateA.getTime() - dateB.getTime();
+    });
+  
+    // Find the first event that starts after the current date
+    const nextEvent = sortedEvents.find(event => {
+      return event.dateStart >= currentDate  && event.startTime > currentTime;
+    });
+    setNextEvent(nextEvent);
+  };
+  
   // always get next event
-  //TODO : find next event
   React.useEffect(()=>{
-    setEvent(eventsStore.events[0]);
-  }, [eventsStore.events])
+    getNextEvent();
+    // rerender on each enter to this screen
+    const unsubscribe = navigation.addListener('focus', () => {
+      getNextEvent();
+    });
+    return unsubscribe;
+  }, [navigation, eventsStore.events]);
 
   const emptyState= (
     <Card style={styles.emptyListItem}>
@@ -26,6 +53,22 @@ const NextEvent = () => {
     </Card>
   )
 
+  const renderItem = (item: event) => (
+    <Card style={styles.listItem}>
+      <View style={{ flex: 2, flexDirection: "row", alignItems: "center" }}>
+        <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
+          from: {item.dateStart} at {item.startTime}
+        </Text>
+        <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
+          to: {item.dateEnd} at {item.endTime}
+        </Text>
+      </View>
+    </Card>
+  );
+
   return (
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
@@ -33,21 +76,11 @@ const NextEvent = () => {
             <Text> Your Next Event</Text>
           </View>
         </View>
-        {!event ? emptyState :
-          <Card style={styles.listItem}>
-              <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
-                <Text style={{ color: "white", fontSize: 22 }}>{event?.title}</Text>
-              </View>
-              <View style={{ flex: 1}}>
-              <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
-                from : {event?.dateStart} at {event?.startTime}
-              </Text>
-              <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
-                to : {event?.dateEnd} at {event?.endTime}
-              </Text>
-            </View>
-          </Card>
-        }
+        {nextEvent ? (
+        renderItem(nextEvent)
+        ) : (
+          emptyState
+        )}
       </View>
   );
 };
