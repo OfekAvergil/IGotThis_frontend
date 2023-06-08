@@ -12,7 +12,7 @@ export async function handleExtractTasks() {
         throw new Error("Uh oh, no text was provided");
       }
 
-    const response = await fetch("http://localhost:4005/extract-task", {
+    const response = await fetch("http://localhost:4005/tasks/extract-task", {
       method: "POST",
       headers: {
         Authorization: userStore.secretKey,
@@ -32,15 +32,15 @@ export async function handleExtractTasks() {
   }
 }
 export async function handleSpeechToText() {
-  const pathToAudioFile = notesStore.recordingCurrentEventNote;
-  console.log("pathToAudioFile: ", pathToAudioFile);
-  if (pathToAudioFile) {
+  const recording = notesStore.recordingCurrentEventNote;
+  console.log("pathToAudioFile: ", recording);
+  if (recording) {
     try {
-      if (pathToAudioFile == null) {
+      if (recording == null) {
         throw new Error("Uh oh, no path was provided");
       }
 
-    const response = await fetch("http://localhost:4005/speech-to-text", {
+    const response = await fetch("http://localhost:4005/tasks/speech-to-text", {
       method: "POST",
       headers: {
         Authorization: userStore.secretKey,

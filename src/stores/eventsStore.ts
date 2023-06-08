@@ -41,6 +41,7 @@ class EventsStore {
           Authorization: `${secretKey}`, // Include the token in the Authorization header
         },
       }); // replace with your API endpoint
+      console.log("response.data.events", response.data.events);
       runInAction(() => {
         this.events = response.data.events; // assuming the API returns an array of events
       });
@@ -51,7 +52,6 @@ class EventsStore {
   };
 
   public addEvent = async (
-    eventId: number,
     eventTitle: string,
     eventDateStart: string,
     eventDateEnd: string,
@@ -63,8 +63,7 @@ class EventsStore {
   ) => {
     try {
       // Add the new event object to the array
-      let newEvent = {
-        id: eventId,
+      let newEventData = {
         title: eventTitle,
         dateStart: eventDateStart,
         dateEnd: eventDateEnd,
@@ -74,29 +73,47 @@ class EventsStore {
         content: eventContent,
         location: eventLocation,
       };
-      let newEventPushed = await axios.post(
+      let res = await axios.post(
         `http://localhost:4005/api/events`,
-        newEvent,
+        newEventData,
         {
           headers: {
             Authorization: userStore.secretKey,
           },
         }
       );
-      // converting tasks from string[] to toDo[]
-      let newEventFromServer: event = {
-        id: newEventPushed.data.id,
-        title: newEventPushed.data.title,
-        dateStart: newEventPushed.data.dateStart,
-        dateEnd: newEventPushed.data.dateEnd,
-        startTime: newEventPushed.data.startTime,
-        endTime: newEventPushed.data.endTime,
-        notifyTimeFrame: newEventPushed.data.notifyTimeFrame,
-        content: newEventPushed.data.content,
-        location: newEventPushed.data.location,
-        tasks: newEventPushed.data.tasks as toDo[],
+
+      let newEvent = {
+        id: res.data.id,
+        title: res.data.title,
+        dateStart: res.data.dateStart,
+        dateEnd: res.data.dateEnd,
+        startTime: res.data.startTime,
+        endTime: res.data.endTime,
+        notifyTimeFrame: res.data.notifyTimeFrame,
+        content: res.data.content,
+        location: res.data.location,
+        tasks: [], // epmty todo array
       };
-      this.events.push(newEventFromServer);
+      this.events.push(newEvent);
+      // update the event with the tasks (api with chatgpt).
+      try {
+        let id = newEvent.id;
+        let res = await axios.put(
+          `http://localhost:4005/api/events/addTasks?id=${id}`,
+          id,
+          {
+            headers: {
+              Authorization: userStore.secretKey,
+            },
+          },
+        );
+        let tasks = res.data;
+        let eventIndex = this.events.findIndex((n) => n.id === newEvent.id);
+        if (newEvent) this.events[eventIndex].tasks = tasks as toDo[];
+      } catch (error) {
+        console.error("Failed to add tasks to event:", error);
+      }
     } catch (error) {
       console.error("Failed to add event:", error);
     }
@@ -109,7 +126,7 @@ class EventsStore {
         {
           headers: {
             Authorization: userStore.secretKey,
-          }, 
+          },
         }
       );
       this.events = this.events.filter((n) => n.id !== eventId);
@@ -127,9 +144,10 @@ class EventsStore {
     eventEndTime: string,
     eventContent: string,
     eventLocation: string,
-    eventTasks?: string[],
+    eventTasks?: string[]
   ) => {
     try {
+      console.log("eventId", eventId);
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
       if (eventIndex === -1) {
         throw new Error(`Event with ID ${eventId} not found`);
@@ -151,13 +169,14 @@ class EventsStore {
           },
         }
       );
-      this.events[eventIndex].title = eventTitle;
-      this.events[eventIndex].dateStart = eventDateStart;
-      this.events[eventIndex].dateEnd = eventDateEnd;
-      this.events[eventIndex].startTime = eventSatrtTime;
-      this.events[eventIndex].endTime = eventEndTime;
-      this.events[eventIndex].content = eventContent;
-      this.events[eventIndex].location = eventLocation;
+
+      this.events[eventIndex].title = res.data.title;
+      this.events[eventIndex].dateStart = res.data.dateStart;
+      this.events[eventIndex].dateEnd = res.data.dateEnd;
+      this.events[eventIndex].startTime = res.data.satrtTime;
+      this.events[eventIndex].endTime = res.data.endTime;
+      this.events[eventIndex].content = res.data.content;
+      this.events[eventIndex].location = res.data.location;
     } catch (error) {
       console.log(`Error in editing event: ${error}`);
     }

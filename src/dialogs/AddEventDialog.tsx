@@ -227,9 +227,7 @@ const endingDateFields = (
     onOk: () => {
       eventsStore.closeAllDialogs();
       let notifyTimeFrame = "30";
-      let newId = eventsStore.events.length + 1;
       eventsStore.addEvent(
-        newId,
         title,
         dateStart,
         dateEnd,

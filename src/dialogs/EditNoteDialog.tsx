@@ -52,7 +52,7 @@ const EditNoteDialog = () => {
     onOk: () => {
       console.log("ok");
       notesStore.closeAllDialogs();
-      notesStore.editNote(notesStore.selectedNote?.id||0 ,title, content, recording? recording: undefined);
+      notesStore.editNote(notesStore.selectedNote?.id||-1 ,title, content, recording? recording: undefined);
       notesStore.setSelectedNote(null);
     },
     onCancle: () => {
