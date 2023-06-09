@@ -3,9 +3,11 @@ import axios, * as others from "axios";
 import userStore from "./userStore";
 import { toDo } from "./todosStore";
 import { BASE_URL } from "../consts";
+import * as Notifications from 'expo-notifications';
+
 
 export interface event {
-  id: number;
+  id: string;
   title: string;
   dateStart: string;
   dateEnd: string;
@@ -29,7 +31,8 @@ class EventsStore {
   currentOpenDialog: EventsDialogs | null = null;
   selectedEvent: event | null = null;
   selectedDate: string | null = null;
-  currentEventId: number | undefined = 1;
+  currentEventId: number | string | undefined = 1;
+  expoPushToken: string | undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -98,6 +101,9 @@ class EventsStore {
       };
       this.events.push(newEvent);
       // update the event with the tasks (api with chatgpt).
+
+      await this.schedulePushNotification(newEvent)
+
       try {
         let id = newEvent.id;
         let res = await axios.put(
@@ -120,7 +126,7 @@ class EventsStore {
     }
   };
 
-  public deleteEvent = async (eventId: number) => {
+  public deleteEvent = async (eventId: string) => {
     try {
       let res = await axios.delete(
         `${BASE_URL}/api/events?id=${eventId}`,
@@ -137,7 +143,7 @@ class EventsStore {
   };
 
   public editEvent = async (
-    eventId: number,
+    eventId: string,
     eventTitle: string,
     eventDateStart: string,
     eventDateEnd: string,
@@ -178,6 +184,9 @@ class EventsStore {
       this.events[eventIndex].endTime = res.data.endTime;
       this.events[eventIndex].content = res.data.content;
       this.events[eventIndex].location = res.data.location;
+      let eventIdentifier = this.events[eventIndex].id
+      await this.cancelSchedulePushNotification(eventIdentifier)
+      await this.schedulePushNotification(this.events[eventIndex])
     } catch (error) {
       console.log(`Error in editing event: ${error}`);
     }
@@ -228,7 +237,7 @@ class EventsStore {
     this.selectedDate = date;
   }
 
-  public setCurrentEvent(id: number | undefined): void {
+  public setCurrentEvent(id: string | undefined): void {
     this.currentEventId = id;
   }
 
@@ -237,6 +246,51 @@ class EventsStore {
       return this.events.find((item) => item.id === this.currentEventId);
     }
     return undefined;
+  }
+
+  public setExpoPushToken(token: string | undefined): void {
+    this.expoPushToken = token;
+  }
+
+  public schedulePushNotification = async (event: event) => {
+    const date = new Date(`${event.dateStart} ${event.startTime}`);
+    const halfHour = 30 * 60 * 1000;
+    const now = new Date();
+    const secondsDiff = Math.floor((date.getTime() - halfHour - now.getTime()) / 1000);
+
+    try {
+      let res = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'Event coming up',
+          body: event.title,
+          data: { data: event },
+        },
+        trigger: { seconds: secondsDiff },
+      });
+      console.log('succes in scheduling event', res)
+    } catch (error) {
+      console.log('error in scheduling event', error)
+    }
+  }
+
+
+  public cancelSchedulePushNotification = async (eventId: string) => {
+    try {
+      let res = await axios.get(
+        `${BASE_URL}/api/notifications?id=${eventId}`,
+        {
+          headers: {
+            Authorization: userStore.secretKey,
+          },
+        }
+      );
+      let identifier = res.data;
+      let cancelNotificationRes = await Notifications.cancelScheduledNotificationAsync(identifier);
+      console.log('cancel event', cancelNotificationRes)
+
+    } catch (error) {
+      console.log(`Error in canceling event notification: ${error}`);
+    }
   }
 }
 
