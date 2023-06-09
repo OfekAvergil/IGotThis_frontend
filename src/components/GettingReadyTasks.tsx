@@ -20,7 +20,11 @@ const GettingReadyTasks = () => {
   // set the current event's todos.
   React.useEffect(()=>{
     if(eventsStore.currentEventId){
-      setTodos(eventsStore.findCurrentEvent()?.tasks || []);
+      const tasks = eventsStore.findCurrentEvent()?.tasks
+      console.log(tasks);
+      if(tasks){
+        setTodos( tasks.slice(2) || []);
+      }
     }
   }, [eventsStore.currentEventId])
 
@@ -53,7 +57,6 @@ const GettingReadyTasks = () => {
   return (
       <FlatList style={styles.container}
         renderItem={({ item }) => renderItem(item)}
-        //Todo: only 3 tasks and update them
         data={todos}
         ListHeaderComponent={
           <View style={{ flex: 1, flexDirection: "row" }}>

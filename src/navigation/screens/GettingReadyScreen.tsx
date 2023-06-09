@@ -16,6 +16,8 @@ const GettingReadyScreen = ({ navigation }: any) => {
   const [currentEvent, setCurrentEvent] = React.useState<event | undefined>(undefined);
 
   const ObservedShowEvent = observer(TasksFromEventDialog);
+  const ObservedHeader = observer(CurrentEventHeader);
+  const ObservedTasks  = observer(GettingReadyTasks);
 
   React.useEffect(()=>{
     if(eventsStore.currentEventId){
@@ -54,7 +56,7 @@ const GettingReadyScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <CurrentEventHeader
+      <ObservedHeader
         header={currentEvent?.title || ""}
         hour={time}
         note={currentEvent?.content || ""}
@@ -64,7 +66,7 @@ const GettingReadyScreen = ({ navigation }: any) => {
       <Card style={styles.card}>
         <Card.Content>
           <View style={{ paddingTop: 10 }}>
-            <GettingReadyTasks />
+            <ObservedTasks />
           </View>
           <View style={{flexDirection:"row", alignItems:"center"}}>
             <Text>
