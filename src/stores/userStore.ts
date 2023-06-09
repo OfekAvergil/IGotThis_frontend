@@ -1,5 +1,6 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import axios, * as others from 'axios';
+import { BASE_URL } from "../consts";
 
 export interface user {
     user_name: string;
@@ -47,7 +48,7 @@ class UserStore {
     // Login user action
     loginUser = async (loggedUser: existUser) => {
         try {
-            const response = await axios.post('http://localhost:4005/api/user/login',{
+            const response = await axios.post(`${BASE_URL}/api/user/login`,{
                 email: loggedUser.user_name,
                 password: loggedUser.password    
             
@@ -72,7 +73,7 @@ class UserStore {
     // Signup user action
     signupUser = async (newUser: user) => {
         try {
-            const response = await axios.post('http://localhost:4005/api/user/signup',
+            const response = await axios.post(`${BASE_URL}/api/user/signup`,
                 {
                     name: newUser.user_name,
                     password: newUser.password,
@@ -99,7 +100,7 @@ class UserStore {
       ) => {
         try {
           let res = await axios.put(
-            `http://localhost:4005/api/user?id=${this.user?.user_name}`,
+            `${BASE_URL}/api/user?id=${this.user?.user_name}`,
             {
                 mail: mail,
                 homeAddress: homeAddress,
