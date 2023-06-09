@@ -254,7 +254,7 @@ class EventsStore {
 
   public schedulePushNotification = async (event: event) => {
     const date = new Date(`${event.dateStart} ${event.startTime}`);
-    const halfHour = 30 * 60 * 1000;
+    const halfHour = (Number(event.notifyTimeFrame)) * 60 * 1000;
     const now = new Date();
     const secondsDiff = Math.floor((date.getTime() - halfHour - now.getTime()) / 1000);
 

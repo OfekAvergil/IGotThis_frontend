@@ -31,8 +31,6 @@ const theme = {
 };
 
 export default function App() {
-  const [expoPushToken, setExpoPushToken] = useState<string | undefined>(''); // Updated type declaration
-  const [notification, setNotification] = useState<Notifications.Notification | false>(false);
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
   
@@ -89,17 +87,6 @@ export default function App() {
       <MainContainer/>
     </PaperProvider>
   );
-}
-
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification bodyyyy',
-      data: { data: 'goes here' },
-    },
-    trigger: { seconds: 2 },
-  });
 }
 
 async function registerForPushNotificationsAsync() {
