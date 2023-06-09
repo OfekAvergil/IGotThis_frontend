@@ -32,11 +32,11 @@ export async function handleExtractTasks() {
   }
 }
 export async function handleSpeechToText() {
-  const pathToAudioFile = notesStore.recordingCurrentEventNote;
-  console.log("pathToAudioFile: ", pathToAudioFile);
-  if (pathToAudioFile) {
+  const recording = notesStore.recordingCurrentEventNote;
+  console.log("pathToAudioFile: ", recording);
+  if (recording) {
     try {
-      if (pathToAudioFile == null) {
+      if (recording == null) {
         throw new Error("Uh oh, no path was provided");
       }
 
