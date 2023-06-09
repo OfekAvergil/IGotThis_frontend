@@ -259,15 +259,24 @@ class EventsStore {
     const secondsDiff = Math.floor((date.getTime() - halfHour - now.getTime()) / 1000);
 
     try {
-      let res = await Notifications.scheduleNotificationAsync({
+      let notificationIdentifier = await Notifications.scheduleNotificationAsync({
         content: {
           title: 'Event coming up',
           body: event.title,
-          data: { data: event },
+          data: event,
         },
         trigger: { seconds: secondsDiff },
       });
-      console.log('succes in scheduling event', res)
+      console.log('succes in scheduling event', notificationIdentifier)
+      let resNotificationAddInServer = await axios.post(
+        `${BASE_URL}/api/notifications`,
+        notificationIdentifier,
+        {
+          headers: {
+            Authorization: userStore.secretKey,
+          },
+        }
+      );
     } catch (error) {
       console.log('error in scheduling event', error)
     }

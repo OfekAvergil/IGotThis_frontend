@@ -61,13 +61,11 @@ export default function App() {
         runInAction(() => {
           eventsStore.setExpoPushToken(token);
         })
-        setExpoPushToken(token);
       }
     });
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       console.log('notification', notification)
-      setNotification(notification);
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
