@@ -11,11 +11,7 @@ import GettingReadyTasks from "../../components/GettingReadyTasks";
 
 
 const GettingReadyScreen = ({ navigation }: any) => {
-  const [content, setContent] = React.useState("");
-  const [recording, setRecording] = React.useState<Audio.Recording | null>(null);
   const [currentEvent, setCurrentEvent] = React.useState<event | undefined>(undefined);
-
-  const ObservedShowEvent = observer(TasksFromEventDialog);
   const ObservedHeader = observer(CurrentEventHeader);
   const ObservedTasks  = observer(GettingReadyTasks);
 
@@ -59,7 +55,7 @@ const GettingReadyScreen = ({ navigation }: any) => {
       <ObservedHeader
         header={currentEvent?.title || ""}
         hour={time}
-        note={currentEvent?.content || ""}
+        note={currentEvent?.content}
         location={currentEvent?.location}
         handleExit={handleExit}
       />
@@ -78,7 +74,7 @@ const GettingReadyScreen = ({ navigation }: any) => {
                 onPress={() => {navigate(currentEvent?.location || "")}}
                 labelStyle={{ fontSize: 16, color:Colors.secondery }}
                 style={{ borderColor: Colors.secondery ,justifyContent:"center" , margin:10}}
-                disabled={currentEvent?.location? false: true}
+                // disabled={currentEvent?.location? false: true}
                 >
               <Text style={{color: Colors.secondery,  fontSize:18}}>
                 Navigate 
@@ -99,7 +95,6 @@ const GettingReadyScreen = ({ navigation }: any) => {
           </View>
         </Card.Content>
       </Card>
-      <ObservedShowEvent/>
     </SafeAreaView>
   );
 };

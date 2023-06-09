@@ -2,51 +2,56 @@ import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Card } from "react-native-paper";
 import { Colors } from "../consts";
-import { toDo } from "../stores/todosStore";
 import Icon from 'react-native-paper/src/components/Icon'
-import eventsStore from "../stores/eventsStore";
+import eventsStore, { eventTask } from "../stores/eventsStore";
 
 const GettingReadyTasks = () => {
-  const [todos, setTodos] = React.useState<toDo[]>([]);
-
-  /**
- * when todo is clicked - mark it as done
- * @param item - the done todo item
- */
-  function checkNote(item: toDo): void{
-
-  }
+  const [todos, setTodos] = React.useState<eventTask[]>([]);
 
   // set the current event's todos.
-  React.useEffect(()=>{
-    if(eventsStore.currentEventId){
-      const tasks = eventsStore.findCurrentEvent()?.tasks
-      console.log(tasks);
-      if(tasks){
-        setTodos( tasks.slice(2) || []);
-      }
+  React.useEffect(() => {
+    if (eventsStore.currentEventId) {
+      setTodos(eventsStore.findCurrentEvent()?.tasks || []);
+      console.log(eventsStore.findCurrentEvent()?.tasks);
     }
-  }, [eventsStore.currentEventId])
+  }, [eventsStore.currentEventId]);
 
   const emptyItem = (
     <Card style={styles.emptyListItem}>
-        <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: "white", fontSize: 20, paddingLeft:10  }}>{"no tasks planned"}</Text>
-          </View>
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: 'white', fontSize: 20, paddingLeft: 10 }}>
+            {'no tasks planned'}
+          </Text>
         </View>
+      </View>
     </Card>
-  )
+  );
 
-  const renderItem = (item: toDo) => {
+  const renderItem = (item: eventTask) => {
+    const itemStyle = {
+      ...styles.listItem,
+      backgroundColor: item.isDone ? Colors.light : Colors.secondery,
+    };
+
     return (
-      <Card style={styles.listItem}>
-        <TouchableOpacity
-          onPress={() => { checkNote(item)}}>
-          <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
-            <View style={{ flex: 3, flexDirection: "row" }}>
-              <Icon source="checkbox-blank-circle-outline" size={24} color={Colors.primary} />
-              <Text style={{ color: "white", fontSize: 20, paddingLeft:10 }}>{item.content}</Text>
+      <Card style={itemStyle}>
+        <TouchableOpacity disabled ={item.isDone ? true: false} onPress={() => {item.isDone = !item.isDone}}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              margin: 2,
+            }}
+          >
+            <View style={{ flex: 3, flexDirection: 'row' }}>
+              <Icon
+                source={item.isDone ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
+                size={24}
+                color={Colors.primary}
+              />
+              <Text style={{ color: 'white', fontSize: 16, paddingLeft: 10 }}>{item.content}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -55,32 +60,34 @@ const GettingReadyTasks = () => {
   };
 
   return (
-      <FlatList style={styles.container}
-        renderItem={({ item }) => renderItem(item)}
-        data={todos}
-        ListHeaderComponent={
-          <View style={{ flex: 1, flexDirection: "row" }}>
-            <View style={{ flex: 1, paddingBottom: 10 }}>
-              <Text style={{ flex: 1 , fontSize: 16}}> Your Next Tasks: </Text>
-            </View>
+    <FlatList
+      style={styles.container}
+      renderItem={({ item }) => renderItem(item)}
+      data={todos}
+      ListHeaderComponent={
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <View style={{ flex: 1, paddingBottom: 10 }}>
+            <Text style={{ flex: 1, fontSize: 16 }}> Your Next Tasks: </Text>
           </View>
-        }
-        ListEmptyComponent={emptyItem}
-      ></FlatList>
+        </View>
+      }
+      ListEmptyComponent={emptyItem}
+    ></FlatList>
   );
-}
+};
+
 export default GettingReadyTasks;
+
 
 
 const styles = StyleSheet.create({
   container: {
     padding: 2,
-    height: 350,
+    height: 400,
     marginBottom: 16,
   },
 
   listItem: {
-    backgroundColor: Colors.secondery,
     minHeight: 50,
     height: "auto",
     margin: 10,
