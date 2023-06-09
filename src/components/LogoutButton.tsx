@@ -9,8 +9,7 @@ const LogoutButton = () => {
   const navigation = useNavigation();
 
   const handleLogout = () => {
-    userStore.user_name = null;
-    userStore.user_password = null;
+    userStore.logOut();
     console.log(navigation);
     navigation.navigate('Login');
   };
