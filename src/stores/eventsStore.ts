@@ -101,7 +101,7 @@ class EventsStore {
       try {
         let id = newEvent.id;
         let res = await axios.put(
-          `http://localhost:4005/api/events/addTasks?id=${id}`,
+          `${BASE_URL}/api/events/addTasks?id=${id}`,
           id,
           {
             headers: {
