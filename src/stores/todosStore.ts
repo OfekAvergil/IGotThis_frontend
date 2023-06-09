@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import axios, * as others from 'axios';
 import userStore from "./userStore";
+import { BASE_URL } from "../consts";
 
 export interface toDo {
     id: number;
@@ -25,7 +26,7 @@ class TodoStore {
     public fetchTodos = async (secretKey: string | null) => {
         try {
             console.log(secretKey)
-            const response = await axios.get('http://localhost:4005/api/todos',{                headers: {
+            const response = await axios.get(`${BASE_URL}/api/todos`,{                headers: {
                 Authorization: `${secretKey}` // Include the token in the Authorization header
             },}); // replace with your API endpoint
             runInAction(() => {
@@ -43,7 +44,7 @@ class TodoStore {
                 content: contentToSet,
             };
             let newTodoPushed = await axios.post(
-                `http://localhost:4005/api/todos`, 
+                `${BASE_URL}/api/todos`, 
                 newTodo,
                 {
                 headers: {
@@ -59,7 +60,7 @@ class TodoStore {
 
     public deleteTodo = async (todoId: number) => {
         try {
-            let res = await axios.delete(`http://localhost:4005/api/todos?id=${todoId}`,{                
+            let res = await axios.delete(`${BASE_URL}/api/todos?id=${todoId}`,{                
                 headers: {
                 Authorization: userStore.secretKey 
             },})
@@ -76,7 +77,7 @@ class TodoStore {
                 throw new Error(`Note with ID ${taskId} not found`);
             }
             let res = await axios.put(
-                `http://localhost:4005/api/notes?id=${taskId}`, 
+                `${BASE_URL}/api/notes?id=${taskId}`, 
                 { 
                 content: contentToSet, 
                 },

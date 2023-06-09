@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import axios, * as others from "axios";
 import userStore from "./userStore";
 import { toDo } from "./todosStore";
+import { BASE_URL } from "../consts";
 
 export interface event {
   id: number;
@@ -36,7 +37,7 @@ class EventsStore {
 
   public fetchEvents = async (secretKey: string | null) => {
     try {
-      const response = await axios.get("http://localhost:4005/api/events", {
+      const response = await axios.get(`${BASE_URL}/api/events`, {
         headers: {
           Authorization: `${secretKey}`, // Include the token in the Authorization header
         },
@@ -75,7 +76,7 @@ class EventsStore {
         location: eventLocation,
       };
       let newEventPushed = await axios.post(
-        `http://localhost:4005/api/events`,
+        `${BASE_URL}/api/events`,
         newEvent,
         {
           headers: {
@@ -105,7 +106,7 @@ class EventsStore {
   public deleteEvent = async (eventId: number) => {
     try {
       let res = await axios.delete(
-        `http://localhost:4005/api/events?id=${eventId}`,
+        `${BASE_URL}/api/events?id=${eventId}`,
         {
           headers: {
             Authorization: userStore.secretKey,
@@ -135,7 +136,7 @@ class EventsStore {
         throw new Error(`Event with ID ${eventId} not found`);
       }
       let res = await axios.put(
-        `http://localhost:4005/api/events?id=${eventId}`,
+        `${BASE_URL}/api/events?id=${eventId}`,
         {
           title: eventTitle,
           dateStart: eventDateStart,
