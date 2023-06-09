@@ -16,7 +16,12 @@ export interface event {
   notifyTimeFrame: string;
   content: string;
   location?: string;
-  tasks: toDo[];
+  tasks: eventTask[];
+}
+
+export interface eventTask {
+  content: string;
+  isDone: boolean;
 }
 
 export enum EventsDialogs {
@@ -116,8 +121,9 @@ class EventsStore {
           },
         );
         let tasks = res.data;
+        console.log("hey", tasks);
         let eventIndex = this.events.findIndex((n) => n.id === newEvent.id);
-        if (newEvent) this.events[eventIndex].tasks = tasks as toDo[];
+        if (newEvent) this.events[eventIndex].tasks = this.convertStringToTasks(tasks);
       } catch (error) {
         console.error("Failed to add tasks to event:", error);
       }
@@ -151,7 +157,7 @@ class EventsStore {
     eventEndTime: string,
     eventContent: string,
     eventLocation: string,
-    eventTasks?: string[]
+    eventTasks?: eventTask[]
   ) => {
     try {
       console.log("eventId", eventId);
@@ -301,6 +307,31 @@ class EventsStore {
       console.log(`Error in canceling event notification: ${error}`);
     }
   }
+
+  private convertStringToTasks(str: string): eventTask[]{
+    const lines = str.split('\n'); // Split the string by newline characters
+    const tasks: eventTask[] = [];
+  
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim(); // Remove leading/trailing whitespaces
+  
+      if (line.length > 0) {
+        // Ignore empty lines
+        const taskNumberMatch = line.match(/^\d+\./); // Check if the line starts with a number followed by a dot
+  
+        if (taskNumberMatch) {
+          const content = line.slice(taskNumberMatch[0].length).trim(); // Extract the content after the task number
+          const task = {
+            content,
+            isDone: false,
+          };
+          tasks.push(task);
+        }
+      }
+    }
+    console.log("completion ", tasks);
+    return tasks;
+  };
 }
 
 const eventsStore = new EventsStore();

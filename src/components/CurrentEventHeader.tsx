@@ -5,13 +5,13 @@ import { Colors } from '../consts';
 import Icon from 'react-native-paper/src/components/Icon'
 
 
-const CurrentEventHeader = (props: { header: string, hour: string, note: string, handleExit: ()=>void, location?: string }) => {
+const CurrentEventHeader = (props: { header: string, hour: string, note?: string, handleExit: ()=>void, location?: string }) => {
 
   return (
     <View style={styles.headerContainer}>
       <View style={{flexDirection:"row",  alignItems:"center", marginTop: 20}}>
-        <View style={{flex: 3, justifyContent:"flex-start",}}>
-            <Text style={{ color: "white", fontSize: 30, fontWeight:"500" }}>{props.header}</Text>
+        <View style={{flex: 4, justifyContent:"flex-start",}}>
+            <Text style={{ color: "white", fontSize: 26, fontWeight:"500" }}>{props.header}</Text>
           </View>
         <View  style={{flex: 1, flexDirection:"row",justifyContent:"flex-end"}}>
           <IconButton
@@ -29,6 +29,7 @@ const CurrentEventHeader = (props: { header: string, hour: string, note: string,
 
         {props.location && <Text style={{ color: Colors.basicGrey, fontSize: 18, textAlign: "left" }}> {props.location}</Text>}
       </View>
+      {props.note &&
       <View style={{flexDirection:"row", alignContent:"center"}}>
         <Icon source="exclamation" size={24} color="black" />
         <Text style={{color:"black", paddingRight:5, fontSize: 18,fontWeight:"500" }}>
@@ -38,7 +39,7 @@ const CurrentEventHeader = (props: { header: string, hour: string, note: string,
           {props.note} 
         </Text>
       </View>
-
+      }
     </View>
   );
 };
