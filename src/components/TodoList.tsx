@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   emptyListItem: {
     backgroundColor: Colors.basicGrey,
-    minHeight: 40,
+    minHeight: 50,
     height: "auto",
     margin: 5,
     padding: 10,

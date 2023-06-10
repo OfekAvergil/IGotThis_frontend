@@ -1,13 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import {
-  View,
-  SafeAreaView,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, StyleSheet, ImageBackground } from "react-native";
 import { Text, Button } from "react-native-paper";
 import { Colors } from "../../consts";
 import * as Notifications from 'expo-notifications';
+import eventsStore, { event } from '../../stores/eventsStore';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -16,7 +12,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
 
 const LandingScreen = ({ navigation }: any) => {
   const notificationListener = useRef<any>();
@@ -30,23 +25,23 @@ const LandingScreen = ({ navigation }: any) => {
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       // navigation.navigate('Settings');
-      console.log('Ofek what you want to do here?');
-      console.log(response);
-      navigation.navigate('Settings');  
+      const currentEvent: event =  response.notification.request.content.data as event;
+      eventsStore.setCurrentEvent(currentEvent.id);
+      console.log('current:', eventsStore.currentEventId)
+      navigation.navigate('GettingReady');  
     });
-
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+
   return (
     <View style={styles.container}>
     <ImageBackground
       style={styles.backgroundImage}
-      source={require("../../../assets/landingBack.png")}
-    >
+      source={require("../../../assets/landingBack.png")}>
       <View style={styles.buttonsContainer}>
         <View style={{ alignItems:"center",}}>
           <View style={{ padding: 10}}>
@@ -57,8 +52,7 @@ const LandingScreen = ({ navigation }: any) => {
                   width:250, 
                   height:60, 
                   backgroundColor: Colors.secondery, 
-                  justifyContent:"center"
-                }}>
+                  justifyContent:"center"}}>
                 <Text style={{color:"white", fontWeight:"600", fontSize:18}}>
                   SIGN ME IN !
                 </Text>
@@ -72,8 +66,7 @@ const LandingScreen = ({ navigation }: any) => {
                   width:250, 
                   height:60, 
                   borderColor: Colors.secondery,
-                  justifyContent:"center" 
-                }}>
+                  justifyContent:"center"}}>
                 <Text style={{color: Colors.secondery,  fontSize:18}}>
                   Login
                 </Text>

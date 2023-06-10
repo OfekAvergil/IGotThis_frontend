@@ -51,7 +51,7 @@ const GettingReadyTasks = () => {
                 size={24}
                 color={Colors.primary}
               />
-              <Text style={{ color: 'white', fontSize: 16, paddingLeft: 10 }}>{item.content}</Text>
+              <Text style={{ color: 'white', fontSize: 16, paddingHorizontal: 10 }}>{item.content}</Text>
             </View>
           </View>
         </TouchableOpacity>

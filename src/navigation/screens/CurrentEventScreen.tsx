@@ -48,7 +48,7 @@ const CurrentEventScreen = ({ navigation }: any) => {
       }
       if (content) notesStore.setTextCurrentEventNote(content);
       notesStore.addNote(currentEvent.title, content, uri ? uri : undefined);
-    //}
+    }
     handleExit();
   }
 
