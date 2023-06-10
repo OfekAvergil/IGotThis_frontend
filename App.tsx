@@ -8,7 +8,8 @@ import { Colors } from './src/consts';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import eventsStore from "./src/stores/eventsStore";
+import eventsStore, { event } from './src/stores/eventsStore';
+
 
 
 Notifications.setNotificationHandler({
@@ -33,6 +34,7 @@ const theme = {
 export default function App() {
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
+
   
   useEffect(()=> {
     /**
@@ -69,8 +71,9 @@ export default function App() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log('Ofek what you want to do here?');
-      console.log(response);
+      const currentEvent: event =  response.notification.request.content.data as event;
+      eventsStore.setCurrentEvent(currentEvent.id);
+      console.log('current:', eventsStore.currentEventId)
     });
 
     return () => {

@@ -3,6 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { Card } from 'react-native-paper';
 import { Colors } from '../consts';
@@ -44,21 +45,24 @@ const NextEvent = () => {
     return unsubscribe;
   }, [navigation, eventsStore.events]);
 
-  const emptyState= (
+  const emptyState = (
     <Card style={styles.emptyListItem}>
-        <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
+      <TouchableOpacity onPress={() => navigation.navigate("Calendar")}>
+        <View>
           <Text style={{ color: "white", fontSize: 18 }}>
-            No events planned</Text>
+            No events planned
+          </Text>
         </View>
+      </TouchableOpacity>
     </Card>
-  )
+  );
 
   const renderItem = (item: event) => (
     <Card style={styles.listItem}>
-      <View style={{ flex: 2, flexDirection: "row", alignItems: "center" }}>
+      <View style={{marginBottom:7}}>
         <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
       </View>
-      <View style={{ flex: 1 }}>
+      <View>
         <Text style={{ color: Colors.basicGrey, textAlign: "left", fontSize: 14 }}>
           from: {item.dateStart} at {item.startTime}
         </Text>
