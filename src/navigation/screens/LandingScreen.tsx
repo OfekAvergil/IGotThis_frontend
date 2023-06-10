@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   SafeAreaView,
@@ -7,8 +7,40 @@ import {
 } from "react-native";
 import { Text, Button } from "react-native-paper";
 import { Colors } from "../../consts";
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 
 const LandingScreen = ({ navigation }: any) => {
+  const notificationListener = useRef<any>();
+  const responseListener = useRef<any>();
+
+  
+  useEffect(()=> {
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      console.log('notification', notification)
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      // navigation.navigate('Settings');
+      console.log('Ofek what you want to do here?');
+      console.log(response);
+      navigation.navigate('Settings');  
+    });
+
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
   return (
     <View style={styles.container}>
     <ImageBackground
