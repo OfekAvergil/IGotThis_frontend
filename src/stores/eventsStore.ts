@@ -75,13 +75,13 @@ class EventsStore {
         location: eventLocation,
       };
       let res = await axios.post(
-        `${BASE_URL}/api/events`,
-        newEventData,
+        `${BASE_URL}/api/events`, 
+        newEventData, 
         {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+        headers: {
+          Authorization: userStore.secretKey,
+        },
+      }
       );
 
       let newEvent = {
@@ -111,7 +111,7 @@ class EventsStore {
         );
         let tasks = res.data;
         let eventIndex = this.events.findIndex((n) => n.id === newEvent.id);
-        if (newEvent) this.events[eventIndex].tasks = tasks as toDo[];
+        if (newEvent) this.events[eventIndex].tasks = tasks;
       } catch (error) {
         console.error("Failed to add tasks to event:", error);
       }
@@ -124,11 +124,11 @@ class EventsStore {
     try {
       let res = await axios.delete(
         `${BASE_URL}/api/events?id=${eventId}`,
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+      {
+        headers: {
+          Authorization: userStore.secretKey,
+        },
+      }
       );
       this.events = this.events.filter((n) => n.id !== eventId);
     } catch (error) {
@@ -144,8 +144,7 @@ class EventsStore {
     eventSatrtTime: string,
     eventEndTime: string,
     eventContent: string,
-    eventLocation: string,
-    eventTasks?: string[]
+    eventLocation: string
   ) => {
     try {
       console.log("eventId", eventId);

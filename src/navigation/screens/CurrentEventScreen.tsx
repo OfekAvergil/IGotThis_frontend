@@ -32,7 +32,7 @@ const CurrentEventScreen = ({ navigation }: any) => {
       eventsStore.openDialog(EventsDialogs.TasksFromEventDialog);
     } else {
       console.log(navigation);
-      navigation.navigate('NavBar');      
+      navigation.navigate('NavBar');
     }
   };
 
@@ -41,16 +41,18 @@ const CurrentEventScreen = ({ navigation }: any) => {
    */
   function endEvent(): void {
     if(currentEvent){
-      let uri: string | null | undefined = undefined;
+      let uri: string | null = null;
       if(recording){
         uri = recording?.getURI();
+        notesStore.setRecordingCurrentEventNote(uri);
       }
-    notesStore.addNote(currentEvent.title, content, uri ? uri : undefined);
-    }
+      if (content) notesStore.setTextCurrentEventNote(content);
+      notesStore.addNote(currentEvent.title, content, uri ? uri : undefined);
+    //}
     handleExit();
   }
 
-  let time = currentEvent?.startTime + '-' + currentEvent?.endTime;
+  let time = currentEvent?.startTime + "-" + currentEvent?.endTime;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -88,11 +90,11 @@ const CurrentEventScreen = ({ navigation }: any) => {
           <View
             style={{ width: "100%", paddingTop: 30, alignItems: "flex-end" }}
           >
-            <Button
-              style={{}}
-              mode="contained"
-              icon="check"
-              onPress={endEvent}
+            <Button 
+            style={{}} 
+            mode="contained" 
+            icon="check" 
+            onPress={endEvent}
             >
               Done!
             </Button>
