@@ -59,7 +59,7 @@ const CurrentEventScreen = ({ navigation }: any) => {
       <CurrentEventHeader
         header={currentEvent?.title || ""}
         hour={time}
-        note="you are going to check your ears"
+        note={currentEvent?.content}
         handleExit={handleExit}
       />
       <Card style={styles.card}>

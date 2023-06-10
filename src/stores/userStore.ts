@@ -16,10 +16,16 @@ export interface existUser {
     password: string;
 }
 
+export enum settingsDialogs {
+    AccountDialog,
+    PreferencesDialog,
+}
+
 class UserStore {
     user: user | null = null;
     secretKey: string| null = null;
     audioPermissions: boolean = false;
+    currentOpenDialog: settingsDialogs | null = null;
 
 
     constructor() {
@@ -94,6 +100,7 @@ class UserStore {
 
 
     public editUser = async (
+        name?: string,
         mail?: string,
         homeAddress?: string,
         contactNumber?: string,
@@ -102,6 +109,7 @@ class UserStore {
           let res = await axios.put(
             `${BASE_URL}/api/user?id=${this.user?.user_name}`,
             {
+                name: name,
                 mail: mail,
                 homeAddress: homeAddress,
                 contactNumber: contactNumber
@@ -116,6 +124,25 @@ class UserStore {
           console.log(`Error in editing user: ${error}`);
         }
       };
+
+    public logOut= () => {
+        this.user = null;
+        this.secretKey = null;
+        this.audioPermissions = false;
+    }
+
+    
+    public isDialogOpen(dialog: settingsDialogs): boolean {
+        return this.currentOpenDialog === dialog;
+    }
+
+    public openDialog(dialog: settingsDialogs): void {
+        this.currentOpenDialog = dialog;
+    }
+
+    public closeAllDialogs(): void {
+        this.currentOpenDialog = null;
+    }
 
 }
 

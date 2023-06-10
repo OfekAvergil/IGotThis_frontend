@@ -4,6 +4,9 @@ import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore, { user } from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors } from "../../consts";
+import eventsStore from "../../stores/eventsStore";
+import todosStore from "../../stores/todosStore";
+import notesStore from "../../stores/notesStore";
 
 const InfoScreen = ({ navigation }: any) => {
   const [address, setAddress] = useState("");
@@ -20,6 +23,11 @@ const InfoScreen = ({ navigation }: any) => {
         contactNumber: contact
       }
       await userStore.signupUser(newUser);
+      if (userStore.secretKey) {
+        await eventsStore.fetchEvents(userStore.secretKey);
+        await todosStore.fetchTodos(userStore.secretKey);
+        await notesStore.fetchNotes(userStore.secretKey);
+      }
       navigation.navigate("NavBar");
     }
   }
