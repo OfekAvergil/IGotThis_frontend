@@ -93,6 +93,10 @@ class NotesStore {
     }
   };
 
+  public deleteAll = async()=>{
+    this.notes.forEach(item => {this.deleteNote(item.id)});
+  }
+
   public editNote = async (
     noteId: number,
     noteName: string,
