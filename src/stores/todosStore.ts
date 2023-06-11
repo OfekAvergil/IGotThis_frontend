@@ -70,6 +70,10 @@ class TodoStore {
         }
     }
 
+    public deleteAll = async()=>{
+        this.tasks.forEach(item => {this.deleteTodo(item.id)});
+      }
+
     public editTodo =async (taskId:number, contentToSet: string) => {
         try {
             const todoIndex = this.tasks.findIndex((n) => n.id === taskId);

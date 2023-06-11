@@ -8,7 +8,8 @@ import { Colors } from './src/consts';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import eventsStore from "./src/stores/eventsStore";
+import eventsStore, { event } from './src/stores/eventsStore';
+
 
 
 Notifications.setNotificationHandler({
@@ -33,6 +34,7 @@ const theme = {
 export default function App() {
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
+
   
   useEffect(()=> {
     /**
@@ -64,19 +66,20 @@ export default function App() {
       }
     });
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log('notification', notification)
-    });
+    // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    //   console.log('notification', notification)
+    // });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log('Ofek what you want to do here?');
-      console.log(response);
-    });
+    // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    //   navigation.navigate('Settings');
+    //   console.log('Ofek what you want to do here?');
+    //   console.log(response);
+    // });
 
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
+    // return () => {
+    //   Notifications.removeNotificationSubscription(notificationListener.current);
+    //   Notifications.removeNotificationSubscription(responseListener.current);
+    // };
   }, []);
 
   

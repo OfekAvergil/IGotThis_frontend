@@ -31,7 +31,7 @@ function TabNavigator () {
             let iconName: string = "";
             if (route.name === "Home") {
               iconName = focused ? "home" : "home-outline";
-            } else if (route.name === "Calender") {
+            } else if (route.name === "Calendar") {
               iconName = focused ? "calendar" : "calendar-outline";
             } else if (route.name === "ToDo") {
               iconName = focused ? "list" : "list-outline";

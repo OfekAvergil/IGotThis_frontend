@@ -11,6 +11,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "notification":{
+      "icon":"./assets/icon.png",
+      "color": "#DB2763"
+   },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -24,7 +28,11 @@
       },
       "permissions": [
         "ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "notification":{
+        "icon":"./assets/icon.png",
+        "color": "#DB2763"
+     }
     },
     "web": {
       "favicon": "./assets/icon.png"

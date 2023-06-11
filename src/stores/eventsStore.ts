@@ -148,6 +148,10 @@ class EventsStore {
     }
   };
 
+  public deleteAll = async()=>{
+    this.events.forEach(item => {this.deleteEvent(item.id)});
+  }
+
   public editEvent = async (
     eventId: string,
     eventTitle: string,
@@ -270,7 +274,7 @@ class EventsStore {
           body: event.title,
           data: event,
         },
-        trigger: { seconds: secondsDiff },
+        trigger: { seconds: 20 },
       });
       console.log('succes in scheduling event', notificationIdentifier)
       let resNotificationAddInServer = await axios.post(

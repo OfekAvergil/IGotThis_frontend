@@ -4,9 +4,11 @@ import { Text, Card } from "react-native-paper";
 import { Colors } from "../consts";
 import todosStore, { toDo } from "../stores/todosStore";
 import Icon from "react-native-paper/src/components/Icon";
+import { useNavigation } from "@react-navigation/native";
 
 const NextTasks = () => {
   const [todos, setTodos] = React.useState<toDo[]>([]);
+  const navigation = useNavigation();
 
   /**
    * when todo is clicked - delete it from the todos list.
@@ -31,11 +33,13 @@ const NextTasks = () => {
 
   const emptyItem = (
     <Card style={styles.emptyListItem}>
-      <View style={{ flex: 1, flexDirection: "row" }}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: "white" }}>{"no tasks planned"}</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("ToDo")}>
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: "white" }}>{"No tasks planned. Let's add some +"}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Card>
   );
 
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
   },
   emptyListItem: {
     backgroundColor: Colors.basicGrey,
-    minHeight: 40,
+    minHeight: 50,
     height: "auto",
     margin: 5,
     padding: 10,
