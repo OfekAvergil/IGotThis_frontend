@@ -4,9 +4,11 @@ import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import { useNavigation } from "@react-navigation/native";
-import notesStore, { note } from "../stores/notesStore";
 import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
+import notesStore, { note } from "../stores/notesStore";
 import userStore from "../stores/userStore";
+import todosStore from "../stores/todosStore";
+import axios from "axios";
 
 const TasksFromEventDialog = () => {
   const navigation = useNavigation();
@@ -38,10 +40,8 @@ const TasksFromEventDialog = () => {
     onOk: () => {
       handleExtractTasks();
       handleSpeechToText();
-
       eventsStore.closeAllDialogs();
       navigation.navigate("NavBar");
-
     },
   });
 };

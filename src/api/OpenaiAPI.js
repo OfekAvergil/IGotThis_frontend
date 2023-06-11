@@ -2,7 +2,7 @@ import React, { Component, useState } from "react";
 import userStore from "../stores/userStore";
 import notesStore from "../stores/notesStore";
 import todosStore from "../stores/todosStore";
-import { set } from "mobx";
+import axios from "axios";
 
 export async function handleExtractTasks() {
   const text = notesStore.textCurrentEventNote;
@@ -11,18 +11,18 @@ export async function handleExtractTasks() {
       if (text == null) {
         throw new Error("Uh oh, no text was provided");
       }
+      const response = await axios.post(
+        `http://192.168.1.236:4005/api/tasks/extract-task`,
+        { text: text },
+        {
+          headers: {
+            Authorization: userStore.secretKey,
+            //"Content-Type": "application/json",
+          },
+        }
+      );
 
-    const response = await fetch(`${BASE_URL}/api/tasks/extract-task`, {
-      method: "POST",
-      headers: {
-        Authorization: userStore.secretKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-
-      const data = await response.json();
-      const completion = data.message;
+      const completion = await response.data;
       // convert completion to list (complection = ["task1", "task2"])
       convertCompletionToList(completion);
     } catch (error) {
@@ -32,38 +32,48 @@ export async function handleExtractTasks() {
   }
 }
 export async function handleSpeechToText() {
-  const recording = notesStore.recordingCurrentEventNote;
-  console.log("pathToAudioFile: ", recording);
-  if (recording) {
+  const path_to_audio_uri = notesStore.recordingCurrentEventNote;
+  console.log("pathToAudioFile: ", path_to_audio_uri);
+  if (path_to_audio_uri) {
     try {
-      if (recording == null) {
+      if (path_to_audio_uri == null) {
         throw new Error("Uh oh, no path was provided");
       }
 
-    const response = await fetch(`${BASE_URL}/api/tasks/speech-to-text`, {
-      method: "POST",
-      headers: {
-        Authorization: userStore.secretKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ path_to_audio: pathToAudioFile }),
-    });
+      const response = await axios.post(
+        `http://192.168.1.236:4005/api/tasks/speech-to-text`,
+        { path_to_audio_uri: path_to_audio_uri },
+        {
+          headers: {
+            Authorization: userStore.secretKey,
+            //"Content-Type": "application/json",
+          },
+        }
+      );
 
-      const data = await response.json();
-      const result = data.message;
-      console.log("result: ", result);
+      const data = await response.data;
       // convert completion to list (complection = ["task1", "task2"])
-      convertCompletionToList(result);
+      convertCompletionToList(data);
     } catch (error) {
       console.error("Couldn't convert speech to text", error);
     }
-    notesStore.setPathToAudioFile(null);
+    notesStore.setRecordingCurrentEventNote(null);
   }
 }
 
 function convertCompletionToList(completion) {
   // convert completion to list (complection = ["task1", "task2"])
-  const tasks_list = JSON.parse(completion);
+  // Remove the leading and trailing newline characters
+  var cleanedText = completion.trim();
+  // Remove the surrounding square brackets
+  var withoutBrackets = cleanedText.slice(1, -1);
+  // Split the remaining string by commas to get an array of strings
+  var arrayOfStrings = withoutBrackets.split(",");
+  // Trim each string to remove any leading or trailing whitespace
+  var tasks_list = arrayOfStrings.map(function (str) {
+    return str.trim();
+  });
+  //const tasks_list = JSON.parse(completion);
   console.log("tasks_list: ", tasks_list);
   for (let i = 0; i < tasks_list.length; i++) {
     console.log("task ", tasks_list[i]);

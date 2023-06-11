@@ -10,45 +10,47 @@ import eventsStore, { EventsDialogs, event } from "../../stores/eventsStore";
 import TasksFromEventDialog from "../../dialogs/TasksFromEventDialog";
 import { observer } from "mobx-react";
 
-
 const CurrentEventScreen = ({ navigation }: any) => {
   const [content, setContent] = React.useState("");
-  const [recording, setRecording] = React.useState<Audio.Recording | null>(null);
-  const [currentEvent, setCurrentEvent] = React.useState<event | undefined>(undefined);
+  const [recording, setRecording] = React.useState<Audio.Recording | null>(
+    null
+  );
+  const [currentEvent, setCurrentEvent] = React.useState<event | undefined>(
+    undefined
+  );
 
   const ObservedShowEvent = observer(TasksFromEventDialog);
 
-
-  React.useEffect(()=>{
-    if(eventsStore.currentEventId){
+  React.useEffect(() => {
+    if (eventsStore.currentEventId) {
       setCurrentEvent(eventsStore.findCurrentEvent());
     }
-  }, [eventsStore.currentEventId])
+  }, [eventsStore.currentEventId]);
 
   function handleExit(): void {
     eventsStore.setCurrentEvent(undefined);
     // if the user entered data to remember, pop the option to create tasks.
-    if(content || recording){
+    if (content || recording) {
       eventsStore.openDialog(EventsDialogs.TasksFromEventDialog);
     } else {
       console.log(navigation);
-      navigation.navigate('NavBar');
+      navigation.navigate("NavBar");
     }
-  };
+  }
 
   /**
    * when the event is over, creates new note with the written and recorded notes from the event.
    */
   function endEvent(): void {
-    if(currentEvent){
+    if (currentEvent) {
       let uri: string | null = null;
-      if(recording){
+      if (recording) {
         uri = recording?.getURI();
         notesStore.setRecordingCurrentEventNote(uri);
       }
       if (content) notesStore.setTextCurrentEventNote(content);
       notesStore.addNote(currentEvent.title, content, uri ? uri : undefined);
-    //}
+    }
     handleExit();
   }
 
@@ -90,18 +92,13 @@ const CurrentEventScreen = ({ navigation }: any) => {
           <View
             style={{ width: "100%", paddingTop: 30, alignItems: "flex-end" }}
           >
-            <Button 
-            style={{}} 
-            mode="contained" 
-            icon="check" 
-            onPress={endEvent}
-            >
+            <Button style={{}} mode="contained" icon="check" onPress={endEvent}>
               Done!
             </Button>
           </View>
         </Card.Content>
       </Card>
-      <ObservedShowEvent/>
+      <ObservedShowEvent />
     </SafeAreaView>
   );
 };

@@ -59,17 +59,11 @@ class NotesStore {
         content: contentToSet,
         audio: record,
       };
-      let newNotePushed = await axios.post(
-        `${BASE_URL}/api/notes`,
-        newNote,
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
-      );
-      
-      console.groupCollapsed("new note response:", newNotePushed.data);
+      let newNotePushed = await axios.post(`${BASE_URL}/api/notes`, newNote, {
+        headers: {
+          Authorization: userStore.secretKey,
+        },
+      });
 
       this.notes = [...this.notes, newNotePushed.data];
     } catch (error) {
@@ -79,14 +73,11 @@ class NotesStore {
 
   public deleteNote = async (noteId: number) => {
     try {
-      let res = await axios.delete(
-        `${BASE_URL}/api/notes?id=${noteId}`,
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
-      );
+      let res = await axios.delete(`${BASE_URL}/api/notes?id=${noteId}`, {
+        headers: {
+          Authorization: userStore.secretKey,
+        },
+      });
       this.notes = this.notes.filter((n) => n.id !== noteId);
     } catch (error) {
       console.log(`Error in deleting note: ${error}`);
