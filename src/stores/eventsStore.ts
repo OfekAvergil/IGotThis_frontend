@@ -282,7 +282,7 @@ class EventsStore {
           body: event.title,
           data: event,
         },
-        trigger: { seconds: 20 }
+        trigger: { seconds: secondsDiff }
       }
 
       let notificationIdentifier = await Notifications.scheduleNotificationAsync(notificationDocument);
