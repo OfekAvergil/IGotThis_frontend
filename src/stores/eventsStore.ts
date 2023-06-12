@@ -19,6 +19,14 @@ export interface event {
   tasks: eventTask[];
 }
 
+export interface notificationDoc {
+  id?: string;
+  user?: string;
+  eventId?: string;
+  content: object;
+  trigger: object;
+}
+
 export interface eventTask {
   content: string;
   isDone: boolean;
@@ -268,18 +276,22 @@ class EventsStore {
     const secondsDiff = Math.floor((date.getTime() - halfHour - now.getTime()) / 1000);
 
     try {
-      let notificationIdentifier = await Notifications.scheduleNotificationAsync({
+      let notificationDocument: notificationDoc = {
         content: {
           title: 'Event coming up',
           body: event.title,
           data: event,
         },
-        trigger: { seconds: 20 },
-      });
+        trigger: { seconds: 20 }
+      }
+
+      let notificationIdentifier = await Notifications.scheduleNotificationAsync(notificationDocument);
+      notificationDocument.id = notificationIdentifier
+      notificationDocument.eventId = event.id
       console.log('succes in scheduling event', notificationIdentifier)
       let resNotificationAddInServer = await axios.post(
         `${BASE_URL}/api/notifications`,
-        notificationIdentifier,
+        notificationDocument,
         {
           headers: {
             Authorization: userStore.secretKey,
@@ -294,7 +306,7 @@ class EventsStore {
 
   public cancelSchedulePushNotification = async (eventId: string) => {
     try {
-      let res = await axios.get(
+      let res = await axios.delete(
         `${BASE_URL}/api/notifications?id=${eventId}`,
         {
           headers: {
@@ -302,10 +314,22 @@ class EventsStore {
           },
         }
       );
-      let identifier = res.data;
-      let cancelNotificationRes = await Notifications.cancelScheduledNotificationAsync(identifier);
-      console.log('cancel event', cancelNotificationRes)
+      
+      if(res.data && res.data.id){
+        res = await axios.delete(
+          `${BASE_URL}/api/notifications?id=${res.data.id}`,
+          {
+            headers: {
+              Authorization: userStore.secretKey,
+            },
+          }
+        );
+        let cancelNotificationRes = await Notifications.cancelScheduledNotificationAsync(res.data.id);
+        console.log('cancel event', cancelNotificationRes)
 
+      } else {
+        console.log(`Notification not found for event id: ${eventId}`)
+      }
     } catch (error) {
       console.log(`Error in canceling event notification: ${error}`);
     }
