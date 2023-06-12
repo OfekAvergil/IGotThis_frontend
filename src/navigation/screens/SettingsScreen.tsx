@@ -38,7 +38,7 @@ const SettingsPage = ({ navigation }: any) => {
         break; 
       }
       case 'Logout':{
-        handleLogOut
+        handleLogOut();
         break; 
       }
     }
