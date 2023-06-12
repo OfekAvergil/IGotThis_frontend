@@ -74,14 +74,14 @@ const LogInScreen = ({ navigation }: any) => {
           >
             Login
           </Button>
-          <Button
+          {/* <Button
             style={styles.card_button}
             icon="google"
             onPress={handleLoginWithGoogle}
           >
             {" "}
             Login with Google
-          </Button>
+          </Button> */}
           <Button
             style={styles.card_button}
             uppercase={false}
