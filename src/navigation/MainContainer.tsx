@@ -17,7 +17,8 @@ import CalenderScreen from "./screens/CalendarScreen";
 import SettingsPage from "./screens/SettingsScreen";
 import { Colors } from "../consts";
 import GettingReadyScreen from "./screens/GettingReadyScreen";
-import infoScreen from "./screens/infoScreen";
+import infoScreen from "./screens/InfoScreen";
+import Walkthrough from "./screens/WalkthroughScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -63,6 +64,7 @@ export default function MainContainer() {
         <Stack.Screen name="GettingReady" component={GettingReadyScreen} />
         <Stack.Screen name="CurrentEvent" component={CurrentEventScreen} />
         <Stack.Screen name="Settings" component={SettingsPage} />
+        <Stack.Screen name="Walkthrough" component={Walkthrough} />
       </Stack.Navigator>
     </NavigationContainer>
     

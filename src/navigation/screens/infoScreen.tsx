@@ -28,7 +28,7 @@ const InfoScreen = ({ navigation }: any) => {
         await todosStore.fetchTodos(userStore.secretKey);
         await notesStore.fetchNotes(userStore.secretKey);
       }
-      navigation.navigate("NavBar");
+      navigation.navigate("Walkthrough");
     }
   }
 

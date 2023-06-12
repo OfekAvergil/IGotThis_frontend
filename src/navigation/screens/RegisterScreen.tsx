@@ -79,13 +79,13 @@ const RegisterScreen = ({ navigation }: any) => {
           >
             Register
           </Button>
-          <Button
+          {/* <Button
             style={styles.card_button}
             icon="google"
             onPress={handleRegister}
           >
             Register with Google
-          </Button>
+          </Button> */}
           <Button
             style={styles.card_button}
             uppercase={false}

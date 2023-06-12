@@ -50,7 +50,7 @@ const NextEvent = () => {
       <TouchableOpacity onPress={() => navigation.navigate("Calendar")}>
         <View>
           <Text style={{ color: "white", fontSize: 18 }}>
-            No events planned
+            No events are planned, let's add some +
           </Text>
         </View>
       </TouchableOpacity>

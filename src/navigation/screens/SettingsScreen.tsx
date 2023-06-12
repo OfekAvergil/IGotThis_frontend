@@ -7,12 +7,14 @@ import { Colors } from "../../consts";
 import Icon from 'react-native-paper/src/components/Icon'
 import EditAccountDialog from '../../dialogs/EditAccountDialog';
 import { observer } from 'mobx-react';
+import EditPreferencesDialog from '../../dialogs/EditPreferencesDialog';
 
 
 
 const SettingsPage = ({ navigation }: any) => {
   const [selectedOption, setSelectedOption] = useState('');
   const AccountListener = observer(EditAccountDialog);
+  const PreferencesListener = observer(EditPreferencesDialog);
 
   const handleSave = () => {
     // Save the settings data or perform any desired actions
@@ -36,7 +38,7 @@ const SettingsPage = ({ navigation }: any) => {
         break; 
       }
       case 'Logout':{
-        handleLogOut
+        handleLogOut();
         break; 
       }
     }
@@ -61,22 +63,21 @@ const SettingsPage = ({ navigation }: any) => {
 
   const renderItem = (item: string, icon:keyof typeof Icons) => {
     const iconName = Icons[icon];
-
     return (
-        <Card style={styles.listItem}>
-            <TouchableOpacity
-            onPress={() => { handleOptionPress(item) }}>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
-                <View style={{ flex: 3, flexDirection: "row" }}>
-                    <Icon source={iconName} size={24} color={Colors.primary} />
-                    <Text style={{ color: "black", fontSize: 18, paddingLeft:10 }}>{item}</Text>
-                </View>
-                <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
-                    <Icon source="chevron-right" size={18} color={Colors.basicGrey} />
-                </View>
-            </View>
-            </TouchableOpacity>
-        </Card>
+      <Card style={styles.listItem}>
+          <TouchableOpacity
+          onPress={() => { handleOptionPress(item) }}>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
+              <View style={{ flex: 3, flexDirection: "row" }}>
+                  <Icon source={iconName} size={24} color={Colors.primary} />
+                  <Text style={{ color: "black", fontSize: 18, paddingLeft:10 }}>{item}</Text>
+              </View>
+              <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
+                  <Icon source="chevron-right" size={18} color={Colors.basicGrey} />
+              </View>
+          </View>
+          </TouchableOpacity>
+      </Card>
     );}
 
   return (
@@ -100,6 +101,7 @@ const SettingsPage = ({ navigation }: any) => {
         </Card.Content>
       </Card>
       <AccountListener/>
+      <PreferencesListener/>
     </SafeAreaView>
   );
 };
