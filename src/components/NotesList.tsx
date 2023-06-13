@@ -35,15 +35,23 @@ export default function NotesList() {
             </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
               <PopUpMenu 
-              menuItems={
-                <>
-                  <Menu.Item onPress={() => {
+              menuItems={[
+                {
+                  title: "Edit",
+                  action: () => {
                     notesStore.setSelectedNote(item);
-                    notesStore.openDialog(NotesDialogs.EditNoteDialog);}} 
-                    title="Edit" leadingIcon="lead-pencil"/>
-                  <Menu.Item onPress={() => noteStore.deleteNote(item.id)} title="Delete" leadingIcon="delete"/>
-                </>
-              }
+                    notesStore.openDialog(NotesDialogs.EditNoteDialog);
+                  },
+                  leadingIcon: "lead-pencil"
+                },
+                {
+                  title: "Delete",
+                  action: () => {
+                    noteStore.deleteNote(item.id);
+                  },
+                  leadingIcon: "delete"
+                },
+              ]}
               />
             </View>
           </View>

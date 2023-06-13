@@ -38,19 +38,31 @@ export default function TodoList() {
             </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
               <PopUpMenu 
-              menuItems={
-                <>
-                  <Menu.Item title="Add To Calnader" leadingIcon="calendar-plus" onPress={() => {
-                    todosStore.setSelectedTodo(item);
-                    eventsStore.openDialog(EventsDialogs.AddEventDialog);
-                  }}/>
-                  <Menu.Item title="Edit" leadingIcon="lead-pencil"  onPress={() => {
-                todosStore.setSelectedTodo(item);
-                    todosStore.openDialog(TodoDialogs.EditTodoDialog);
-                  }}/>
-                  <Menu.Item title="Delete" leadingIcon="delete" onPress={()=>checkNote(item)}  />
-                </>
-              }
+                menuItems={[
+                  {
+                    title: "Add To Calnader",
+                    action: () => {
+                      todosStore.setSelectedTodo(item);
+                      eventsStore.openDialog(EventsDialogs.AddEventDialog);
+                    },
+                    leadingIcon: "calendar-plus"
+                  },
+                  {
+                    title: "Edit",
+                    action: () => {
+                      todosStore.setSelectedTodo(item);
+                      todosStore.openDialog(TodoDialogs.EditTodoDialog);
+                    },
+                    leadingIcon: "lead-pencil"
+                  },
+                  {
+                    title: "Delete",
+                    action: () => {
+                      checkNote(item);
+                    },
+                    leadingIcon: "delete"
+                  },
+                ]}
               />
             </View>
           </View>

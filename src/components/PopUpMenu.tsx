@@ -1,9 +1,16 @@
 import * as React from 'react';
 import {  Menu, IconButton } from 'react-native-paper';
 import { Colors } from '../consts';
+import { IconSource } from 'react-native-paper/src/components/Icon';
+
+export interface menuItem{
+  title: string, 
+  action: () => void,
+  leadingIcon?: IconSource
+}
 
 export interface menuProps {
-    menuItems: JSX.Element;
+    menuItems: menuItem[];
   }
 
 export default function PopUpMenu(props: menuProps){
@@ -24,7 +31,17 @@ export default function PopUpMenu(props: menuProps){
                 style={{ height: 22, width: 22, margin: 10 }}
             /> 
         }>
-        {props.menuItems}
+        {props.menuItems.map((item: menuItem) => (
+          <Menu.Item 
+            key ={item.title}
+            title={item.title} 
+            onPress={() => {
+              closeMenu();
+              item.action();
+            }}  
+            leadingIcon={item.leadingIcon}
+          />
+        ))}
       </Menu>
     )
 }
