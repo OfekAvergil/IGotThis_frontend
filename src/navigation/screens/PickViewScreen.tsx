@@ -9,29 +9,19 @@ import todosStore from "../../stores/todosStore";
 import notesStore from "../../stores/notesStore";
 import Icon from 'react-native-paper/src/components/Icon';
 
-const InfoScreen = ({ navigation }: any) => {
-  const [address, setAddress] = useState("");
-  const [contact, setContact] = useState("");
+const PickViewScreen = ({ navigation }: any) => {
   const [role, setRole] = useState(false);
   const [checked, setChecked] = React.useState("first");
 
   async function handleSave() {
     if (userStore.user) {
-      const newUser: user = {
-        user_name: userStore.user.user_name,
-        password: userStore.user.password,
-        mail: userStore.user.mail,
-        isSuperviosr: role,
-        homeAddress: address,
-        contactNumber: contact
-      };
-      await userStore.signupUser(newUser);
+      userStore.setRole(role);
       if (userStore.secretKey) {
         await eventsStore.fetchEvents(userStore.secretKey);
         await todosStore.fetchTodos(userStore.secretKey);
         await notesStore.fetchNotes(userStore.secretKey);
-      };
-      navigation.navigate("Walkthrough");
+      }
+      navigation.navigate("NavBar");
     }
   }
 
@@ -57,7 +47,7 @@ const InfoScreen = ({ navigation }: any) => {
               <Button 
               onPress={() => {
                 setChecked("second");
-                setRole(false);
+                setRole(true);
               }}
               mode= {checked==="second"? "contained" : "outlined"}
               style={styles.RadioButton}
@@ -66,23 +56,6 @@ const InfoScreen = ({ navigation }: any) => {
                 <Text style={styles.label}>Supervisior</Text>
               </Button>
             </View>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.notes}>Please fill in some details:</Text>
-            <TextInput
-              value={address}
-              onChangeText={setAddress}
-              label="Your home address"
-              secureTextEntry={false}
-              style={styles.input}
-            />
-            <TextInput
-              value={contact}
-              onChangeText={setContact}
-              label="Emergency contact"
-              secureTextEntry={false}
-              style={styles.input}
-            />
           </View>
           <View
             style={{  marginTop: 200, alignItems: "flex-end" }}
@@ -101,6 +74,8 @@ const InfoScreen = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
+
+export default PickViewScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -151,4 +126,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default InfoScreen;
