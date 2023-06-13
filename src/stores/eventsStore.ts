@@ -176,6 +176,7 @@ class EventsStore {
       if (eventIndex === -1) {
         throw new Error(`Event with ID ${eventId} not found`);
       }
+      // update db
       let res = await axios.put(
         `${BASE_URL}/api/events?id=${eventId}`,
         {
@@ -193,14 +194,16 @@ class EventsStore {
           },
         }
       );
-
-      this.events[eventIndex].title = res.data.title;
-      this.events[eventIndex].dateStart = res.data.dateStart;
-      this.events[eventIndex].dateEnd = res.data.dateEnd;
-      this.events[eventIndex].startTime = res.data.satrtTime;
-      this.events[eventIndex].endTime = res.data.endTime;
-      this.events[eventIndex].content = res.data.content;
-      this.events[eventIndex].location = res.data.location;
+      // update store
+      this.events[eventIndex].title = eventTitle;
+      this.events[eventIndex].dateStart = eventDateStart;
+      this.events[eventIndex].dateEnd = eventDateEnd;
+      if (eventSatrtTime) this.events[eventIndex].dateEnd = eventSatrtTime;
+      if (eventEndTime) this.events[eventIndex].dateEnd = eventEndTime;
+      if (eventContent) this.events[eventIndex].dateEnd = eventContent;
+      if (eventLocation) this.events[eventIndex].dateEnd = eventLocation;
+      this.events = [...this.events];
+      // update notifications
       let eventIdentifier = this.events[eventIndex].id
       await this.cancelSchedulePushNotification(eventIdentifier)
       await this.schedulePushNotification(this.events[eventIndex])
