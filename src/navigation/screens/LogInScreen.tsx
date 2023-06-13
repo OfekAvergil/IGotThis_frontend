@@ -1,26 +1,29 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors } from "../../consts";
-import eventsStore from "../../stores/eventsStore";
-import todosStore from "../../stores/todosStore";
-import notesStore from "../../stores/notesStore";
+import { observer } from "mobx-react";
+import LoginError from "../../components/LoginError";
 
 const LogInScreen = ({ navigation }: any) => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
+  const ObserverMessage = observer(LoginError)
+
   async function handleLogIn() {
     await userStore.loginUser({user_name: inputUsername, password: inputPassword});
-    setInputUsername("");
-    setInputPassword("");
-    navigation.navigate("PickView");
+    if(!userStore.errorMessage){
+      setInputUsername("");
+      setInputPassword("");
+      navigation.navigate("PickView");
+    }
   };
 
+
   const handleForgotPassword = () => {};
-  const handleLoginWithGoogle = () => {};
 
   const handleCreateAccount = () => { 
     setInputUsername("");
@@ -60,7 +63,7 @@ const LogInScreen = ({ navigation }: any) => {
             >
               Forgot password?
             </Button>
-          
+          <ObserverMessage/>
           <Button
             style={{}}
             mode="contained"

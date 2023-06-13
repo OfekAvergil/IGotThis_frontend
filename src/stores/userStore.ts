@@ -26,7 +26,7 @@ class UserStore {
     secretKey: string| null = null;
     audioPermissions: boolean = false;
     currentOpenDialog: settingsDialogs | null = null;
-
+    errorMessage: boolean = false;
 
     constructor() {
         makeAutoObservable(this, {
@@ -59,6 +59,7 @@ class UserStore {
                 password: loggedUser.password    
             
         });
+            this.setErrorMessage(false);
             const data = response.data;
             console.log(response)
             this.setToken(data.token);
@@ -71,8 +72,12 @@ class UserStore {
                 contactNumber: data.contactNumber
             }
             this.setUser(user);
-        } catch (error) {
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                this.setErrorMessage(true);
+            } else{
             console.error('Error logging in user:', error);
+            }
         }
     };
 
@@ -147,6 +152,12 @@ class UserStore {
     public setRole(isSuperviosr: boolean):void{
         if(this.user) this.user.isSuperviosr = isSuperviosr;
     }
+
+    setErrorMessage(message: boolean) {
+        this.errorMessage = message;
+    }
+
+
 
 }
 
