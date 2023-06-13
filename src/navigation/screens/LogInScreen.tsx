@@ -22,7 +22,6 @@ const LogInScreen = ({ navigation }: any) => {
     }
   };
 
-
   const handleForgotPassword = () => {};
 
   const handleCreateAccount = () => { 
@@ -69,6 +68,7 @@ const LogInScreen = ({ navigation }: any) => {
             mode="contained"
             icon="account"
             onPress={handleLogIn}
+            disabled={inputUsername==="" || inputPassword===""}
           >
             Login
           </Button>
