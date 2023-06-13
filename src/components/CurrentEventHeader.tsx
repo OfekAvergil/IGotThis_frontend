@@ -9,9 +9,9 @@ const CurrentEventHeader = (props: { header: string, hour: string, note?: string
 
   return (
     <View style={styles.headerContainer}>
-      <View style={{flexDirection:"row",  alignItems:"center", marginTop: 20}}>
-        <View style={{flex: 4, justifyContent:"flex-start",}}>
-            <Text style={{ color: "white", fontSize: 26, fontWeight:"500" }}>{props.header}</Text>
+      <View style={{flexDirection:"row",  alignItems:"flex-start", marginTop: 20}}>
+        <View style={{flex: 4, justifyContent:"flex-start"}}>
+            <Text style={{ color: "white", fontSize: 24, fontWeight:"500" }}>{props.header}</Text>
           </View>
         <View  style={{flex: 1, flexDirection:"row",justifyContent:"flex-end"}}>
           <IconButton
@@ -22,24 +22,14 @@ const CurrentEventHeader = (props: { header: string, hour: string, note?: string
         </View>
       </View>
       <View style={{paddingVertical:15, flexDirection:"row"}}>
-      <Icon source="clock" size={24} color={Colors.basicGrey} />
-
+        <Icon source="clock" size={24} color={Colors.basicGrey} />
         <Text style={{ color: Colors.basicGrey, fontSize: 18, textAlign: "left", marginRight:15 }}> {props.hour}</Text>
-        <Icon source="navigation-variant" size={24} color={Colors.basicGrey} />
-
-        {props.location && <Text style={{ color: Colors.basicGrey, fontSize: 18, textAlign: "left" }}> {props.location}</Text>}
+        {props.location && 
+        <View style={{paddingVertical:15, flexDirection:"row"}}>
+          <Icon source="navigation-variant" size={24} color={Colors.basicGrey} />
+          <Text style={{ color: Colors.basicGrey, fontSize: 18, textAlign: "left" }}> {props.location}</Text>
+        </View>}
       </View>
-      {props.note &&
-      <View style={{flexDirection:"row", alignContent:"center"}}>
-        <Icon source="exclamation" size={24} color="black" />
-        <Text style={{color:"black", paddingRight:5, fontSize: 18,fontWeight:"500" }}>
-          don't forget:
-        </Text>
-        <Text style={{color:Colors.basicGrey, fontSize: 18 }}>
-          {props.note} 
-        </Text>
-      </View>
-      }
     </View>
   );
 };
@@ -57,5 +47,6 @@ const styles = StyleSheet.create({
       borderBottomWidth: 0,
       elevation: 0,
       width: "100%",
+      height: 'auto'
     },
   });

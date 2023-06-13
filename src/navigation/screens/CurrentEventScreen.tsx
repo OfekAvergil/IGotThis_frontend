@@ -107,12 +107,9 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   card: {
     width: "100%",
-    flex: 5,
   },
   card_title: {
     marginTop: 50,
