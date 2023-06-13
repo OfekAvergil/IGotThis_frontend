@@ -54,7 +54,7 @@ function TabNavigator () {
         })}
       >
          { userType === 2? 
-         <Tab.Screen name="Home" component={SupervisorHomeScreen} /> 
+         <Tab.Screen name="Home" component={HomeScreen} /> 
         :
         <Tab.Screen name="Home" component={SupervisorHomeScreen} /> 
         }
