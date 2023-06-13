@@ -21,16 +21,17 @@ import infoScreen from "./screens/infoScreen";
 import Walkthrough from "./screens/WalkthroughScreen";
 import userStore from "../stores/userStore";
 import SupervisorHomeScreen from "./screens/SupervisorHomeScreen";
+import PickViewScreen from "./screens/PickViewScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function TabNavigator () {
-  const [userType, setUserType] = React.useState(0);
+  const [isSuperviosr, setIsSuperviosr] = React.useState(false);
   
   React.useEffect(() => {
-    if(userStore.user?.isSuperviosr) setUserType(2);
-    else setUserType(1);
+    if(userStore.user?.isSuperviosr) setIsSuperviosr(true);
+    else setIsSuperviosr(false);
   },[userStore.user?.isSuperviosr])
 
   return (
@@ -53,10 +54,10 @@ function TabNavigator () {
           header: () => (<Header />),
         })}
       >
-         { userType === 2? 
-         <Tab.Screen name="Home" component={HomeScreen} /> 
+         { isSuperviosr? 
+         <Tab.Screen name="Home" component={SupervisorHomeScreen} /> 
         :
-        <Tab.Screen name="Home" component={SupervisorHomeScreen} /> 
+        <Tab.Screen name="Home" component={HomeScreen} /> 
         }
         <Tab.Screen name="Calendar" component={CalenderScreen} />
         <Tab.Screen name="ToDo" component={ToDoScreen} />
@@ -79,6 +80,7 @@ export default function MainContainer() {
         <Stack.Screen name="CurrentEvent" component={CurrentEventScreen} />
         <Stack.Screen name="Settings" component={SettingsPage} />
         <Stack.Screen name="Walkthrough" component={Walkthrough} />
+        <Stack.Screen name="PickView" component={PickViewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     

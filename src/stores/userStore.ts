@@ -144,6 +144,10 @@ class UserStore {
         this.currentOpenDialog = null;
     }
 
+    public setRole(isSuperviosr: boolean):void{
+        if(this.user) this.user.isSuperviosr = isSuperviosr;
+    }
+
 }
 
 const userStore = new UserStore();

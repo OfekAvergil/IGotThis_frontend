@@ -16,12 +16,7 @@ const LogInScreen = ({ navigation }: any) => {
     await userStore.loginUser({user_name: inputUsername, password: inputPassword});
     setInputUsername("");
     setInputPassword("");
-    if (userStore.secretKey) {
-      await eventsStore.fetchEvents(userStore.secretKey);
-      await todosStore.fetchTodos(userStore.secretKey);
-      await notesStore.fetchNotes(userStore.secretKey);
-    }
-    navigation.navigate("NavBar");
+    navigation.navigate("PickView");
   };
 
   const handleForgotPassword = () => {};
