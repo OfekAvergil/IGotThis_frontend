@@ -102,6 +102,8 @@ const InfoScreen = ({ navigation }: any) => {
                 icon="chevron-left"
                 onPress={() => {
                   userStore.setErrorMessage("");
+                  setAddress("");
+                  setContact("");
                   navigation.navigate("Register");
                 }}
               >
