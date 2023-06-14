@@ -104,11 +104,14 @@ class UserStore {
             console.log(response)
             this.setToken(data.token);
             this.setUser(newUser)
-        } catch (error) {
-            console.error('Error signing up user:', error);
-        }
+        } catch (error: any) {
+            if (error.response && error.response.status === 403) {
+                this.setErrorMessage("user with the same mail address already exist");
+            } else {
+                this.setErrorMessage(`Error signing up user: ${error}`);
+            };
+        };
     };
-
 
     public editUser = async (
         name?: string,

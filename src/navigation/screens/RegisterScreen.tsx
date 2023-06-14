@@ -4,6 +4,8 @@ import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors } from "../../consts";
+import LoginError from "../../components/LoginError";
+import { observer } from "mobx-react";
 
 const RegisterScreen = ({ navigation }: any) => {
 
@@ -11,11 +13,12 @@ const RegisterScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
-  const [displayError, setDisplayError] = useState(false);
+
+  const ObserverMessage = observer(LoginError)
 
   const handleRegister = () => {
     if(isPasswordsOk()){
-      setDisplayError(false);
+      userStore.setErrorMessage("");
       userStore.setUser({
         user_name: username,
         password: password,
@@ -25,7 +28,7 @@ const RegisterScreen = ({ navigation }: any) => {
       clearPage();
       navigation.navigate("Info");
     } else{
-      setDisplayError(true);
+      userStore.setErrorMessage("passwords do not match.");
     }
   };
 
@@ -81,13 +84,7 @@ const RegisterScreen = ({ navigation }: any) => {
             right={<TextInput.Icon icon="eye-off-outline" />}
             style={styles.input}
           />
-          {displayError && (
-          <View style={{ alignItems: "center", marginVertical:5}}>
-              <Text style={{ color: Colors.pink }}>
-                passwords do not match.
-              </Text>
-          </View>             
-          )}
+          <ObserverMessage/>
           <Button
             style={[styles.card_button, { marginTop: 10 }]}
             mode="contained"
@@ -97,13 +94,6 @@ const RegisterScreen = ({ navigation }: any) => {
           >
             Register
           </Button>
-          {/* <Button
-            style={styles.card_button}
-            icon="google"
-            onPress={handleRegister}
-          >
-            Register with Google
-          </Button> */}
           <Button
             style={styles.card_button}
             uppercase={false}
