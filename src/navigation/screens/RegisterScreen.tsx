@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
@@ -11,29 +11,39 @@ const RegisterScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [displayError, setDisplayError] = useState(false);
 
   const handleRegister = () => {
-    userStore.setUser({
-      user_name: username,
-      password: password,
-      mail: email,
-      isSuperviosr: false
-    })
-    setUsername("");
-    setPassword("");
-    setEmail("");
-    setPasswordRepeat("");
-    navigation.navigate("Info");
+    if(isPasswordsOk()){
+      setDisplayError(false);
+      userStore.setUser({
+        user_name: username,
+        password: password,
+        mail: email,
+        isSuperviosr: false
+      })
+      clearPage();
+      navigation.navigate("Info");
+    } else{
+      setDisplayError(true);
+    }
   };
 
   const handkeAllreadyHaveAccount = () => {
+    clearPage();
+    navigation.navigate("Login");
+  };
+
+  const isPasswordsOk = (): boolean => {
+    return (password === passwordRepeat);
+  }
+
+  const clearPage = () => {
     setUsername("");
     setPassword("");
     setEmail("");
     setPasswordRepeat("");
-    navigation.navigate("Login");
-  };
-
+  }
   return (
     <SafeAreaView style={styles.container}>
       <LoginHeader header="Sign in"/>
@@ -71,21 +81,29 @@ const RegisterScreen = ({ navigation }: any) => {
             right={<TextInput.Icon icon="eye-off-outline" />}
             style={styles.input}
           />
+          {displayError && (
+          <View style={{ alignItems: "center", marginVertical:5}}>
+              <Text style={{ color: Colors.pink }}>
+                passwords do not match.
+              </Text>
+          </View>             
+          )}
           <Button
             style={[styles.card_button, { marginTop: 10 }]}
             mode="contained"
             icon="account"
             onPress={handleRegister}
+            disabled={username==="" || email==="" || password===""}
           >
             Register
           </Button>
-          <Button
+          {/* <Button
             style={styles.card_button}
             icon="google"
             onPress={handleRegister}
           >
             Register with Google
-          </Button>
+          </Button> */}
           <Button
             style={styles.card_button}
             uppercase={false}

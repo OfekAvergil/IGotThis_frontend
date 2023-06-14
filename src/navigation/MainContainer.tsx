@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
+import { Colors } from "../consts";
 
 //Screens
 import HomeScreen from "./screens/HomeScreen";
@@ -15,14 +16,24 @@ import LandingScreen from "./screens/LandingScreen";
 import CurrentEventScreen from "./screens/CurrentEventScreen";
 import CalenderScreen from "./screens/CalendarScreen";
 import SettingsPage from "./screens/SettingsScreen";
-import { Colors } from "../consts";
 import GettingReadyScreen from "./screens/GettingReadyScreen";
 import infoScreen from "./screens/infoScreen";
+import Walkthrough from "./screens/WalkthroughScreen";
+import userStore from "../stores/userStore";
+import SupervisorHomeScreen from "./screens/SupervisorHomeScreen";
+import PickViewScreen from "./screens/PickViewScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function TabNavigator () {
+  const [isSuperviosr, setIsSuperviosr] = React.useState(false);
+  
+  React.useEffect(() => {
+    if(userStore.user?.isSuperviosr) setIsSuperviosr(true);
+    else setIsSuperviosr(false);
+  },[userStore.user?.isSuperviosr])
+
   return (
       <Tab.Navigator
         initialRouteName="Home"
@@ -43,7 +54,11 @@ function TabNavigator () {
           header: () => (<Header />),
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
+         { isSuperviosr? 
+         <Tab.Screen name="Home" component={SupervisorHomeScreen} /> 
+        :
+        <Tab.Screen name="Home" component={HomeScreen} /> 
+        }
         <Tab.Screen name="Calendar" component={CalenderScreen} />
         <Tab.Screen name="ToDo" component={ToDoScreen} />
         <Tab.Screen name="Notes" component={NotesScreen} />
@@ -52,6 +67,7 @@ function TabNavigator () {
 };
 
 export default function MainContainer() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -63,6 +79,8 @@ export default function MainContainer() {
         <Stack.Screen name="GettingReady" component={GettingReadyScreen} />
         <Stack.Screen name="CurrentEvent" component={CurrentEventScreen} />
         <Stack.Screen name="Settings" component={SettingsPage} />
+        <Stack.Screen name="Walkthrough" component={Walkthrough} />
+        <Stack.Screen name="PickView" component={PickViewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     

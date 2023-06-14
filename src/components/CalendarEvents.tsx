@@ -70,35 +70,31 @@ const CalendarEvents = () => {
               </View>
               <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
                 <PopUpMenu 
-                menuItems={
-                  <>
-                    <Menu.Item
-                      onPress={() => {
-                        // ???
-                        eventsStore.setCurrentEvent(item.id);
-                        navigation.navigate('GettingReady');
-                        // close pop up menu
-                      }}
-                      title="Start now!"
-                      leadingIcon="play"
-                    />
-                    <Menu.Item
-                      onPress={() => {
-                        // ???
-                        eventsStore.setSelectedEvent(item);
-                        eventsStore.openDialog(EventsDialogs.EditEventDialog);
-                        // close pop up menu
-                      }}
-                      title="Edit"
-                      leadingIcon="lead-pencil"
-                    />
-                    <Menu.Item
-                      onPress={() => eventsStore.deleteEvent(item.id)}
-                      title="Delete"
-                      leadingIcon="delete"
-                    />
-                  </>
-                }
+                menuItems={[
+                  {
+                    title: "Start now!",
+                    action: () => {
+                      eventsStore.setCurrentEvent(item.id);
+                      navigation.navigate('GettingReady');
+                    },
+                    leadingIcon: "play"
+                  },
+                  {
+                    title: "Edit",
+                    action: () => {
+                      eventsStore.setSelectedEvent(item);
+                      eventsStore.openDialog(EventsDialogs.EditEventDialog);
+                    },
+                    leadingIcon: "lead-pencil"
+                  },
+                  {
+                    title: "Delete",
+                    action: () => {
+                      eventsStore.deleteEvent(item.id);
+                    },
+                    leadingIcon: "delete"
+                  },
+                ]}
               />
             </View>
           </View>

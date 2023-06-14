@@ -226,7 +226,7 @@ const EditEventDialog = () => {
     enableActions: true,
     onOk: () => {
       eventsStore.closeAllDialogs();
-      let id = selectedEvent ? selectedEvent.id : -1;
+      let id = selectedEvent ? selectedEvent.id : '-1';
       eventsStore.editEvent(
         id,
         title,

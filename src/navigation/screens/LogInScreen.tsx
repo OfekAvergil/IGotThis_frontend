@@ -1,31 +1,28 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors } from "../../consts";
-import eventsStore from "../../stores/eventsStore";
-import todosStore from "../../stores/todosStore";
-import notesStore from "../../stores/notesStore";
+import { observer } from "mobx-react";
+import LoginError from "../../components/LoginError";
 
 const LogInScreen = ({ navigation }: any) => {
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
+  const ObserverMessage = observer(LoginError)
+
   async function handleLogIn() {
     await userStore.loginUser({user_name: inputUsername, password: inputPassword});
-    setInputUsername("");
-    setInputPassword("");
-    if (userStore.secretKey) {
-      await eventsStore.fetchEvents(userStore.secretKey);
-      await todosStore.fetchTodos(userStore.secretKey);
-      await notesStore.fetchNotes(userStore.secretKey);
+    if(!userStore.errorMessage){
+      setInputUsername("");
+      setInputPassword("");
+      navigation.navigate("PickView");
     }
-    navigation.navigate("NavBar");
   };
 
   const handleForgotPassword = () => {};
-  const handleLoginWithGoogle = () => {};
 
   const handleCreateAccount = () => { 
     setInputUsername("");
@@ -65,23 +62,24 @@ const LogInScreen = ({ navigation }: any) => {
             >
               Forgot password?
             </Button>
-          
+          <ObserverMessage/>
           <Button
             style={{}}
             mode="contained"
             icon="account"
             onPress={handleLogIn}
+            disabled={inputUsername==="" || inputPassword===""}
           >
             Login
           </Button>
-          <Button
+          {/* <Button
             style={styles.card_button}
             icon="google"
             onPress={handleLoginWithGoogle}
           >
             {" "}
             Login with Google
-          </Button>
+          </Button> */}
           <Button
             style={styles.card_button}
             uppercase={false}
