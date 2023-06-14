@@ -15,7 +15,7 @@ const LogInScreen = ({ navigation }: any) => {
 
   async function handleLogIn() {
     await userStore.loginUser({mail: inputMail, password: inputPassword});
-    if(!userStore.errorMessage){
+    if(userStore.errorMessage===""){
       setInputMail("");
       setInputPassword("");
       navigation.navigate("PickView");

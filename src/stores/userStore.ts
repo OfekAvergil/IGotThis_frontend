@@ -31,7 +31,7 @@ class UserStore {
     secretKey: string| null = null;
     audioPermissions: boolean = false;
     currentOpenDialog: settingsDialogs | null = null;
-    errorMessage: boolean = false;
+    errorMessage: string = "";
 
     constructor() {
         makeAutoObservable(this, {
@@ -64,7 +64,7 @@ class UserStore {
                 password: loggedUser.password    
             
         });
-            this.setErrorMessage(false);
+            this.setErrorMessage("");
             const data = response.data;
             console.log(response)
             this.setToken(data.token);
@@ -80,9 +80,9 @@ class UserStore {
             this.setUser(user);
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
-                this.setErrorMessage(true);
-            } else{
-            console.error('Error logging in user:', error);
+                this.setErrorMessage("mail or password are incorrect");
+            } else {
+                this.setErrorMessage(`Error logging in user: ${error}`);
             }
         }
     };
@@ -159,7 +159,7 @@ class UserStore {
         if(this.user) this.user.isSuperviosr = isSuperviosr;
     }
 
-    setErrorMessage(message: boolean) {
+    setErrorMessage(message: string) {
         this.errorMessage = message;
     }
 

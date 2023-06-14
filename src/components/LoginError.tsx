@@ -8,14 +8,14 @@ const LoginError = () => {
   const [isErrorDisplayed, setErrorDisplayed] = useState(false);
 
   React.useEffect(() => {
-    setErrorDisplayed(userStore.errorMessage);
+    userStore.errorMessage === "" ? setErrorDisplayed(false):setErrorDisplayed(true);
   }, [userStore.errorMessage]);
 
   return (
     <View style={{ alignItems: "center", marginVertical:5}}>
       {isErrorDisplayed && (
         <Text style={{ color: Colors.pink }}>
-          mail or password are incorrect
+          {userStore.errorMessage}
         </Text>
       )}
     </View>
