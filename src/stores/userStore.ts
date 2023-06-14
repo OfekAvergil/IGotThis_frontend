@@ -12,8 +12,13 @@ export interface user {
   }
 
 export interface existUser {
-    user_name: string;
+    mail: string;
     password: string;
+}
+
+export interface restoreData {
+    user_name: string;
+    mail: string;
 }
 
 export enum settingsDialogs {
@@ -26,7 +31,7 @@ class UserStore {
     secretKey: string| null = null;
     audioPermissions: boolean = false;
     currentOpenDialog: settingsDialogs | null = null;
-    errorMessage: boolean = false;
+    errorMessage: string = "";
 
     constructor() {
         makeAutoObservable(this, {
@@ -55,28 +60,29 @@ class UserStore {
     loginUser = async (loggedUser: existUser) => {
         try {
             const response = await axios.post(`${BASE_URL}/api/user/login`,{
-                email: loggedUser.user_name,
+                email: loggedUser.mail,
                 password: loggedUser.password    
             
         });
-            this.setErrorMessage(false);
+            this.setErrorMessage("");
             const data = response.data;
             console.log(response)
             this.setToken(data.token);
             const user: user = {
-                user_name: loggedUser.user_name,
-                password: loggedUser.password,
-                mail: data.mail,
-                isSuperviosr: data.isInCharge,
-                homeAddress: data.homeAddress,
-                contactNumber: data.contactNumber
+                user_name: data.user.name,
+                password: data.user.password,
+                mail: data.user.mail,
+                isSuperviosr: data.user.isInCharge,
+                homeAddress: data.user.homeAddress,
+                contactNumber: data.user.contactNumber
             }
+            console.log(user);
             this.setUser(user);
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
-                this.setErrorMessage(true);
-            } else{
-            console.error('Error logging in user:', error);
+                this.setErrorMessage("mail or password are incorrect");
+            } else {
+                this.setErrorMessage(`Error logging in user: ${error}`);
             }
         }
     };
@@ -153,7 +159,7 @@ class UserStore {
         if(this.user) this.user.isSuperviosr = isSuperviosr;
     }
 
-    setErrorMessage(message: boolean) {
+    setErrorMessage(message: string) {
         this.errorMessage = message;
     }
 

@@ -16,6 +16,14 @@ const GettingReadyTasks = () => {
     }
   }, [eventsStore.currentEventId]);
 
+  const toggleTodo = (index: number) => {
+    setTodos((prevTodos) => {
+      const updatedTodos = [...prevTodos];
+      updatedTodos[index].isDone = !updatedTodos[index].isDone;
+      return updatedTodos;
+    });
+  };
+
   const emptyItem = (
     <Card style={styles.emptyListItem}>
       <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -28,7 +36,7 @@ const GettingReadyTasks = () => {
     </Card>
   );
 
-  const renderItem = (item: eventTask) => {
+  const renderItem = ({ item, index }: { item: eventTask; index: number }) => {
     const itemStyle = {
       ...styles.listItem,
       backgroundColor: item.isDone ? Colors.light : Colors.secondery,
@@ -36,7 +44,7 @@ const GettingReadyTasks = () => {
 
     return (
       <Card style={itemStyle}>
-        <TouchableOpacity disabled ={item.isDone ? true: false} onPress={() => {item.isDone = !item.isDone}}>
+        <TouchableOpacity onPress={() => toggleTodo(index)}>
           <View
             style={{
               flex: 1,
@@ -62,7 +70,7 @@ const GettingReadyTasks = () => {
   return (
     <FlatList
       style={styles.container}
-      renderItem={({ item }) => renderItem(item)}
+      renderItem={({ item, index }) => renderItem({item, index})}
       data={todos}
       ListHeaderComponent={
         <View style={{ flex: 1, flexDirection: 'row' }}>
