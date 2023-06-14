@@ -8,15 +8,15 @@ import { observer } from "mobx-react";
 import LoginError from "../../components/LoginError";
 
 const LogInScreen = ({ navigation }: any) => {
-  const [inputUsername, setInputUsername] = useState("");
+  const [inputMail, setInputMail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
   const ObserverMessage = observer(LoginError)
 
   async function handleLogIn() {
-    await userStore.loginUser({user_name: inputUsername, password: inputPassword});
+    await userStore.loginUser({mail: inputMail, password: inputPassword});
     if(!userStore.errorMessage){
-      setInputUsername("");
+      setInputMail("");
       setInputPassword("");
       navigation.navigate("PickView");
     }
@@ -25,7 +25,7 @@ const LogInScreen = ({ navigation }: any) => {
   const handleForgotPassword = () => {};
 
   const handleCreateAccount = () => { 
-    setInputUsername("");
+    setInputMail("");
     setInputPassword("");
     navigation.navigate("Register");
   };
@@ -36,11 +36,11 @@ const LogInScreen = ({ navigation }: any) => {
       <Card style={styles.card}>
         <Card.Content>
           <TextInput
-            value={inputUsername}
-            onChangeText={setInputUsername}
-            placeholder="User name"
+            value={inputMail}
+            onChangeText={setInputMail}
+            placeholder="Mail"
             secureTextEntry={false}
-            right={<TextInput.Icon icon="account" />}
+            right={<TextInput.Icon icon="Email" />}
             style={styles.input}
           />
           <TextInput
@@ -68,7 +68,7 @@ const LogInScreen = ({ navigation }: any) => {
             mode="contained"
             icon="account"
             onPress={handleLogIn}
-            disabled={inputUsername==="" || inputPassword===""}
+            disabled={inputMail==="" || inputPassword===""}
           >
             Login
           </Button>
