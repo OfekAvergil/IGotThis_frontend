@@ -22,6 +22,7 @@ import Walkthrough from "./screens/WalkthroughScreen";
 import userStore from "../stores/userStore";
 import SupervisorHomeScreen from "./screens/SupervisorHomeScreen";
 import PickViewScreen from "./screens/PickViewScreen";
+import ForgetPasswordScreen from "./screens/ForgetPasswordScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -81,6 +82,7 @@ export default function MainContainer() {
         <Stack.Screen name="Settings" component={SettingsPage} />
         <Stack.Screen name="Walkthrough" component={Walkthrough} />
         <Stack.Screen name="PickView" component={PickViewScreen} />
+        <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     

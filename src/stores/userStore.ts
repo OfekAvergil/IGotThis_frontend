@@ -91,8 +91,7 @@ class UserStore {
     // Login user action
     restPassword = async (loggedUser: restoreData) => {
         try {
-            const response = await axios.post(`${BASE_URL}/api/user/forgotPassword`,{
-                email: loggedUser.mail,
+            const response = await axios.post(`${BASE_URL}/api/user/forgotPassword?email=${loggedUser.mail}`,{
                 name: loggedUser.user_name,    
                 password: loggedUser.password
         });

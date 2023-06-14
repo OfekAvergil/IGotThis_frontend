@@ -22,7 +22,11 @@ const LogInScreen = ({ navigation }: any) => {
     }
   };
 
-  const handleForgotPassword = () => {};
+  const handleForgotPassword = () => {
+    setInputMail("");
+    setInputPassword("");
+    navigation.navigate("ForgetPassword");
+  };
 
   const handleCreateAccount = () => { 
     setInputMail("");
@@ -72,14 +76,6 @@ const LogInScreen = ({ navigation }: any) => {
           >
             Login
           </Button>
-          {/* <Button
-            style={styles.card_button}
-            icon="google"
-            onPress={handleLoginWithGoogle}
-          >
-            {" "}
-            Login with Google
-          </Button> */}
           <Button
             style={styles.card_button}
             uppercase={false}
