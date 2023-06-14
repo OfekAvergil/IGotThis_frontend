@@ -72,12 +72,12 @@ class UserStore {
             const user: user = {
                 user_name: data.user.name,
                 password: data.user.password,
-                mail: data.user.mail,
+                mail: data.user.email,
                 isSuperviosr: data.user.isInCharge,
                 homeAddress: data.user.homeAddress,
                 contactNumber: data.user.contactNumber
             }
-            console.log(user);
+            console.log("loginnnnn", user);
             this.setUser(user);
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
@@ -91,7 +91,7 @@ class UserStore {
     // Login user action
     restPassword = async (loggedUser: restoreData) => {
         try {
-            const response = await axios.post(`${BASE_URL}/api/user/forgotPassword?email=${loggedUser.mail}`,{
+            const response = await axios.put(`${BASE_URL}/api/user/forgotPassword?email=${loggedUser.mail}`,{
                 name: loggedUser.user_name,    
                 password: loggedUser.password
         });
