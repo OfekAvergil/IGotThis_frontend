@@ -20,9 +20,9 @@ const PickViewScreen = ({ navigation }: any) => {
         await eventsStore.fetchEvents(userStore.secretKey);
         await todosStore.fetchTodos(userStore.secretKey);
         await notesStore.fetchNotes(userStore.secretKey);
+        navigation.navigate("NavBar");
       }
-      navigation.navigate("NavBar");
-    }
+    };
   }
 
   return (
@@ -58,7 +58,7 @@ const PickViewScreen = ({ navigation }: any) => {
             </View>
           </View>
           <View
-            style={{  marginTop: 200, alignItems: "flex-end" }}
+            style={{  marginTop: 360, alignItems: "flex-end" }}
           >
           <Button
             mode="contained"
@@ -87,6 +87,8 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     flex: 3,
+    alignItems: "center",
+    justifyContent:"center"
   },
   input: {
     height: 50,
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   RadioButton: {
-    height:80,
+    height:120,
     width:175,
     color: "white",
     margin:3,
