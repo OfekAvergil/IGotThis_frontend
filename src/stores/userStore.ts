@@ -19,6 +19,7 @@ export interface existUser {
 export interface restoreData {
     user_name: string;
     mail: string;
+    password: string;
 }
 
 export enum settingsDialogs {
@@ -87,6 +88,35 @@ class UserStore {
         }
     };
 
+    // Login user action
+    restPassword = async (loggedUser: restoreData) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/api/user/forgotPassword`,{
+                email: loggedUser.mail,
+                name: loggedUser.user_name,    
+                password: loggedUser.password
+        });
+            this.setErrorMessage("");
+            const data = response.data;
+            this.setToken(data.token);
+            const user: user = {
+                user_name: data.user.name,
+                password: data.user.password,
+                mail: data.user.mail,
+                isSuperviosr: data.user.isInCharge,
+                homeAddress: data.user.homeAddress,
+                contactNumber: data.user.contactNumber
+            }
+            this.setUser(user);
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                this.setErrorMessage("mail or user name are incorrect");
+            } else {
+                this.setErrorMessage(`Error logging in user: ${error}`);
+            }
+        }
+    };
+
     // Signup user action
     signupUser = async (newUser: user) => {
         try {
@@ -121,7 +151,7 @@ class UserStore {
       ) => {
         try {
           let res = await axios.put(
-            `${BASE_URL}/api/user?id=${this.user?.user_name}`,
+            `${BASE_URL}/api/user?email=${this.user?.mail}`,
             {
                 name: name,
                 mail: mail,
