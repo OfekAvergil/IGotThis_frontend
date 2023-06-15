@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { action, makeAutoObservable, makeObservable, observable, runInAction } from "mobx";
 import axios, * as others from "axios";
 import userStore from "./userStore";
 import { toDo } from "./todosStore";
@@ -48,7 +48,10 @@ class EventsStore {
   expoPushToken: string | undefined;
 
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this, {
+      selectedDate: observable,
+      setSelectedDate: action
+    });
   }
 
   public fetchEvents = async (secretKey: string | null) => {
@@ -253,6 +256,7 @@ class EventsStore {
     this.selectedEvent = item;
   }
 
+  // @action
   public setSelectedDate(date: string): void {
     this.selectedDate = date;
   }
