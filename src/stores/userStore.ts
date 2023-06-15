@@ -12,7 +12,13 @@ export interface user {
   }
 
 export interface existUser {
+    mail: string;
+    password: string;
+}
+
+export interface restoreData {
     user_name: string;
+    mail: string;
     password: string;
 }
 
@@ -26,7 +32,7 @@ class UserStore {
     secretKey: string| null = null;
     audioPermissions: boolean = false;
     currentOpenDialog: settingsDialogs | null = null;
-    errorMessage: boolean = false;
+    errorMessage: string = "";
 
     constructor() {
         makeAutoObservable(this, {
@@ -55,28 +61,57 @@ class UserStore {
     loginUser = async (loggedUser: existUser) => {
         try {
             const response = await axios.post(`${BASE_URL}/api/user/login`,{
-                email: loggedUser.user_name,
+                email: loggedUser.mail,
                 password: loggedUser.password    
             
         });
-            this.setErrorMessage(false);
+            this.setErrorMessage("");
             const data = response.data;
             console.log(response)
             this.setToken(data.token);
             const user: user = {
-                user_name: loggedUser.user_name,
-                password: loggedUser.password,
-                mail: data.mail,
-                isSuperviosr: data.isInCharge,
-                homeAddress: data.homeAddress,
-                contactNumber: data.contactNumber
+                user_name: data.user.name,
+                password: data.user.password,
+                mail: data.user.email,
+                isSuperviosr: data.user.isInCharge,
+                homeAddress: data.user.homeAddress,
+                contactNumber: data.user.contactNumber
+            }
+            console.log("loginnnnn", user);
+            this.setUser(user);
+        } catch (error: any) {
+            if (error.response && error.response.status === 401) {
+                this.setErrorMessage("mail or password are incorrect");
+            } else {
+                this.setErrorMessage(`Error logging in user: ${error}`);
+            }
+        }
+    };
+
+    // Login user action
+    restPassword = async (loggedUser: restoreData) => {
+        try {
+            const response = await axios.put(`${BASE_URL}/api/user/forgotPassword?email=${loggedUser.mail}`,{
+                name: loggedUser.user_name,    
+                password: loggedUser.password
+        });
+            this.setErrorMessage("");
+            const data = response.data;
+            this.setToken(data.token);
+            const user: user = {
+                user_name: data.user.name,
+                password: data.user.password,
+                mail: data.user.mail,
+                isSuperviosr: data.user.isInCharge,
+                homeAddress: data.user.homeAddress,
+                contactNumber: data.user.contactNumber
             }
             this.setUser(user);
         } catch (error: any) {
             if (error.response && error.response.status === 401) {
-                this.setErrorMessage(true);
-            } else{
-            console.error('Error logging in user:', error);
+                this.setErrorMessage("mail or user name are incorrect");
+            } else {
+                this.setErrorMessage(`Error logging in user: ${error}`);
             }
         }
     };
@@ -98,11 +133,14 @@ class UserStore {
             console.log(response)
             this.setToken(data.token);
             this.setUser(newUser)
-        } catch (error) {
-            console.error('Error signing up user:', error);
-        }
+        } catch (error: any) {
+            if (error.response && error.response.status === 403) {
+                this.setErrorMessage("user with the same mail address already exist");
+            } else {
+                this.setErrorMessage(`Error signing up user: ${error}`);
+            };
+        };
     };
-
 
     public editUser = async (
         name?: string,
@@ -112,7 +150,7 @@ class UserStore {
       ) => {
         try {
           let res = await axios.put(
-            `${BASE_URL}/api/user?id=${this.user?.user_name}`,
+            `${BASE_URL}/api/user?email=${this.user?.mail}`,
             {
                 name: name,
                 mail: mail,
@@ -153,7 +191,7 @@ class UserStore {
         if(this.user) this.user.isSuperviosr = isSuperviosr;
     }
 
-    setErrorMessage(message: boolean) {
+    setErrorMessage(message: string) {
         this.errorMessage = message;
     }
 

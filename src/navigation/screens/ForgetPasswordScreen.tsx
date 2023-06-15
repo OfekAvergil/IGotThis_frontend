@@ -4,72 +4,65 @@ import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors } from "../../consts";
-import LoginError from "../../components/LoginError";
 import { observer } from "mobx-react";
+import LoginError from "../../components/LoginError";
 
-const RegisterScreen = ({ navigation }: any) => {
-
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+const ForgetPasswordScreen = ({ navigation }: any) => {
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputMail, setInputMail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const ObserverMessage = observer(LoginError)
 
-  const handleRegister = () => {
+  async function handleSend() {
+    await userStore.restPassword({user_name: inputUsername, mail: inputMail, password: password});
     if(isPasswordsOk()){
-      userStore.setErrorMessage("");
-      userStore.setUser({
-        user_name: username,
-        password: password,
-        mail: email,
-        isSuperviosr: false
-      })
-      clearPage();
-      navigation.navigate("Info");
-    } else{
+      if(!userStore.errorMessage){
+        userStore.setErrorMessage("");
+        setInputUsername("");
+        setInputMail("");
+        navigation.navigate("PickView");
+      };
+    } else {
       userStore.setErrorMessage("passwords do not match.");
-    }
+    }   
   };
-
-  const handkeAllreadyHaveAccount = () => {
-    clearPage();
-    navigation.navigate("Login");
-  };
-
+  
   const isPasswordsOk = (): boolean => {
     return (password === passwordRepeat);
   }
 
-  const clearPage = () => {
-    setUsername("");
-    setPassword("");
-    setEmail("");
-    setPasswordRepeat("");
-  }
+  const handleBack = () => { 
+    setInputUsername("");
+    setInputMail("");
+    navigation.navigate("Login");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <LoginHeader header="Sign in"/>
+      <LoginHeader header="Enter the user's details"/>
       <Card style={styles.card}>
         <Card.Content>
           <TextInput
-            label="User name"
-            value={username}
-            onChangeText={setUsername}
+            value={inputUsername}
+            onChangeText={setInputUsername}
+            placeholder="User name"
             secureTextEntry={false}
             right={<TextInput.Icon icon="account" />}
             style={styles.input}
           />
           <TextInput
-            label="Email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            secureTextEntry={false}
+            placeholder="Mail"
+            value={inputMail}
+            onChangeText={setInputMail}
+            secureTextEntry={true}
+            style={styles.input}
             right={<TextInput.Icon icon="email" />}
-            style={styles.input}          />
+            
+          />
           <TextInput
-            label="Password"
+            label="New Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
@@ -85,25 +78,26 @@ const RegisterScreen = ({ navigation }: any) => {
             style={styles.input}
           />
           <ObserverMessage/>
+          < View>
           <Button
-            style={[styles.card_button, { marginTop: 10 }]}
+            style={{}}
+            mode="outlined"
+            icon="chevron-left"
+            onPress={handleBack}
+          >
+            Back
+          </Button>
+          <Button
+            style={{}}
             mode="contained"
-            icon="account"
-            onPress={handleRegister}
-            disabled={username==="" || email==="" || password===""}
+            icon="check"
+            onPress={handleSend}
+            disabled={inputUsername==="" || inputMail===""}
           >
-            Register
+            Send
           </Button>
-          <Button
-            style={styles.card_button}
-            uppercase={false}
-            onPress={handkeAllreadyHaveAccount}
-          >
-            <Text>
-              Allready have an account?  
-            </Text> 
-            Login
-          </Button>
+          </View>
+          
         </Card.Content>
       </Card>
     </SafeAreaView>
@@ -121,23 +115,23 @@ const styles = StyleSheet.create({
     width: "100%",
     flex:3
   },
+  input: {
+  height: 50,
+  borderColor: Colors.basicGrey,
+  backgroundColor: Colors.basicGrey,
+  borderWidth: 1,
+  borderRadius: 5,
+  paddingHorizontal: 10,
+  marginBottom: 10,
+  },
   card_title: {
-    fontSize: 30,
     marginTop: 50,
     color: Colors.primary,
+    fontSize: 30,
   },
   card_button: {
-    margin: 7,
+    margin:7,
   },
-  input: {
-    height: 50,
-    borderColor: Colors.basicGrey,
-    backgroundColor: Colors.basicGrey,
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    },
 });
 
-export default RegisterScreen;
+export default ForgetPasswordScreen;

@@ -7,13 +7,16 @@ import { Colors } from "../../consts";
 import eventsStore from "../../stores/eventsStore";
 import todosStore from "../../stores/todosStore";
 import notesStore from "../../stores/notesStore";
-import Icon from 'react-native-paper/src/components/Icon';
+import Icon from "react-native-paper/src/components/Icon";
+import LoginError from "../../components/LoginError";
+import { observer } from "mobx-react";
 
 const InfoScreen = ({ navigation }: any) => {
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
   const [role, setRole] = useState(false);
   const [checked, setChecked] = React.useState("first");
+  const ObserverMessage = observer(LoginError);
 
   async function handleSave() {
     if (userStore.user) {
@@ -23,44 +26,45 @@ const InfoScreen = ({ navigation }: any) => {
         mail: userStore.user.mail,
         isSuperviosr: role,
         homeAddress: address,
-        contactNumber: contact
+        contactNumber: contact,
       };
       await userStore.signupUser(newUser);
       if (userStore.secretKey) {
+        userStore.setErrorMessage("");
         await eventsStore.fetchEvents(userStore.secretKey);
         await todosStore.fetchTodos(userStore.secretKey);
         await notesStore.fetchNotes(userStore.secretKey);
-      };
-      navigation.navigate("Walkthrough");
+        navigation.navigate("Walkthrough");
+      }
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <LoginHeader header="Sign in"/>
+      <LoginHeader header="Sign in" />
       <Card style={styles.card}>
         <Card.Content>
           <Text style={styles.notes}>Which user is in this device?</Text>
           <View style={styles.section}>
-            <View style={{ flexDirection: "row", alignItems:"center"}}>
-              <Button 
-              onPress={() => {
-                setChecked("first");
-                setRole(false);
-              }}
-              mode= {checked==="first"? "contained" : "outlined"}
-              style={styles.RadioButton}
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Button
+                onPress={() => {
+                  setChecked("first");
+                  setRole(false);
+                }}
+                mode={checked === "first" ? "contained" : "outlined"}
+                style={styles.RadioButton}
               >
                 {/* <Icon source="face-man-outline" size={22} color="black" /> */}
                 <Text style={styles.label}>Main User</Text>
               </Button>
-              <Button 
-              onPress={() => {
-                setChecked("second");
-                setRole(false);
-              }}
-              mode= {checked==="second"? "contained" : "outlined"}
-              style={styles.RadioButton}
+              <Button
+                onPress={() => {
+                  setChecked("second");
+                  setRole(false);
+                }}
+                mode={checked === "second" ? "contained" : "outlined"}
+                style={styles.RadioButton}
               >
                 {/* <Icon source="face-agent" size={24} color="black" /> */}
                 <Text style={styles.label}>Supervisior</Text>
@@ -84,18 +88,40 @@ const InfoScreen = ({ navigation }: any) => {
               style={styles.input}
             />
           </View>
-          <View
-            style={{  marginTop: 200, alignItems: "flex-end" }}
-          >
-          <Button
-            mode="contained"
-            icon="check"
-            onPress={handleSave}
-          >
-            Done!
-          </Button>
+          <ObserverMessage />
+          <View style={{ marginTop: 180, flexDirection: "row" }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "flex-start",
+                flexDirection: "row",
+              }}
+            >
+              <Button
+                mode="outlined"
+                icon="chevron-left"
+                onPress={() => {
+                  userStore.setErrorMessage("");
+                  setAddress("");
+                  setContact("");
+                  navigation.navigate("Register");
+                }}
+              >
+                Back
+              </Button>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "flex-end",
+                flexDirection: "row",
+              }}
+            >
+              <Button mode="contained" icon="check" onPress={handleSave}>
+                Done!
+              </Button>
+            </View>
           </View>
-
         </Card.Content>
       </Card>
     </SafeAreaView>
@@ -130,7 +156,7 @@ const styles = StyleSheet.create({
   card_button: {
     margin: 7,
   },
-  section:{
+  section: {
     marginBottom: 10,
   },
   notes: {
@@ -143,12 +169,12 @@ const styles = StyleSheet.create({
     color: "black",
   },
   RadioButton: {
-    height:80,
-    width:175,
+    height: 80,
+    width: 175,
     color: "white",
-    margin:3,
-    justifyContent:"center"
-  }
+    margin: 3,
+    justifyContent: "center",
+  },
 });
 
 export default InfoScreen;
