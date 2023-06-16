@@ -1,12 +1,8 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  StyleSheet
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import userStore from "../../stores/userStore";
-import { Colors } from "../../consts";
+import { Strings } from "../../consts";
 
 
 const SupervisorHomeScreen = ({ navigation }: any) => {
@@ -14,34 +10,34 @@ const SupervisorHomeScreen = ({ navigation }: any) => {
     <View style={{height:"100%"}}>
       <View style={{ padding: 10 }}>
         <Text style={{ color: "black", fontSize: 25, fontWeight:"500" }}>
-          Hello {userStore.user?.user_name}, let's organize their day!
+          Hello {userStore.user?.user_name}, {Strings.organize_day}
         </Text>
       </View>
       <View style={{ flexDirection: "row" }}>
         <View style={{ padding: 10 }}>
-          <Text> Plan their schedule</Text>
+          <Text>{Strings.plan_schedule}</Text>
         </View>
         <Button
             onPress={() => navigation.navigate("Calendar")}
-          > Add events
+          > {Strings.add_events}
           </Button>
       </View>
       <View style={{ flexDirection: "row" }}>
         <View style={{ padding: 10 }}>
-          <Text> Give them some tasks</Text>
+          <Text> {Strings.give_tasks} </Text>
         </View>
         <Button
             onPress={() => navigation.navigate("ToDo")}
-          > Add tasks
+          > {Strings.add_tasks}
           </Button>
       </View>
       <View style={{ flexDirection: "row" }}>
         <View style={{ padding: 10 }}>
-          <Text> Want to update on their last events?</Text>
+          <Text> {Strings.update_events} </Text>
         </View>
         <Button
             onPress={() => navigation.navigate("ToDo")}
-          > Go to Notes
+          > {Strings.go_to_notes}
           </Button>
       </View>
     </View>

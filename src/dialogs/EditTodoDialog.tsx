@@ -4,7 +4,7 @@ import notesStore from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import todosStore, { TodoDialogs } from "../stores/todosStore";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 
 
 const EditTodoDialog = () => {
@@ -17,12 +17,12 @@ const EditTodoDialog = () => {
   }, [todosStore.selectedTodo])
 
   return BasicDialog({
-    title: "Edit Task",
+    title: Strings.edit_task_header,
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <TextInput
-            label="task"
+            label={Strings.task_field_header}
             value={content}
             onChangeText={(content) => setContent(content)}
             style={styles.input}
@@ -33,13 +33,11 @@ const EditTodoDialog = () => {
     isVisible: todosStore.isDialogOpen(TodoDialogs.EditTodoDialog),
     enableActions: true,
     onOk: () => {
-      console.log("ok");
       todosStore.closeAllDialogs();
       todosStore.editTodo(notesStore.selectedNote?.id||0 , content);
       todosStore.setSelectedTodo(null);
     },
     onCancle: () => {
-      console.log("cancle");
       todosStore.closeAllDialogs();
       todosStore.setSelectedTodo(null);
     },

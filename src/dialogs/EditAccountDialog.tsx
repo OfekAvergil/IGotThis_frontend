@@ -2,7 +2,7 @@ import * as React from "react";
 import { TextInput } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 import { useState } from "react";
 import userStore, { settingsDialogs } from "../stores/userStore";
 
@@ -31,42 +31,39 @@ const EditAccountDialog = () => {
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <TextInput
-            label="Name"
+            label={Strings.user_field_header}
             value={username}
             onChangeText={(title) => setUsername(title)}
             style={styles.input}
           />      
           <TextInput
-            label="Mail"
+            label={Strings.email_field_header}
             value={email}
             onChangeText={(title) => setEmail(title)}
             style={styles.input}
           />          
           <TextInput
-            label="Home Address"
+            label={Strings.info_page_address_field_label}
             value={address}
             onChangeText={(title) => setAddress(title)}
             style={styles.input}
           />
           <TextInput
-            label="Emergency Contact"
+            label={Strings.content_field_header}
             value={contact}
             onChangeText={(title) => setContact(title)}
             style={styles.input}
           />
-
         </View>
       </View>
     ),
     isVisible: userStore.isDialogOpen(settingsDialogs.AccountDialog),
     enableActions: true,
     onOk: () => {
-      console.log("ok");
       userStore.closeAllDialogs();
       userStore.editUser(username, email, address, contact);
     },
     onCancle: () => {
-      console.log("cancle");
       resetModal();
       userStore.closeAllDialogs();
     },

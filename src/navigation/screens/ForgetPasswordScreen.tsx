@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, View } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
-import { Colors } from "../../consts";
+import { Colors, Pages, Strings } from "../../consts";
 import { observer } from "mobx-react";
 import LoginError from "../../components/LoginError";
 
@@ -20,12 +20,11 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
     if(isPasswordsOk()){
       if(!userStore.errorMessage){
         userStore.setErrorMessage("");
-        setInputUsername("");
-        setInputMail("");
-        navigation.navigate("PickView");
+        clearPage();
+        navigation.navigate(Pages.PickView);
       };
     } else {
-      userStore.setErrorMessage("passwords do not match.");
+      userStore.setErrorMessage(Strings.error_passwords_not_match);
     }   
   };
   
@@ -34,26 +33,30 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
   }
 
   const handleBack = () => { 
-    setInputUsername("");
-    setInputMail("");
-    navigation.navigate("Login");
+    clearPage();
+    navigation.navigate(Pages.Login);
   };
+
+  const clearPage = ()=>{
+    setInputMail("");
+    setInputUsername("");
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <LoginHeader header="Enter the user's details"/>
+      <LoginHeader header={Strings.forget_password_header}/>
       <Card style={styles.card}>
         <Card.Content>
           <TextInput
             value={inputUsername}
             onChangeText={setInputUsername}
-            placeholder="User name"
+            label={Strings.user_field_header}
             secureTextEntry={false}
             right={<TextInput.Icon icon="account" />}
             style={styles.input}
           />
           <TextInput
-            placeholder="Mail"
+            label={Strings.email_field_header}
             value={inputMail}
             onChangeText={setInputMail}
             secureTextEntry={true}
@@ -62,7 +65,7 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
             
           />
           <TextInput
-            label="New Password"
+            label={Strings.new_password_field_header}
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
@@ -70,7 +73,7 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
             style={styles.input}
           />
           <TextInput
-            label="Confirm Password"
+            label={Strings.reenter_password_field_header}
             value={passwordRepeat}
             onChangeText={setPasswordRepeat}
             secureTextEntry={true}
@@ -79,25 +82,24 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
           />
           <ObserverMessage/>
           < View>
-          <Button
-            style={{}}
-            mode="outlined"
-            icon="chevron-left"
-            onPress={handleBack}
-          >
-            Back
-          </Button>
-          <Button
-            style={{}}
-            mode="contained"
-            icon="check"
-            onPress={handleSend}
-            disabled={inputUsername==="" || inputMail===""}
-          >
-            Send
-          </Button>
+            <Button
+              style={{}}
+              mode="outlined"
+              icon="chevron-left"
+              onPress={handleBack}
+            >
+              {Strings.back_button}
+            </Button>
+            <Button
+              style={{}}
+              mode="contained"
+              icon="check"
+              onPress={handleSend}
+              disabled={inputUsername==="" || inputMail===""}
+            >
+              {Strings.ok_button}
+            </Button>
           </View>
-          
         </Card.Content>
       </Card>
     </SafeAreaView>

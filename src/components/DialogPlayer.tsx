@@ -8,10 +8,8 @@ export interface playerProps {
 }
 
 export default function DialogPlayer(props: playerProps) {
-  
   async function playRecording() {
     try {
-      //const recordingUri = props.recording?.getURI();
       const playbackObject = new Audio.Sound();
       await playbackObject.loadAsync({ uri: props.recording || "" });
       await playbackObject.playAsync();
@@ -19,7 +17,6 @@ export default function DialogPlayer(props: playerProps) {
       console.log(error);
     }
   }
-
 
   return (
     <View
@@ -29,7 +26,6 @@ export default function DialogPlayer(props: playerProps) {
       <View
         style={{ flexDirection: "row", alignItems: "center", paddingLeft: 23 }}
       >
-        
         <IconButton
           onPress={playRecording}
           icon="play"

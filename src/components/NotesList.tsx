@@ -5,20 +5,13 @@ import notesStore, { NotesDialogs, note } from "../stores/notesStore";
 import noteStore from "../stores/notesStore";
 import { useEffect } from "react";
 import userStore from "../stores/userStore";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 import PopUpMenu from "./PopUpMenu";
 
 
 export default function NotesList() {
   useEffect(() => {
-    // This code will run after the component has been rendered to the screen
-    console.log('userStore.secretKey' + userStore.secretKey)
     noteStore.fetchNotes(userStore.secretKey);
-
-    return () => {
-      // This cleanup function will run when the component is unmounted or when the dependencies change
-      // You can perform cleanup tasks or cancel any ongoing operations here
-    };
   }, []);
 
   const renderItem = (item: note) => {
@@ -37,7 +30,7 @@ export default function NotesList() {
               <PopUpMenu 
               menuItems={[
                 {
-                  title: "Edit",
+                  title: Strings.popup_menu_edit_button,
                   action: () => {
                     notesStore.setSelectedNote(item);
                     notesStore.openDialog(NotesDialogs.EditNoteDialog);
@@ -45,7 +38,7 @@ export default function NotesList() {
                   leadingIcon: "lead-pencil"
                 },
                 {
-                  title: "Delete",
+                  title: Strings.popup_menu_delete_button,
                   action: () => {
                     noteStore.deleteNote(item.id);
                   },
@@ -72,7 +65,7 @@ export default function NotesList() {
       ListHeaderComponent={
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 1, padding: 10 }}>
-            <Text style={{ flex: 1 }}> Your Notes</Text>
+            <Text style={{ flex: 1 }}> {Strings.notes_header} </Text>
           </View>
           <View>
             <Button
@@ -80,7 +73,7 @@ export default function NotesList() {
                 notesStore.openDialog(NotesDialogs.AddNoteDialog);
               }}
             >
-              New Note +
+              {Strings.new_note_button}
             </Button>
           </View>
         </View>

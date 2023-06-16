@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Image, View, Text } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import AppIntroSlider from 'react-native-app-intro-slider';
+import { Pages, Strings } from '../../consts';
 
 interface Slide {
   key: string;
@@ -52,7 +53,7 @@ const Walkthrough= ({ navigation }: any) => {
       <Button 
         mode="contained" 
         style={styles.button}>
-        Done
+        {Strings.done_button}
       </Button>
     );
   };
@@ -62,7 +63,7 @@ const Walkthrough= ({ navigation }: any) => {
       <AppIntroSlider 
       renderItem={renderSlide} 
       data={slides} 
-      onDone={()=>{navigation.navigate("NavBar")}}
+      onDone={()=>{navigation.navigate(Pages.NavBar)}}
       renderNextButton={renderNextButton}
       renderDoneButton={renderDoneButton}
       />

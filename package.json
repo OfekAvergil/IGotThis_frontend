@@ -35,8 +35,6 @@
     "react-native-chatgpt": "^0.9.0",
     "react-native-datepicker": "^1.7.2",
     "react-native-dotenv": "^3.4.8",
-    "react-native-modal-datetime-picker": "^15.0.0",
-    "react-native-paper-datetimepicker": "^0.0.2",
     "react-native-web": "~0.18.11",
     "transform-class-properties": "^1.0.0-beta"
   },

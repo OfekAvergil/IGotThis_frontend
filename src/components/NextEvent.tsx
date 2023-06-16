@@ -1,17 +1,13 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity} from "react-native";
 import { Card } from 'react-native-paper';
-import { Colors } from '../consts';
+import { Colors, Pages, Strings } from '../consts';
 import eventsStore, { event } from '../stores/eventsStore';
-import { useNavigation } from '@react-navigation/native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const NextEvent = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const [nextEvent, setNextEvent] = React.useState<event>();
 
@@ -47,10 +43,10 @@ const NextEvent = () => {
 
   const emptyState = (
     <Card style={styles.emptyListItem}>
-      <TouchableOpacity onPress={() => navigation.navigate("Calendar")}>
+      <TouchableOpacity onPress={() => navigation.navigate(Pages.Calendar)}>
         <View>
           <Text style={{ color: "white", fontSize: 18 }}>
-            No events are planned, let's add some +
+            {Strings.empty_events_message}
           </Text>
         </View>
       </TouchableOpacity>
@@ -77,7 +73,7 @@ const NextEvent = () => {
       <View style={styles.container}>
         <View style={{ flexDirection: "row" }}>
           <View style={{ padding: 10 }}>
-            <Text> Your Next Event</Text>
+            <Text> {Strings.next_event_title} </Text>
           </View>
         </View>
         {nextEvent ? (
@@ -94,8 +90,6 @@ export default NextEvent;
 const styles = StyleSheet.create({
     
   container: {
-    //flex: 1,
-    //justifyContent: "flex-end",
     marginBottom: 5,
     marginTop:5,
     backgroundColor: 'transparent'
