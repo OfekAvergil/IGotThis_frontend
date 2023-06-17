@@ -105,7 +105,7 @@ class EventsStore {
       try {
         let id = newEvent.id;
         let res = await sendPut(
-          "/events/addTasks",
+          "events/addTasks",
           id,
           id,
           userStore.secretKey
@@ -266,7 +266,7 @@ class EventsStore {
       notificationDocument.eventId = event.id;
       console.log("succes in scheduling event", notificationIdentifier);
       let resNotificationAddInServer = await axios.post(
-        `${BASE_URL}/api/notifications`,
+        `${BASE_URL}/notifications`,
         notificationDocument,
         {
           headers: {
@@ -282,7 +282,7 @@ class EventsStore {
   public cancelSchedulePushNotification = async (eventId: string) => {
     try {
       let res = await axios.delete(
-        `${BASE_URL}/api/notifications?id=${eventId}`,
+        `${BASE_URL}/notifications?id=${eventId}`,
         {
           headers: {
             Authorization: userStore.secretKey,
@@ -292,7 +292,7 @@ class EventsStore {
 
       if (res.data && res.data.id) {
         res = await axios.delete(
-          `${BASE_URL}/api/notifications?id=${res.data.id}`,
+          `${BASE_URL}/notifications?id=${res.data.id}`,
           {
             headers: {
               Authorization: userStore.secretKey,

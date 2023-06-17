@@ -63,7 +63,7 @@ export const Strings= {
     log_out_button: "Log Out",
     empty_events_message: "No events are planned, let's add some +",
     next_event_title: "Your Next Event",
-    empty_tasks_message: "No tasks planned. Let's add some +", 
+    empty_tasks_message: "No tasks are planned. Let's add some +", 
     next_tasks_title: "Your Next Tasks", 
     notes_header: "Your Notes", 
     new_note_button: "New Note +", 
@@ -99,21 +99,16 @@ export const Strings= {
     sign_in_button: "SIGN ME IN !",
     organize_day: "Let's organize the day!",
     plan_schedule: "Plan the schedule",
-    add_events: "Add events",
+    add_events: "Add events +",
     give_tasks: "Give them some tasks",
-    add_tasks: "Add tasks",
+    add_tasks: "Add tasks +",
     update_events: "Want to update on their last events?",
     go_to_notes: "Go to Notes",
     notification_header: "Event coming up",
     error_passwords_not_match: "Passwords do not match.",
     error_login_data: "Mail or password are incorrect.",
     error_login_connection: "Error logging in user:",
-    error_user_exist: "user with the same mail address already exist",
+    error_user_exist: "User with the same mail address already exist",
     error_register_connection: "Error signing up in user:",
     error_editing_connection: "Error in editing user:",
-
-
-
-
-
 }

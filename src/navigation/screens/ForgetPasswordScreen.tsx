@@ -59,7 +59,7 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
             label={Strings.email_field_header}
             value={inputMail}
             onChangeText={setInputMail}
-            secureTextEntry={true}
+            secureTextEntry={false}
             style={styles.input}
             right={<TextInput.Icon icon="email" />}
             
@@ -81,24 +81,42 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
             style={styles.input}
           />
           <ObserverMessage/>
-          < View>
-            <Button
-              style={{}}
-              mode="outlined"
-              icon="chevron-left"
-              onPress={handleBack}
+          <View style={{flexDirection:"row"}}>
+            <View
+                style={{
+                  flex: 1,
+                  justifyContent: "flex-start",
+                  flexDirection: "row",
+                  paddingHorizontal: 15,
+                }}
+              >
+              <Button
+                style={{}}
+                mode="outlined"
+                icon="chevron-left"
+                onPress={handleBack}
+              >
+                {Strings.back_button}
+              </Button>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "flex-end",
+                flexDirection: "row",
+                paddingHorizontal: 15,
+              }}
             >
-              {Strings.back_button}
-            </Button>
-            <Button
-              style={{}}
-              mode="contained"
-              icon="check"
-              onPress={handleSend}
-              disabled={inputUsername==="" || inputMail===""}
-            >
-              {Strings.ok_button}
-            </Button>
+              <Button
+                style={{}}
+                mode="contained"
+                icon="check"
+                onPress={handleSend}
+                disabled={inputUsername==="" || inputMail===""}
+              >
+                {Strings.ok_button}
+              </Button>
+            </View>
           </View>
         </Card.Content>
       </Card>

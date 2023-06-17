@@ -48,7 +48,7 @@ export async function sendLogin(email: string, password: string) {
 
 // SIGNUP
 export async function sendSignUp(newUser: user) {
-  return await axios.post(`${BASE_URL}/api/user/signup`,
+  return await axios.post(`${BASE_URL}/user/signup`,
     {
         name: newUser.user_name,
         password: newUser.password,
@@ -63,7 +63,7 @@ export async function sendSignUp(newUser: user) {
 // PUT USER
 export async function sendEditUser(mail: string, secretKey: string|null, name?: string, homeAddress?: string, contactNumber?: string) {
   return await axios.put(
-    `${BASE_URL}/api/user?email=${mail}`,
+    `${BASE_URL}/user?email=${mail}`,
     {
         name: name,
         mail: mail,
@@ -79,7 +79,7 @@ export async function sendEditUser(mail: string, secretKey: string|null, name?: 
 
 // RESET PASSWORD
 export async function sendResetPassword(mail: string, name: string, password: string) {
-  return await axios.put(`${BASE_URL}/api/user/forgotPassword?email=${mail}`,{
+  return await axios.put(`${BASE_URL}/user/forgotPassword?email=${mail}`,{
     name: name,    
     password: password
 });

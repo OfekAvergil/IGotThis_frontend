@@ -22,6 +22,11 @@ export default function TodoList() {
     todosStore.deleteTodo(item.id)
   }
 
+  function editNote(item:toDo): void{
+    todosStore.setSelectedTodo(item);
+    todosStore.openDialog(TodoDialogs.EditTodoDialog);
+  }
+
   const renderItem = (item: toDo) => {
     return (
       <Card style={styles.listItem}>
@@ -46,8 +51,7 @@ export default function TodoList() {
                   {
                     title: Strings.popup_menu_edit_button,
                     action: () => {
-                      todosStore.setSelectedTodo(item);
-                      todosStore.openDialog(TodoDialogs.EditTodoDialog);
+                      editNote(item);
                     },
                     leadingIcon: "lead-pencil"
                   },

@@ -1,18 +1,20 @@
-import React, { Component, useState } from "react";
 import userStore from "../stores/userStore";
 import notesStore from "../stores/notesStore";
 import todosStore from "../stores/todosStore";
 import axios from "axios";
+import { BASE_URL } from "../consts";
+
 
 export async function handleExtractTasks() {
   const text = notesStore.textCurrentEventNote;
+  const url = `${BASE_URL}/tasks/extract-task`;
   if (text) {
     try {
       if (text == null) {
         throw new Error("Uh oh, no text was provided");
       }
       const response = await axios.post(
-        `${BASE_URL}/api/tasks/extract-task`,
+        url,
         { text: text },
         {
           headers: {
@@ -35,6 +37,8 @@ export async function handleSpeechToText() {
   const path_to_audio_uri = notesStore.recordingCurrentEventNote;
   const path_to_audio_mp3 = convertToMp3(path_to_audio_uri);
   console.log("path_to_audio_mp3: ", path_to_audio_mp3);
+  const url = `${BASE_URL}/tasks/speech-to-text`;
+
   if (path_to_audio_mp3) {
     try {
       if (path_to_audio_mp3 == null) {
@@ -42,7 +46,7 @@ export async function handleSpeechToText() {
       }
 
       const response = await axios.post(
-        `http://192.168.1.236:4005/api/tasks/speech-to-text`,
+        url,
         { path_to_audio_mp3: path_to_audio_mp3 },
         {
           headers: {
