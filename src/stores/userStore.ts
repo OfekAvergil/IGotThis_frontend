@@ -30,6 +30,7 @@ export interface restoreData {
 export enum settingsDialogs {
   AccountDialog,
   PreferencesDialog,
+  HelpDialog
 }
 
 class UserStore {

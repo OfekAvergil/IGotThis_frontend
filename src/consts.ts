@@ -8,7 +8,7 @@ export const Colors = {
     background: 'white',
     pink: "#E45082",
 }
-//const {IP, PORT} = process.env
+
 export const BASE_URL = `http://localhost:${PORT}/api`;
 
 export enum Pages {
@@ -29,7 +29,6 @@ export enum Pages {
     Notes = "Notes"
 }
 
-export const SettingsPages: string[]= ["Account","Preferences", "Help", "Logout"];
 
 export const Strings= {
     login_page_header: "Login",
@@ -111,4 +110,24 @@ export const Strings= {
     error_user_exist: "User with the same mail address already exist",
     error_register_connection: "Error signing up in user:",
     error_editing_connection: "Error in editing user:",
+    settings_page_account: "Account",
+    settings_page_preferences: "Preferences",
+    settings_page_help: "Help",
+    settings_page_logout: "Logout",
+    help_content: 
+    `Welcome to the IGotThis Help Center!
+        Frequently Asked Questions (FAQs):
+    
+    1. How do I get started with IGotThis?
+       - Simply download the app from the App Store or Google Play and follow the on-screen instructions to create your account.
+    
+    2. How do I set reminders for my tasks?
+       - To set a reminder, go to the Todos section, select the item, and tap on the "Add To Calender" button. Choose your desired time and receive notifications when it's time to complete the task.
+    
+    3. Can I customize the app to fit my preferences?
+       - Absolutely! IGotThis offers customizable settings to cater to your individual needs. You can change the getting ready time at the settings menu under "Preferences".
+    
+    We're here to assist you every step of the way. If you have any feedback, suggestions, or need further assistance, please don't hesitate to reach out to us. Your satisfaction is our top priority.
+    
+    Thank you for choosing IGotThis. Let's make your daily management easier and more enjoyable!`
 }

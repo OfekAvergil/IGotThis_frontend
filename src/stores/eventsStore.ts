@@ -1,9 +1,9 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import axios, * as others from "axios";
 import userStore from "./userStore";
-import { BASE_URL, Strings } from "../consts";
+import {  Strings } from "../consts";
 import { sendDelete, sendGet, sendPost, sendPut } from "../api/REST_Requests";
 import * as Notifications from "expo-notifications";
+import { convertStringToTasks } from "../common";
 
 export interface event {
   id: string;
@@ -39,6 +39,7 @@ export enum EventsDialogs {
 }
 
 const Route: string = "events";
+const notificationsRoute: string = "notificiation";
 
 class EventsStore {
   events: event[] = [];
@@ -113,7 +114,7 @@ class EventsStore {
         let tasks = res.data;
         let eventIndex = this.events.findIndex((n) => n.id === newEvent.id);
         if (newEvent)
-          this.events[eventIndex].tasks = this.convertStringToTasks(tasks);
+          this.events[eventIndex].tasks = convertStringToTasks(tasks);
       } catch (error) {
         console.error("Failed to add tasks to event:", error);
       }
@@ -265,14 +266,10 @@ class EventsStore {
       notificationDocument.id = notificationIdentifier;
       notificationDocument.eventId = event.id;
       console.log("succes in scheduling event", notificationIdentifier);
-      let resNotificationAddInServer = await axios.post(
-        `${BASE_URL}/notifications`,
+      let resNotificationAddInServer = await sendPost(
+        notificationsRoute,
         notificationDocument,
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+        userStore.secretKey,
       );
     } catch (error) {
       console.log("error in scheduling event", error);
@@ -281,23 +278,16 @@ class EventsStore {
 
   public cancelSchedulePushNotification = async (eventId: string) => {
     try {
-      let res = await axios.delete(
-        `${BASE_URL}/notifications?id=${eventId}`,
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+      let res = await sendDelete(
+        notificationsRoute,
+        eventId,
+        userStore.secretKey
       );
-
       if (res.data && res.data.id) {
-        res = await axios.delete(
-          `${BASE_URL}/notifications?id=${res.data.id}`,
-          {
-            headers: {
-              Authorization: userStore.secretKey,
-            },
-          }
+        res = await sendDelete(
+          notificationsRoute,
+          res.data.id,
+          userStore.secretKey
         );
         let cancelNotificationRes =
           await Notifications.cancelScheduledNotificationAsync(res.data.id);
@@ -309,31 +299,6 @@ class EventsStore {
       console.log(`Error in canceling event notification: ${error}`);
     }
   };
-
-  private convertStringToTasks(str: string): eventTask[] {
-    const lines = str.split("\n"); // Split the string by newline characters
-    const tasks: eventTask[] = [];
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim(); // Remove leading/trailing whitespaces
-
-      if (line.length > 0) {
-        // Ignore empty lines
-        const taskNumberMatch = line.match(/^\d+\./); // Check if the line starts with a number followed by a dot
-
-        if (taskNumberMatch) {
-          const content = line.slice(taskNumberMatch[0].length).trim(); // Extract the content after the task number
-          const task = {
-            content,
-            isDone: false,
-          };
-          tasks.push(task);
-        }
-      }
-    }
-    console.log("completion ", tasks);
-    return tasks;
-  }
 }
 
 const eventsStore = new EventsStore();

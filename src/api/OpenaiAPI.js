@@ -1,73 +1,53 @@
 import userStore from "../stores/userStore";
 import notesStore from "../stores/notesStore";
 import todosStore from "../stores/todosStore";
-import axios from "axios";
-import { BASE_URL } from "../consts";
-
+import { sendPost } from "./REST_Requests";
 
 export async function handleExtractTasks() {
   const text = notesStore.textCurrentEventNote;
-  const url = `${BASE_URL}/tasks/extract-task`;
+  const route = `tasks/extract-task`;
   if (text) {
     try {
-      if (text == null) {
-        throw new Error("Uh oh, no text was provided");
-      }
-      const response = await axios.post(
-        url,
-        { text: text },
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-            //"Content-Type": "application/json",
-          },
-        }
-      );
-
+      const response = await sendPost(route, { text: text }, userStore.secretKey);
       const completion = await response.data;
-      // convert completion to list (complection = ["task1", "task2"])
       convertCompletionToList(completion);
     } catch (error) {
       console.error("Couldn't extract task", error);
     }
     notesStore.setTextCurrentEventNote(null);
+  } else{
+    console.error("Uh oh, no text was provided");
   }
 }
+
 export async function handleSpeechToText() {
   const path_to_audio_uri = notesStore.recordingCurrentEventNote;
   const path_to_audio_mp3 = convertToMp3(path_to_audio_uri);
   console.log("path_to_audio_mp3: ", path_to_audio_mp3);
-  const url = `${BASE_URL}/tasks/speech-to-text`;
-
+  const route = `tasks/speech-to-text`;
   if (path_to_audio_mp3) {
     try {
-      if (path_to_audio_mp3 == null) {
-        throw new Error("Uh oh, no path was provided");
-      }
-
-      const response = await axios.post(
-        url,
-        { path_to_audio_mp3: path_to_audio_mp3 },
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-            //"Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = await response.data;
-      // convert completion to list (complection = ["task1", "task2"])
+      const response = await  sendPost(
+        route, 
+        { path_to_audio_mp3: path_to_audio_mp3 }, 
+        userStore.secretKey);
+      const data = response.data;
       convertCompletionToList(data);
     } catch (error) {
       console.error("Couldn't convert speech to text", error);
     }
     notesStore.setRecordingCurrentEventNote(null);
+  } else {
+    console.error("Uh oh, no recording was provided");
   }
 }
 
+/**
+ * convert completion to seperated tasks (completion = ["task1", "task2"]), 
+ * and add them to the todos list
+ * @param completion - array of tasks
+ */
 function convertCompletionToList(completion) {
-  // convert completion to list (complection = ["task1", "task2"])
   // Remove the leading and trailing newline characters
   var cleanedText = completion.trim();
   // Remove the surrounding square brackets
@@ -87,7 +67,9 @@ function convertCompletionToList(completion) {
 }
 
 
-// Helper function to convert an audio file from URI to ArrayBuffer
+/**
+ * Helper function to convert an audio file from URI to ArrayBuffer
+ */
 function convertAudioToBuffer(uri) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -110,7 +92,9 @@ function convertAudioToBuffer(uri) {
   });
 }
 
-// Helper function to encode an ArrayBuffer to MP3
+/**
+ * Helper function to encode an ArrayBuffer to MP3
+ */
 function encodeToMp3(buffer) {
   const mp3Encoder = new lamejs.Mp3Encoder(1, 44100, 128);
   const samples = new Int16Array(buffer);
@@ -136,7 +120,9 @@ function encodeToMp3(buffer) {
   return mergedMp3Data.buffer;
 }
 
-// Convert audio file from URI to MP3
+/** 
+ * Convert audio file from URI to MP3
+ */ 
 function convertToMp3(uri) {
   convertAudioToBuffer(uri)
     .then((audioBuffer) => {
