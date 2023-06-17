@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
-import userStore from "../../stores/userStore";
+import userStore, { settingsDialogs } from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
 import { Colors, Pages, Strings } from "../../consts";
 import { observer } from "mobx-react";
 import LoginError from "../../components/LoginError";
+import ResetPasswordDialog from "../../dialogs/ResetPasswordDialog";
 
 const ForgetPasswordScreen = ({ navigation }: any) => {
   const [inputUsername, setInputUsername] = useState("");
@@ -14,6 +15,7 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const ObserverMessage = observer(LoginError)
+  const ObservedModal = observer(ResetPasswordDialog);
 
   async function handleSend() {
     await userStore.restPassword({user_name: inputUsername, mail: inputMail, password: password});
@@ -21,7 +23,7 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
       if(!userStore.errorMessage){
         userStore.setErrorMessage("");
         clearPage();
-        navigation.navigate(Pages.PickView);
+        userStore.openDialog(settingsDialogs.ResetPassword);
       };
     } else {
       userStore.setErrorMessage(Strings.error_passwords_not_match);
@@ -120,6 +122,7 @@ const ForgetPasswordScreen = ({ navigation }: any) => {
           </View>
         </Card.Content>
       </Card>
+      <ObservedModal/>
     </SafeAreaView>
   );
 };

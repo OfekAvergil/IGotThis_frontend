@@ -7,14 +7,14 @@ export async function handleExtractTasks() {
   const text = notesStore.textCurrentEventNote;
   const route = `tasks/extract-task`;
   if (text) {
-    try {
-      const response = await sendPost(route, { text: text }, userStore.secretKey);
-      const completion = await response.data;
-      convertCompletionToList(completion);
-    } catch (error) {
-      console.error("Couldn't extract task", error);
-    }
-    notesStore.setTextCurrentEventNote(null);
+    // try {
+    //   const response = await sendPost(route, { text: text }, userStore.secretKey);
+    //   const completion = await response.data;
+    //   convertCompletionToList(completion);
+    // } catch (error) {
+    //   console.error("Couldn't extract task", error);
+    // }
+    // notesStore.setTextCurrentEventNote(null);
   } else{
     console.error("Uh oh, no text was provided");
   }
@@ -26,17 +26,17 @@ export async function handleSpeechToText() {
   console.log("path_to_audio_mp3: ", path_to_audio_mp3);
   const route = `tasks/speech-to-text`;
   if (path_to_audio_mp3) {
-    try {
-      const response = await  sendPost(
-        route, 
-        { path_to_audio_mp3: path_to_audio_mp3 }, 
-        userStore.secretKey);
-      const data = response.data;
-      convertCompletionToList(data);
-    } catch (error) {
-      console.error("Couldn't convert speech to text", error);
-    }
-    notesStore.setRecordingCurrentEventNote(null);
+    // try {
+    //   const response = await  sendPost(
+    //     route, 
+    //     { path_to_audio_mp3: path_to_audio_mp3 }, 
+    //     userStore.secretKey);
+    //   const data = response.data;
+    //   convertCompletionToList(data);
+    // } catch (error) {
+    //   console.error("Couldn't convert speech to text", error);
+    // }
+    // notesStore.setRecordingCurrentEventNote(null);
   } else {
     console.error("Uh oh, no recording was provided");
   }

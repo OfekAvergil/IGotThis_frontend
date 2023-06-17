@@ -1,4 +1,6 @@
 import { eventTask } from "./stores/eventsStore";
+import moment from 'moment';
+
 
 /**
  * format Date item to dd/mm/yyyy
@@ -42,4 +44,25 @@ export function convertStringToTasks(str: string): eventTask[] {
     }
     console.log("completion ", tasks);
     return tasks;
+  };
+
+
+  export function getTimeDifference(eventDateStr: string, eventTimeStr: string, minutesBeforeReminder: number): number {
+    const currentDate = moment();
+    const currentDateTime = moment(currentDate);
+  
+    const eventDateTimeStr = `${eventDateStr} ${eventTimeStr}`;
+    console.log("1", eventDateTimeStr);
+    const eventDateTime = moment(eventDateTimeStr, 'YYYY-MM-DD hh:mm A');
+    console.log("2", eventDateTime);
+
+    const reminderTime = moment(eventDateTime).subtract(minutesBeforeReminder, 'minutes');
+    console.log("3", reminderTime);
+
+    const timeDifferenceInSeconds = Math.abs(reminderTime.diff(currentDateTime, 'seconds'));
+    console.log("4", timeDifferenceInSeconds);
+
+    return timeDifferenceInSeconds;
   }
+  
+

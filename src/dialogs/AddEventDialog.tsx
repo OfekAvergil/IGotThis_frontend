@@ -226,14 +226,12 @@ const endingDateFields = (
     enableActions: true,
     onOk: () => {
       eventsStore.closeAllDialogs();
-      let notifyTimeFrame = "30";
       eventsStore.addEvent(
         title,
         dateStart,
         dateEnd,
         startTime,
         endTime,
-        notifyTimeFrame,
         content,
         location
       );

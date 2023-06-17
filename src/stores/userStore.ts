@@ -30,7 +30,8 @@ export interface restoreData {
 export enum settingsDialogs {
   AccountDialog,
   PreferencesDialog,
-  HelpDialog
+  HelpDialog,
+  ResetPassword
 }
 
 class UserStore {
@@ -39,6 +40,7 @@ class UserStore {
   audioPermissions: boolean = false;
   currentOpenDialog: settingsDialogs | null = null;
   errorMessage: string = "";
+  gettingReadyTime: string = '30';
 
   constructor() {
     makeAutoObservable(this, {
@@ -176,6 +178,10 @@ class UserStore {
 
   setErrorMessage(message: string) {
     this.errorMessage = message;
+  }
+
+  setGettingReadyTime(time: string){
+    this.gettingReadyTime = time;
   }
 }
 

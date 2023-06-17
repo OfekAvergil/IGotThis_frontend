@@ -1,15 +1,23 @@
 import * as React from "react";
-import { TextInput, Switch, Text   } from "react-native-paper";
+import { TextInput, Switch, Text } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View} from "react-native";
 import { Colors, Strings } from "../consts";
 import { useState } from "react";
 import userStore, { settingsDialogs } from "../stores/userStore";
 
-const EditAccountDialog = () => {
-  const [gettingReadyTime, setTime] = useState('30');
+const EditPreferencesDialog = () => {
+  const [gettingReadyTime, setTime] = useState(userStore.gettingReadyTime);
   const [notifications, setNotifications] = useState(true);
   const [tasks, setTasks] = useState(true);
+
+  const handleSave = () => {
+    if(notifications){
+      userStore.setGettingReadyTime(gettingReadyTime);
+    } else {
+      userStore.setGettingReadyTime('0');
+    }
+  }
 
   return BasicDialog({
     title: Strings.preferences_header,
@@ -53,6 +61,7 @@ const EditAccountDialog = () => {
     isVisible: userStore.isDialogOpen(settingsDialogs.PreferencesDialog),
     enableActions: true,
     onOk: () => {
+      handleSave();
       userStore.closeAllDialogs();
     },
     onCancle: () => {
@@ -64,7 +73,7 @@ const EditAccountDialog = () => {
   });
 };
 
-export default EditAccountDialog;
+export default EditPreferencesDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {

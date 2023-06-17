@@ -3,7 +3,7 @@ import userStore from "./userStore";
 import {  Strings } from "../consts";
 import { sendDelete, sendGet, sendPost, sendPut } from "../api/REST_Requests";
 import * as Notifications from "expo-notifications";
-import { convertStringToTasks } from "../common";
+import { convertStringToTasks, getTimeDifference } from "../common";
 
 export interface event {
   id: string;
@@ -70,7 +70,6 @@ class EventsStore {
     eventDateEnd: string,
     eventSatrtTime: string,
     eventEndTime: string,
-    eventNotifyTimeFrame: string,
     eventContent: string,
     eventLocation: string
   ) => {
@@ -82,7 +81,7 @@ class EventsStore {
         dateEnd: eventDateEnd,
         startTime: eventSatrtTime,
         endTime: eventEndTime,
-        notifyTimeFrame: eventNotifyTimeFrame,
+        notifyTimeFrame: userStore.gettingReadyTime,
         content: eventContent,
         location: eventLocation,
       };
@@ -244,13 +243,8 @@ class EventsStore {
   }
 
   public schedulePushNotification = async (event: event) => {
-    const date = new Date(`${event.dateStart} ${event.startTime}`);
-    const halfHour = Number(event.notifyTimeFrame) * 60 * 1000;
-    const now = new Date();
-    const secondsDiff = Math.floor(
-      (date.getTime() - halfHour - now.getTime()) / 1000
-    );
-
+    const secondsDiff = getTimeDifference(event.dateStart, event.startTime, Number(userStore.gettingReadyTime));
+    console.log("time diff", secondsDiff);
     try {
       let notificationDocument: notificationDoc = {
         content: {

@@ -66,7 +66,7 @@ export async function sendEditUser(mail: string, secretKey: string|null, name?: 
     `${BASE_URL}/user?email=${mail}`,
     {
         name: name,
-        mail: mail,
+        email: mail,
         homeAddress: homeAddress,
         contactNumber: contactNumber
     },

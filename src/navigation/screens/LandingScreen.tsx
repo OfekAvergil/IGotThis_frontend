@@ -4,6 +4,7 @@ import { Text, Button } from "react-native-paper";
 import { Colors, Pages, Strings } from "../../consts";
 import * as Notifications from 'expo-notifications';
 import eventsStore, { event } from '../../stores/eventsStore';
+import userStore from "../../stores/userStore";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,7 +28,11 @@ const LandingScreen = ({ navigation }: any) => {
       const currentEvent: event =  response.notification.request.content.data as event;
       eventsStore.setCurrentEvent(currentEvent.id);
       console.log('current:', eventsStore.currentEventId)
-      navigation.navigate(Pages.GettingReady);  
+      if(userStore.gettingReadyTime == '0'){
+        navigation.navigate(Pages.CurrentEvent);  
+      } else {
+        navigation.navigate(Pages.GettingReady);  
+      }
     });
 
     return () => {

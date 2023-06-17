@@ -29,7 +29,7 @@ const SettingsPage = ({ navigation }: any) => {
       <Card style={styles.listItem}>
           <TouchableOpacity
           onPress={() => { action() }}>
-          <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", margin: 2 }}>
               <View style={{ flex: 3, flexDirection: "row" }}>
                   <Icon source={icon} size={24} color={Colors.primary} />
                   <Text style={{ color: "black", fontSize: 18, paddingLeft:10 }}>{item}</Text>
