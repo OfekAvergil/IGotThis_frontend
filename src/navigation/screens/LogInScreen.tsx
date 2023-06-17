@@ -44,7 +44,7 @@ const LogInScreen = ({ navigation }: any) => {
             onChangeText={setInputMail}
             placeholder="Mail"
             secureTextEntry={false}
-            right={<TextInput.Icon icon="Email" />}
+            right={<TextInput.Icon icon="email" />}
             style={styles.input}
           />
           <TextInput

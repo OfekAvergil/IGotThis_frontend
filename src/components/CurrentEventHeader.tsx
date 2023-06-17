@@ -21,9 +21,11 @@ const CurrentEventHeader = (props: { header: string, hour: string, note?: string
                   style={{ height:22, width:22 }}/>
         </View>
       </View>
-      <View style={{paddingVertical:15, flexDirection:"row"}}>
-        <Icon source="clock" size={24} color={Colors.basicGrey} />
-        <Text style={{ color: Colors.basicGrey, fontSize: 18, textAlign: "left", marginRight:15 }}> {props.hour}</Text>
+      <View style={{flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
+        <View style={{paddingVertical:15, flexDirection:"row"}}>
+          <Icon source="clock" size={24} color={Colors.basicGrey} />
+          <Text style={{ color: Colors.basicGrey, fontSize: 18, textAlign: "left", marginRight:15 }}> {props.hour}</Text>
+        </View>
         {props.location && 
         <View style={{paddingVertical:15, flexDirection:"row"}}>
           <Icon source="navigation-variant" size={24} color={Colors.basicGrey} />

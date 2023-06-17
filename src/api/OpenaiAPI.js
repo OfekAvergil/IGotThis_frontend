@@ -12,7 +12,7 @@ export async function handleExtractTasks() {
         throw new Error("Uh oh, no text was provided");
       }
       const response = await axios.post(
-        `http://192.168.1.236:4005/api/tasks/extract-task`,
+        `${BASE_URL}/api/tasks/extract-task`,
         { text: text },
         {
           headers: {
