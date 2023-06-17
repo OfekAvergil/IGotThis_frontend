@@ -3,11 +3,9 @@ import { Divider, Text } from "react-native-paper";
 import eventsStore, {  EventsDialogs, event } from "../stores/eventsStore";
 import BasicDialog from "./BaseDialog";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Colors } from "../consts";
 
 const ShowEventDialog = () => {
   const event: event | null = eventsStore.selectedEvent;
-  console.log(event);
   if (!event) return null;
   return BasicDialog({
     title: event.title,

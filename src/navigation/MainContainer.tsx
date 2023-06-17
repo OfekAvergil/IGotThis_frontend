@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
-import { Colors } from "../consts";
+import { Colors, Pages } from "../consts";
 
 //Screens
 import HomeScreen from "./screens/HomeScreen";
@@ -41,13 +41,13 @@ function TabNavigator () {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName: string = "";
-            if (route.name === "Home") {
+            if (route.name === Pages.Home) {
               iconName = focused ? "home" : "home-outline";
-            } else if (route.name === "Calendar") {
+            } else if (route.name === Pages.Calendar) {
               iconName = focused ? "calendar" : "calendar-outline";
-            } else if (route.name === "ToDo") {
+            } else if (route.name === Pages.ToDo) {
               iconName = focused ? "list" : "list-outline";
-            } else if (route.name === "Notes") {
+            } else if (route.name === Pages.Notes) {
               iconName = focused ? "book" : "book-outline";
             }
             return <Ionicons name={iconName} size={size} color={Colors.secondery} />;
@@ -56,13 +56,13 @@ function TabNavigator () {
         })}
       >
          { isSuperviosr? 
-         <Tab.Screen name="Home" component={SupervisorHomeScreen} /> 
+         <Tab.Screen name={Pages.Home} component={SupervisorHomeScreen} /> 
         :
-        <Tab.Screen name="Home" component={HomeScreen} /> 
+        <Tab.Screen name={Pages.Home} component={HomeScreen} /> 
         }
-        <Tab.Screen name="Calendar" component={CalenderScreen} />
-        <Tab.Screen name="ToDo" component={ToDoScreen} />
-        <Tab.Screen name="Notes" component={NotesScreen} />
+        <Tab.Screen name={Pages.Calendar} component={CalenderScreen} />
+        <Tab.Screen name={Pages.ToDo} component={ToDoScreen} />
+        <Tab.Screen name={Pages.Notes} component={NotesScreen} />
       </Tab.Navigator>
   );
 };
@@ -72,17 +72,17 @@ export default function MainContainer() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Landing" component={LandingScreen} />
-        <Stack.Screen name="Login" component={LogInScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Info" component={infoScreen} />
-        <Stack.Screen name="NavBar" component={TabNavigator} />
-        <Stack.Screen name="GettingReady" component={GettingReadyScreen} />
-        <Stack.Screen name="CurrentEvent" component={CurrentEventScreen} />
-        <Stack.Screen name="Settings" component={SettingsPage} />
-        <Stack.Screen name="Walkthrough" component={Walkthrough} />
-        <Stack.Screen name="PickView" component={PickViewScreen} />
-        <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
+        <Stack.Screen name={Pages.Landing} component={LandingScreen} />
+        <Stack.Screen name={Pages.Login} component={LogInScreen} />
+        <Stack.Screen name={Pages.Register} component={RegisterScreen} />
+        <Stack.Screen name={Pages.Info} component={infoScreen} />
+        <Stack.Screen name={Pages.NavBar} component={TabNavigator} />
+        <Stack.Screen name={Pages.GettingReady} component={GettingReadyScreen} />
+        <Stack.Screen name={Pages.CurrentEvent} component={CurrentEventScreen} />
+        <Stack.Screen name={Pages.Settings} component={SettingsPage} />
+        <Stack.Screen name={Pages.Walkthrough} component={Walkthrough} />
+        <Stack.Screen name={Pages.PickView} component={PickViewScreen} />
+        <Stack.Screen name={Pages.ForgetPassword} component={ForgetPasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     

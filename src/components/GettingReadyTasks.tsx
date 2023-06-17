@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Card } from "react-native-paper";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 import Icon from 'react-native-paper/src/components/Icon'
 import eventsStore, { eventTask } from "../stores/eventsStore";
 
@@ -29,7 +29,7 @@ const GettingReadyTasks = () => {
       <View style={{ flex: 1, flexDirection: 'row' }}>
         <View style={{ flex: 1 }}>
           <Text style={{ color: 'white', fontSize: 20, paddingLeft: 10 }}>
-            {'no tasks planned'}
+            {Strings.getting_ready_empty_tasks_message}
           </Text>
         </View>
       </View>

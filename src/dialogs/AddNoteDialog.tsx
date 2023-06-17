@@ -4,7 +4,7 @@ import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import Recorder from "../components/DialogRecorder";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 
 
 const AddNoteDialog = () => {
@@ -27,13 +27,13 @@ const AddNoteDialog = () => {
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <TextInput
-            label="title"
+            label={Strings.title_field_header}
             value={title}
             onChangeText={(title) => setTitle(title)}
             style={styles.input}
           />
           <TextInput
-            label="content"
+            label={Strings.content_field_header}
             value={content}
             onChangeText={(content) => setContent(content)}
             multiline={true}
@@ -47,13 +47,11 @@ const AddNoteDialog = () => {
     isVisible: notesStore.isDialogOpen(NotesDialogs.AddNoteDialog),
     enableActions: true,
     onOk: () => {
-      console.log("ok");
       notesStore.closeAllDialogs();
       notesStore.addNote(title, content, recording ? recording : undefined);
       clearModal();
     },
     onCancle: () => {
-      console.log("cancle");
       notesStore.closeAllDialogs();
       clearModal();
     },

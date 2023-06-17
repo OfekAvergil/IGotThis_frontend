@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import LogoutButton from './LogoutButton';
 import { IconButton } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import { Colors } from '../consts';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { Colors, Pages } from '../consts';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const Header = () => {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   return (
     <View style={styles.headerContainer}>
@@ -21,8 +22,7 @@ const Header = () => {
           icon="account"
           iconColor={Colors.primary}
           onPress={() => {
-            console.log(navigation);
-            navigation.navigate('Settings');  
+            navigate(Pages.Settings);  
           }}
           style={{ height:22, width:22 }}/>
          <LogoutButton />

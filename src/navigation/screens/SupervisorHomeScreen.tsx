@@ -1,12 +1,8 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  StyleSheet
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Button, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
-import { Colors } from "../../consts";
+import { Strings } from "../../consts";
 
 
 const SupervisorHomeScreen = ({ navigation }: any) => {
@@ -19,35 +15,35 @@ const SupervisorHomeScreen = ({ navigation }: any) => {
       </View>
       <Card style={styles.container}>
         <View style={{ padding: 10 }}>
-          <Text style={{ color: "black", fontSize: 18, fontWeight:"500" }}> Plan schedule</Text>
+          <Text style={{ color: "black", fontSize: 18, fontWeight:"500" }}>{Strings.plan_schedule}</Text>
         </View>
         <Button
                   mode = "contained"
                   style={{width: 200, alignSelf:"center"}}
             onPress={() => navigation.navigate("Calendar")}
-          > Add events +
+          > {Strings.add_events}
           </Button>
       </Card>
       <Card style={styles.container}>
         <View style={{ padding: 10 }}>
-          <Text style={{ color: "black", fontSize: 18, fontWeight:"500" }}> Give them some tasks</Text>
+          <Text style={{ color: "black", fontSize: 18, fontWeight:"500" }}> {Strings.give_tasks} </Text>
         </View>
         <Button
           style={{width: 200, alignSelf:"center"}}
           mode = "contained"
             onPress={() => navigation.navigate("ToDo")}
-          > Add tasks +
+          > {Strings.add_tasks}
           </Button>
       </Card>
       <Card style={styles.container}>
         <View style={{ padding: 10 }}>
-          <Text style={{ color: "black", fontSize: 18, fontWeight:"500" }}> Want to update on their last events?</Text>
+          <Text style={{ color: "black", fontSize: 18, fontWeight:"500" }}> {Strings.update_events} </Text>
         </View>
         <Button
          style={{width: 200, alignSelf:"center"}}
             mode = "contained"
             onPress={() => navigation.navigate("ToDo")}
-          > Go to Notes
+          > {Strings.go_to_notes}
           </Button>
       </Card>
     </View>

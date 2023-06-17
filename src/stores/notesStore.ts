@@ -1,9 +1,7 @@
-import { makeAutoObservable, observable, action, runInAction } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { formatDate } from "../common";
-import axios, * as others from "axios";
 import userStore from "./userStore";
-import { Audio } from "expo-av";
-import { BASE_URL } from "../consts";
+import { sendDelete, sendGet, sendPost, sendPut } from "../api/REST_Requests";
 
 export interface note {
   id: number;
@@ -19,6 +17,8 @@ export enum NotesDialogs {
   EditNoteDialog,
 }
 
+const Route: string = "notes";
+
 class NotesStore {
   notes: note[] = [];
   currentOpenDialog: NotesDialogs | null = null;
@@ -32,16 +32,11 @@ class NotesStore {
 
   public fetchNotes = async (secretKey: string | null) => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/notes`, {
-        headers: {
-          Authorization: `${secretKey}`, // Include the token in the Authorization header
-        },
-      }); // replace with your API endpoint
-      runInAction(() => {
-        this.notes = response.data.notes; // assuming the API returns an array of notes
+      const response = await sendGet(Route, secretKey);
+      runInAction(async () => {
+        this.notes = response.data.notes;
       });
     } catch (error) {
-      // Handle error here
       console.error("Failed to fetch notes:", error);
     }
   };
@@ -59,12 +54,7 @@ class NotesStore {
         content: contentToSet,
         audio: record,
       };
-      let newNotePushed = await axios.post(`${BASE_URL}/api/notes`, newNote, {
-        headers: {
-          Authorization: userStore.secretKey,
-        },
-      });
-
+      let newNotePushed = await sendPost(Route, newNote, userStore.secretKey);
       this.notes = [...this.notes, newNotePushed.data];
     } catch (error) {
       console.log(`Error in adding note: ${error}`);
@@ -73,20 +63,18 @@ class NotesStore {
 
   public deleteNote = async (noteId: number) => {
     try {
-      let res = await axios.delete(`${BASE_URL}/api/notes?id=${noteId}`, {
-        headers: {
-          Authorization: userStore.secretKey,
-        },
-      });
+      let res = await sendDelete(Route, noteId, userStore.secretKey);
       this.notes = this.notes.filter((n) => n.id !== noteId);
     } catch (error) {
       console.log(`Error in deleting note: ${error}`);
     }
   };
 
-  public deleteAll = async()=>{
-    this.notes.forEach(item => {this.deleteNote(item.id)});
-  }
+  public deleteAll = async () => {
+    this.notes.forEach((item) => {
+      this.deleteNote(item.id);
+    });
+  };
 
   public editNote = async (
     noteId: number,
@@ -99,18 +87,15 @@ class NotesStore {
       if (noteIndex === -1) {
         throw new Error(`Note with ID ${noteId} not found`);
       }
-      let res = await axios.put(
-        `${BASE_URL}/api/notes?id=${noteId}`,
+      let res = await sendPut(
+        Route,
+        noteId,
         {
           name: noteName,
           content: contentToSet,
           audio: recording,
         },
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+        userStore.secretKey
       );
       this.notes[noteIndex].name = noteName;
       if (contentToSet) this.notes[noteIndex].content = contentToSet;

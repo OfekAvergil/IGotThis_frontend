@@ -3,7 +3,7 @@ import { TextInput } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import todosStore, { TodoDialogs } from "../stores/todosStore";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 
 const AddTodoDialog = () => {
   const [content, setContent] = React.useState("");
@@ -13,12 +13,12 @@ const AddTodoDialog = () => {
   }
 
   return BasicDialog({
-    title: "New Task",
+    title: Strings.new_task_header,
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <TextInput
-            label="task"
+            label={Strings.task_field_header}
             value={content}
             onChangeText={(content) => setContent(content)}
             style={styles.input}
@@ -29,13 +29,11 @@ const AddTodoDialog = () => {
     isVisible: todosStore.isDialogOpen(TodoDialogs.AddTodoDialog),
     enableActions: true,
     onOk: () => {
-      console.log("ok");
       todosStore.closeAllDialogs();
       todosStore.addTodo(content);
       clearModal();
     },
     onCancle: () => {
-      console.log("cancle");
       todosStore.closeAllDialogs();
       clearModal();
     },

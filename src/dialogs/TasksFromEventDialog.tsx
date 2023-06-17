@@ -3,15 +3,13 @@ import { Text } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
-import { useNavigation } from "@react-navigation/native";
+import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
-import notesStore, { note } from "../stores/notesStore";
-import userStore from "../stores/userStore";
-import todosStore from "../stores/todosStore";
-import axios from "axios";
+import { Pages, Strings } from "../consts";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const TasksFromEventDialog = () => {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   return BasicDialog({
     title: "notice",
@@ -19,7 +17,7 @@ const TasksFromEventDialog = () => {
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <Text>
-            Would you like to create tasks from the notes taken in this event?
+            {Strings.tasks_from_event_prompt}
           </Text>
         </View>
       </View>
@@ -28,20 +26,17 @@ const TasksFromEventDialog = () => {
     enableActions: true,
     onDismiss: () => {
       eventsStore.closeAllDialogs();
-      console.log(navigation);
-      navigation.navigate("NavBar");
+      navigate(Pages.NavBar);
     },
     onCancle: () => {
       eventsStore.closeAllDialogs();
-      console.log(navigation);
-      navigation.navigate("NavBar");
+      navigate(Pages.NavBar);
     },
-    // chatGPT connection here!
     onOk: () => {
       handleExtractTasks();
       handleSpeechToText();
       eventsStore.closeAllDialogs();
-      navigation.navigate("NavBar");
+      navigate(Pages.NavBar);
     },
   });
 };

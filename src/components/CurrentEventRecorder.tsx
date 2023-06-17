@@ -3,6 +3,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { Colors } from "../consts";
+import React from "react";
 
 export interface recorderProps {
   addNewRec: (record: Audio.Recording | null) => void;
@@ -57,11 +58,7 @@ export default function EventRecorder(props: recorderProps) {
     props.addNewRec(recording);
   }
 
-  //TODO
-  async function pauseRecording() :Promise<void> {
-    await recording?.pauseAsync;
-    setIsPaused(true);
-  }
+
 
   async function continueRecording() :Promise<void> {
     await recording?.startAsync;
@@ -84,8 +81,7 @@ export default function EventRecorder(props: recorderProps) {
       )}
       {isRecording && !isPaused  &&(
         <IconButton
-          onPress={pauseRecording}
-          icon="pause"
+          icon="microphone"
           mode="contained"
           containerColor={Colors.primary}
           iconColor="#DCDCDC"
@@ -104,7 +100,7 @@ export default function EventRecorder(props: recorderProps) {
         onPress={stopRecording}
         icon="stop"
         mode="contained"
-        disabled={recording  ? false : true}
+        disabled={recording ? false : true}
       ></IconButton>
       <IconButton
         onPress={deleteRecording}
@@ -113,7 +109,6 @@ export default function EventRecorder(props: recorderProps) {
         disabled={recording && !isRecording ? false : true}
       ></IconButton>
       </View>
-   
     </View>
   );
 }

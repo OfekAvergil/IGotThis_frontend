@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Button, TextInput, Text, IconButton } from "react-native-paper";
+import { TextInput, Text } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import todosStore from "../stores/todosStore";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 
 const AddEventDialog = () => {
   const [title, setTitle] = React.useState("");
@@ -82,18 +82,18 @@ const AddEventDialog = () => {
 
   const startingDateFields = (
   <View>
-    <Text style={{ marginBottom: 5 }}>starting date</Text>
+    <Text style={{ marginBottom: 5 }}>{Strings.starting_date_header}</Text>
     {/* for web users*/}
     {isWeb && 
         <View style={{ flexDirection: "row" }}>
           <TextInput
-            label={"date"}
+            label={Strings.date_field_header}
             value={dateStart}
             onChangeText={(text) => setDateStart(text)}
             style={styles.smallInput}
           />
           <TextInput
-            label={"time"}
+            label={Strings.time_field_header}
             style={styles.smallInput}
             value={startTime}
             onChangeText={(text) => setStartTime(text)}
@@ -103,7 +103,7 @@ const AddEventDialog = () => {
     {!isWeb && 
       <View style={{ flexDirection: "row" }}>
         <TextInput
-          label="date"
+          label={Strings.date_field_header}
           value={dateStart}
           onChangeText={(dateStart) => setDateStart(dateStart)}
           style={styles.input}
@@ -116,7 +116,7 @@ const AddEventDialog = () => {
         />
         <View>
           <TextInput
-            label="hour"
+            label={Strings.time_field_header}
             value={startTime}
             onChangeText={(startTime) => setStartTime(startTime)}
             style={styles.smallInput}
@@ -133,18 +133,18 @@ const AddEventDialog = () => {
 
 const endingDateFields = (
   <View>
-    <Text style={{ marginBottom: 5 }}>ending date</Text>
+    <Text style={{ marginBottom: 5 }}>{Strings.ending_date_header}</Text>
     {/* for web users*/}
     {isWeb && 
         <View style={{ flexDirection: "row" }}>
           <TextInput
-            label={"date"}
+            label={Strings.date_field_header}
             value={dateEnd}
             onChangeText={(text) => setDateEnd(text)}
             style={styles.smallInput}
           />
           <TextInput
-            label={"time"}
+            label={Strings.time_field_header}
             style={styles.smallInput}
             value={endTime}
             onChangeText={(text) => setEndTime(text)}
@@ -154,7 +154,7 @@ const endingDateFields = (
     {!isWeb && 
       <View style={{ flexDirection: "row" }}>
         <TextInput
-          label="date"
+          label={Strings.date_field_header}
           value={dateEnd}
           onChangeText={(dateEnd) => setDateEnd(dateEnd)}
           style={styles.input}
@@ -167,7 +167,7 @@ const endingDateFields = (
         />
         <View>
           <TextInput
-            label="hour"
+            label={Strings.time_field_header}
             value={endTime}
             onChangeText={(endTime) => setEndTime(endTime)}
             style={styles.smallInput}
@@ -188,7 +188,7 @@ const endingDateFields = (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <TextInput
-            label="title"
+            label={Strings.title_field_header}
             value={title}
             onChangeText={(title) => setTitle(title)}
             style={styles.input}
@@ -196,7 +196,7 @@ const endingDateFields = (
           {startingDateFields}
           {endingDateFields}
           <TextInput
-            label="location"
+            label={Strings.location_field_header}
             value={location}
             onChangeText={(location) => setLocation(location)}
             style={styles.input}
@@ -237,7 +237,6 @@ const endingDateFields = (
         content,
         location
       );
-      console.log(eventsStore.events);
       clearModal();
     },
     onCancle: () => {

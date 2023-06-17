@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import { Text, Button, TextInput, Card, RadioButton } from "react-native-paper";
-import userStore, { user } from "../../stores/userStore";
+import { Text, Button, Card } from "react-native-paper";
+import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
-import { Colors } from "../../consts";
+import { Colors, Pages, Strings } from "../../consts";
 import eventsStore from "../../stores/eventsStore";
 import todosStore from "../../stores/todosStore";
 import notesStore from "../../stores/notesStore";
-import Icon from 'react-native-paper/src/components/Icon';
 
 const PickViewScreen = ({ navigation }: any) => {
   const [role, setRole] = useState(false);
@@ -20,7 +19,7 @@ const PickViewScreen = ({ navigation }: any) => {
         await eventsStore.fetchEvents(userStore.secretKey);
         await todosStore.fetchTodos(userStore.secretKey);
         await notesStore.fetchNotes(userStore.secretKey);
-        navigation.navigate("NavBar");
+        navigation.navigate(Pages.NavBar);
       }
     };
   }
@@ -30,7 +29,7 @@ const PickViewScreen = ({ navigation }: any) => {
       <LoginHeader header="Sign in"/>
       <Card style={styles.card}>
         <Card.Content>
-          <Text style={styles.notes}>Which user is in this device?</Text>
+          <Text style={styles.notes}>{Strings.select_user_header}</Text>
           <View style={styles.section}>
             <View style={{ flexDirection: "row", alignItems:"center"}}>
               <Button 
@@ -42,7 +41,7 @@ const PickViewScreen = ({ navigation }: any) => {
               style={styles.RadioButton}
               >
                 {/* <Icon source="face-man-outline" size={22} color="black" /> */}
-                <Text style={styles.label}>Main User</Text>
+                <Text style={styles.label}>{Strings.main_user_title}</Text>
               </Button>
               <Button 
               onPress={() => {
@@ -53,7 +52,7 @@ const PickViewScreen = ({ navigation }: any) => {
               style={styles.RadioButton}
               >
                 {/* <Icon source="face-agent" size={24} color="black" /> */}
-                <Text style={styles.label}>Supervisior</Text>
+                <Text style={styles.label}>{Strings.supervisior_user_title}</Text>
               </Button>
             </View>
           </View>
@@ -65,10 +64,9 @@ const PickViewScreen = ({ navigation }: any) => {
             icon="check"
             onPress={handleSave}
           >
-            Done!
+           {Strings.done_button}
           </Button>
           </View>
-
         </Card.Content>
       </Card>
     </SafeAreaView>

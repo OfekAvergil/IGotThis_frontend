@@ -1,22 +1,22 @@
-import { useNavigation } from "@react-navigation/native";
+import { ParamListBase, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Button, Text } from "react-native-paper";
 import userStore from "../stores/userStore";
-
+import { Pages, Strings } from "../consts";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const LogoutButton = () => {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleLogout = () => {
     userStore.logOut();
-    console.log(navigation);
-    navigation.navigate('Login');
+    navigate(Pages.Login);
   };
 
   return <Button style={styles.logOutButton} onPress={handleLogout}>
     <Text>
-      Log Out
+      {Strings.log_out_button}
     </Text>
   </Button>;
 };

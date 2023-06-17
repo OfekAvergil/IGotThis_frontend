@@ -4,7 +4,7 @@ import BasicDialog from "./BaseDialog";
 import { Platform, StyleSheet, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 
 const EditEventDialog = () => {
   const selectedEvent = eventsStore.selectedEvent;
@@ -82,18 +82,18 @@ const EditEventDialog = () => {
 
   const startingDateFields = (
 <View>
-  <Text style={{ marginBottom: 5 }}>starting date</Text>
+  <Text style={{ marginBottom: 5 }}>{Strings.starting_date_header}</Text>
   {/* for web users*/}
   {isWeb && 
       <View style={{ flexDirection: "row" }}>
         <TextInput
-          label={"date"}
+          label={Strings.date_field_header}
           value={dateStart}
           onChangeText={(text) => setDateStart(text)}
           style={styles.smallInput}
         />
         <TextInput
-          label={"time"}
+          label={Strings.time_field_header}
           style={styles.smallInput}
           value={startTime}
           onChangeText={(text) => setStartTime(text)}
@@ -103,7 +103,7 @@ const EditEventDialog = () => {
   {!isWeb && 
     <View style={{ flexDirection: "row" }}>
       <TextInput
-        label="date"
+        label={Strings.date_field_header}
         value={dateStart}
         onChangeText={(dateStart) => setDateStart(dateStart)}
         style={styles.input}
@@ -116,7 +116,7 @@ const EditEventDialog = () => {
       />
       <View>
         <TextInput
-          label="hour"
+          label={Strings.time_field_header}
           value={startTime}
           onChangeText={(startTime) => setStartTime(startTime)}
           style={styles.smallInput}
@@ -133,18 +133,18 @@ const EditEventDialog = () => {
 
   const endingDateFields = (
   <View>
-    <Text style={{ marginBottom: 5 }}>ending date</Text>
+    <Text style={{ marginBottom: 5 }}>{Strings.ending_date_header}</Text>
     {/* for web users*/}
     {isWeb && 
         <View style={{ flexDirection: "row" }}>
           <TextInput
-            label={"date"}
+            label={Strings.date_field_header}
             value={dateEnd}
             onChangeText={(text) => setDateEnd(text)}
             style={styles.smallInput}
           />
           <TextInput
-            label={"time"}
+            label={Strings.time_field_header}
             style={styles.smallInput}
             value={endTime}
             onChangeText={(text) => setEndTime(text)}
@@ -154,7 +154,7 @@ const EditEventDialog = () => {
     {!isWeb && 
       <View style={{ flexDirection: "row" }}>
         <TextInput
-          label="date"
+          label={Strings.date_field_header}
           value={dateEnd}
           onChangeText={(dateEnd) => setDateEnd(dateEnd)}
           style={styles.input}
@@ -167,7 +167,7 @@ const EditEventDialog = () => {
         />
         <View>
           <TextInput
-            label="hour"
+            label={Strings.time_field_header}
             value={endTime}
             onChangeText={(endTime) => setEndTime(endTime)}
             style={styles.smallInput}
@@ -188,7 +188,7 @@ const EditEventDialog = () => {
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <TextInput
-            label="title"
+            label={Strings.title_field_header}
             value={title}
             onChangeText={(title) => setTitle(title)}
             style={styles.input}
@@ -196,13 +196,13 @@ const EditEventDialog = () => {
           {startingDateFields}
           {endingDateFields}
           <TextInput
-            label="location"
+            label={Strings.location_field_header}
             value={location}
             onChangeText={(location) => setLocation(location)}
             style={styles.input}
           />
           <TextInput
-            label="content"
+            label={Strings.content_field_header}
             value={content}
             onChangeText={(content) => setContent(content)}
             multiline={true}
