@@ -34,7 +34,7 @@ const EditTodoDialog = () => {
     enableActions: true,
     onOk: () => {
       todosStore.closeAllDialogs();
-      todosStore.editTodo(notesStore.selectedNote?.id||0 , content);
+      todosStore.editTodo(todosStore.selectedTodo?.id||0 , content);
       todosStore.setSelectedTodo(null);
     },
     onCancle: () => {
