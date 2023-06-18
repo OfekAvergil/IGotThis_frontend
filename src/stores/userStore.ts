@@ -137,9 +137,9 @@ class UserStore {
 
   public editUser = async (
     mail: string,
-    name?: string,
-    homeAddress?: string,
-    contactNumber?: string
+    name: string,
+    homeAddress: string,
+    contactNumber: string
   ) => {
     try {
       let res = await sendEditUser(
@@ -149,6 +149,15 @@ class UserStore {
         homeAddress,
         contactNumber
       );
+      const updatedUser: user = {
+        user_name: name,
+        password: this.user?.password || "",
+        mail: mail,
+        isSuperviosr: this.user?.isSuperviosr || false,
+        homeAddress: homeAddress,
+        contactNumber: contactNumber
+      }
+      this.setUser(updatedUser);
     } catch (error) {
       console.log(`${Strings.error_editing_connection} ${error}`);
     }

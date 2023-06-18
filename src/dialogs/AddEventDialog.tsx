@@ -64,7 +64,7 @@ const AddEventDialog = () => {
     }
   };
 
-  const showMode = (currentMode: any) => {
+  const showMode = (currentMode: string) => {
     setShow(true);
     setMode(currentMode);
   };

@@ -8,7 +8,6 @@ import userStore, { settingsDialogs } from "../stores/userStore";
 
 const EditAccountDialog = () => {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
   
@@ -19,7 +18,6 @@ const EditAccountDialog = () => {
   const resetModal =() =>{
     if(userStore.user){
       setUsername(userStore.user.user_name);
-      setEmail(userStore.user.mail);
       setAddress(userStore.user.homeAddress||"");
       setContact(userStore.user.contactNumber|| "");
     }
@@ -35,13 +33,7 @@ const EditAccountDialog = () => {
             value={username}
             onChangeText={(title) => setUsername(title)}
             style={styles.input}
-          />      
-          <TextInput
-            label={Strings.email_field_header}
-            value={email}
-            onChangeText={(title) => setEmail(title)}
-            style={styles.input}
-          />          
+          />             
           <TextInput
             label={Strings.info_page_address_field_label}
             value={address}
@@ -61,7 +53,7 @@ const EditAccountDialog = () => {
     enableActions: true,
     onOk: () => {
       userStore.closeAllDialogs();
-      userStore.editUser(username, email, address, contact);
+      userStore.editUser(userStore.user?.mail || "", username, address, contact);
     },
     onCancle: () => {
       resetModal();

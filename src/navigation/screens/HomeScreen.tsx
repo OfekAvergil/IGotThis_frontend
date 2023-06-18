@@ -15,7 +15,7 @@ import todosStore from "../../stores/todosStore";
 
 
 const HomeScreen = () => {
-
+  const [username, setUsername] = React.useState("");
   const TasksListener = observer(NextTasks);
   const EventsListener = observer(NextEvent);
 
@@ -26,6 +26,13 @@ const HomeScreen = () => {
     }
 
   }, [userStore.secretKey]);
+
+  React.useEffect(() => {
+    if (userStore.user) {
+      setUsername(userStore.user.user_name);
+    }
+
+  }, [userStore.user]);
 
 
   const navigateHome = () => {
@@ -49,7 +56,7 @@ const HomeScreen = () => {
     <View style={{height:"100%"}}>
       <View style={{ padding: 10 }}>
         <Text style={{ color: "black", fontSize: 25, fontWeight:"500" }}>
-          Hello {userStore.user?.user_name} !
+          Hello {username} !
         </Text>
       </View>
       <EventsListener />

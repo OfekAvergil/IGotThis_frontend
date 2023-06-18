@@ -114,6 +114,8 @@ export const Strings= {
     settings_page_preferences: "Preferences",
     settings_page_help: "Help",
     settings_page_logout: "Logout",
+    info_alert_header: "Notice",
+    reset_password_prompt: "Password updated succefully",
     help_content: 
     `Welcome to the IGotThis Help Center!
         Frequently Asked Questions (FAQs):
