@@ -39,10 +39,11 @@ export async function sendDelete(route: string, itemId:number|string, secretKey:
 }
 
 // LOGIN
-export async function sendLogin(email: string, password: string) {
+export async function sendLogin(email: string, password: string, phoneToken?: string) {
   return await axios.post(`${BASE_URL}/user/login`,{
     email: email,
-    password: password
+    password: password,
+    phoneToken: phoneToken
   });
 }
 

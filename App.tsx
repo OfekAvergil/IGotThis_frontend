@@ -8,7 +8,6 @@ import { Colors } from './src/consts';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import eventsStore, { event } from './src/stores/eventsStore';
 
 
 
@@ -56,11 +55,13 @@ export default function App() {
     //   }
     // }
 
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    });
 
     registerForPushNotificationsAsync().then((token: string | undefined) => {
       if (token) {
         runInAction(() => {
-          eventsStore.setExpoPushToken(token);
+          userStore.setExpoPushToken(token);
         })
       }
     });

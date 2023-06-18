@@ -6,6 +6,7 @@ import {
   sendSignUp,
 } from "../api/REST_Requests";
 import { Strings } from "../consts";
+import eventsStore from "./eventsStore";
 
 export interface user {
   user_name: string;
@@ -14,6 +15,7 @@ export interface user {
   isSuperviosr: boolean;
   homeAddress?: string;
   contactNumber?: string;
+  phoneToken?: string;
 }
 
 export interface existUser {
@@ -39,6 +41,7 @@ class UserStore {
   audioPermissions: boolean = false;
   currentOpenDialog: settingsDialogs | null = null;
   errorMessage: string = "";
+  expoPushToken: string | undefined;
 
   constructor() {
     makeAutoObservable(this, {
@@ -66,7 +69,7 @@ class UserStore {
   // Login user action
   loginUser = async (loggedUser: existUser) => {
     try {
-      const response = await sendLogin(loggedUser.mail, loggedUser.password);
+      const response = await sendLogin(loggedUser.mail, loggedUser.password, this.expoPushToken );
       this.setErrorMessage("");
       const data = response.data;
       this.setToken(data.token);
@@ -77,7 +80,11 @@ class UserStore {
         isSuperviosr: data.user.isInCharge,
         homeAddress: data.user.homeAddress,
         contactNumber: data.user.contactNumber,
+        phoneToken: data.user.contactNumber.phoneToken
       };
+      if(data.user.isInCharge) {
+        this.setExpoPushToken(data.user.contactNumber.phoneToken)
+      }
       this.setUser(user);
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -157,6 +164,10 @@ class UserStore {
     this.secretKey = null;
     this.audioPermissions = false;
   };
+
+  public setExpoPushToken(token: string | undefined): void {
+    this.expoPushToken = token;
+  }
 
   public isDialogOpen(dialog: settingsDialogs): boolean {
     return this.currentOpenDialog === dialog;

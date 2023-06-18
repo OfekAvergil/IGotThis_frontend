@@ -39,7 +39,7 @@ export enum EventsDialogs {
 }
 
 const Route: string = "events";
-const notificationsRoute: string = "notificiation";
+const notificationsRoute: string = "notifications";
 
 class EventsStore {
   events: event[] = [];
@@ -47,7 +47,6 @@ class EventsStore {
   selectedEvent: event | null = null;
   selectedDate: string | null = null;
   currentEventId: number | string | undefined = 1;
-  expoPushToken: string | undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -239,9 +238,6 @@ class EventsStore {
     return undefined;
   }
 
-  public setExpoPushToken(token: string | undefined): void {
-    this.expoPushToken = token;
-  }
 
   public schedulePushNotification = async (event: event) => {
     const date = new Date(`${event.dateStart} ${event.startTime}`);
@@ -258,7 +254,7 @@ class EventsStore {
           body: event.title,
           data: event,
         },
-        trigger: { seconds: secondsDiff },
+        trigger: { seconds: 2 },
       };
 
       let notificationIdentifier =
@@ -266,11 +262,14 @@ class EventsStore {
       notificationDocument.id = notificationIdentifier;
       notificationDocument.eventId = event.id;
       console.log("succes in scheduling event", notificationIdentifier);
+
       let resNotificationAddInServer = await sendPost(
         notificationsRoute,
         notificationDocument,
         userStore.secretKey,
       );
+
+      let silentNotificationIdentifier = await this.sendPushNotification()
     } catch (error) {
       console.log("error in scheduling event", error);
     }
@@ -299,6 +298,27 @@ class EventsStore {
       console.log(`Error in canceling event notification: ${error}`);
     }
   };
+
+  public sendPushNotification = async () =>{
+    if (!userStore.user || !userStore.user.phoneToken) {
+      return
+    }
+    const message = {
+      to: userStore.user.phoneToken,
+      sound: 'silent',
+      data: { new: 'events' },
+    };
+  
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
+  }
 }
 
 const eventsStore = new EventsStore();

@@ -4,6 +4,7 @@ import { Text, Button } from "react-native-paper";
 import { Colors, Pages, Strings } from "../../consts";
 import * as Notifications from 'expo-notifications';
 import eventsStore, { event } from '../../stores/eventsStore';
+import userStore from '../../stores/userStore';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -19,11 +20,17 @@ const LandingScreen = ({ navigation }: any) => {
 
   
   useEffect(()=> {
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log('notification', notification)
+    notificationListener.current = Notifications.addNotificationReceivedListener(async (notification) => {
+      console.log('notification1', notification)
+      if (notification.request.content.data.new && notification.request.content.data.new == "events"){
+        await eventsStore.fetchEvents(userStore.secretKey);
+      }
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      if (response.notification.request.content.data.new && response.notification.request.content.data.new == "events"){
+        return
+      }
       const currentEvent: event =  response.notification.request.content.data as event;
       eventsStore.setCurrentEvent(currentEvent.id);
       console.log('current:', eventsStore.currentEventId)
