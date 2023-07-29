@@ -80,11 +80,11 @@ const CurrentEventScreen = ({ navigation }: any) => {
               {Strings.current_event_notes}
             </Text>
             <TextInput
-              placeholder="write here..."
+              label="write here..."
               value={content}
               onChangeText={(content) => setContent(content)}
               multiline={true}
-              numberOfLines={5}
+              numberOfLines={3}
               style={styles.inputArea}
             />
           </View>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     margin: 7,
   },
   inputArea: {
-    height: 200,
+    height: 150,
     borderColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,
