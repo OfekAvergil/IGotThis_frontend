@@ -10,7 +10,6 @@ import { getCurrentDate, parseTimeFromString } from "../common";
 
 const AddEventDialog = () => {
   const [title, setTitle] = React.useState("");
-  const [datePick, setDatePick] = React.useState(new Date());
   const [dateStart, setDateStart] = React.useState("");
   const [dateEnd, setDateEnd] = React.useState("");
   const [startTime, setStartTime] = React.useState("08:00");
@@ -22,7 +21,6 @@ const AddEventDialog = () => {
   const isWeb = Platform.OS === "web";
 
   const clearModal = () => {
-    setDatePick(new Date());
     setTitle("");
     setDateStart("");
     setDateEnd("");
