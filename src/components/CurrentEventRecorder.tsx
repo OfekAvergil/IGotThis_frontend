@@ -22,9 +22,32 @@ export default function EventRecorder(props: recorderProps) {
     try {
       const newRecording: Audio.Recording = new Audio.Recording();
       console.log("start recording");
-      await newRecording.prepareToRecordAsync(
-        Audio.RecordingOptionsPresets.LOW_QUALITY
-      );
+        const recordingOptions: Audio.RecordingOptions = {
+        android: {
+          extension: '.mp3',
+          outputFormat: 2, // MediaRecorder.OutputFormat.MPEG_4
+          audioEncoder: 3, // MediaRecorder.AudioEncoder.AAC
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+        },
+        ios: {
+          extension: '.m4a',
+          outputFormat: 2, // Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_MPEG4AAC
+          audioQuality: 1, // Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+        },
+        web: {
+          mimeType: 'audio/webm', // Adjust the mime type according to the recorded format
+        },
+      };
+      console.log("start recording");
+      await newRecording.prepareToRecordAsync(recordingOptions);
+      // await newRecording.prepareToRecordAsync(
+      //   Audio.RecordingOptionsPresets.LOW_QUALITY
+      // );
       await newRecording.startAsync();
       setRecording(newRecording);
       setIsRecording(true);
@@ -66,17 +89,40 @@ export default function EventRecorder(props: recorderProps) {
       const audioData = await audioFile.blob();
       const filetype = audioURI.split(".").pop();
       const filename = audioURI.split("/").pop();
-      console.log('File Name', audioFile);
+      console.log('audioURI', audioURI);
       console.log('File Size', filename);
+      // const blobData = new Blob([audioData], { type: 'audio/mpeg' }); // Adjust the type according to the recorded format
 
       // Create a FormData object to send the audio file as raw binary data
       const formData = new FormData();
+
+      // formData.append('audio', blobData, 'audio_recording.mp3'); // Change the filename and extension as needed
+
       formData.append('audio', audioData, 'audio.mp3');
+
+      // const apiUrl = "https://api.openai.com/v1/audio/transcriptions";
+      // const headers = {
+      //   Authorization: `Bearer ${OPENAI_API_KEY}`,
+      //   'Content-Type': 'application/json',
+      // };
+
+
+      // const response = await axios.post(
+      //   apiUrl,
+      //   {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //       Authorization: `Bearer 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`,
+      //     },
+      //   }
+        
+      // );
 
 
 
       const response = await axios.post(
         `http://192.168.1.198:4005/api/tasks/speech-to-text`,
+        formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
