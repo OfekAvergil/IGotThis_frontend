@@ -12,7 +12,6 @@ const GettingReadyTasks = () => {
   React.useEffect(() => {
     if (eventsStore.currentEventId) {
       setTodos(eventsStore.findCurrentEvent()?.tasks || []);
-      console.log(eventsStore.findCurrentEvent()?.tasks);
     }
   }, [eventsStore.currentEventId]);
 

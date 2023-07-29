@@ -6,19 +6,18 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import todosStore from "../stores/todosStore";
 import { Colors, Strings } from "../consts";
-import { getCurrentDate } from "../common";
+import { getCurrentDate, parseTimeFromString } from "../common";
 
 const AddEventDialog = () => {
   const [title, setTitle] = React.useState("");
   const [datePick, setDatePick] = React.useState(new Date());
   const [dateStart, setDateStart] = React.useState("");
   const [dateEnd, setDateEnd] = React.useState("");
-  const [startTime, setStartTime] = React.useState("");
-  const [endTime, setEndTime] = React.useState("");
+  const [startTime, setStartTime] = React.useState("08:00");
+  const [endTime, setEndTime] = React.useState("08:30");
   const [content, setContent] = React.useState("");
   const [location, setLocation] = React.useState("");
-  const [show, setShow] = React.useState(false); //show the date or time picker (boolean)
-  const [mode, setMode] = React.useState("date"); //date or time picker (string)
+  const [mode, setMode] = React.useState<string | null>(null); //date or time picker
 
   const isWeb = Platform.OS === "web";
 
@@ -33,42 +32,64 @@ const AddEventDialog = () => {
     setEndTime("08:30");
   };
 
-  const onChange = (event: any, selectedDate: any) => {
-    // if mode == date setDate, if mode == startTime setStartTime etc.
-    if (mode == "dateStart") {
-      const currentDate = selectedDate || dateStart;
-      setShow(Platform.OS === "ios"); // ?
-      let tempDate = new Date(currentDate).toISOString().slice(0, 10);
+  const changeStartDate = (selectedDate: any) => {
+    let tempDate = new Date(selectedDate).toISOString().slice(0, 10);
+    setMode(null);
+    setDateStart(tempDate);
+    setDateEnd(tempDate);
+  };
+
+  const changeEndDate = (selectedDate: any) => {
+    let tempDate = new Date(selectedDate).toISOString().slice(0, 10);
+    setMode(null);
+    setDateEnd(tempDate);
+    //check if before start date
+    const startDateObj = new Date(dateStart);
+    const endDateObj = new Date(tempDate);
+    if (endDateObj < startDateObj) {
       setDateStart(tempDate);
-      setDateEnd(tempDate);
-      setShow(false);
-    } else if (mode == "startTime") {
-      const currentDate = selectedDate || startTime;
-      setShow(Platform.OS === "ios"); // ?
-      let tempTime = currentDate.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour24: true,
-      });
-      setStartTime(tempTime);
-      setShow(false);
-    } else if (mode == "endTime") {
-      const currentDate = selectedDate || endTime;
-      setShow(Platform.OS === "ios"); // ?
-      let tempTime = currentDate.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour24: true,
-      });
-      setEndTime(tempTime);
-      setShow(false);
     }
   };
 
-  const showMode = (currentMode: string) => {
-    setShow(true);
-    setMode(currentMode);
+  const changeStartTime = (selectedDate: any) => {
+    let tempTime = selectedDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour24: true,
+    });
+    setMode(null);
+    setStartTime(tempTime);
+    setEndTime(tempTime);
   };
+
+  const changeEndTime = (selectedDate: any) => {
+      let tempTime = selectedDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour24: true,
+      });
+      setMode(null);
+      setEndTime(tempTime);
+  };
+
+  /**
+   * Check if the end time is earlier than the start time and both dates are the same
+   * if so - move the end date to the next day
+  */
+  const ensureTimeLogic = () => {
+    const startDateObj = new Date(dateStart);
+    const endDateObj = new Date(dateEnd);
+    const startTimeObj = parseTimeFromString(startTime);
+    const endTimeObj = parseTimeFromString(endTime);
+    if(endDateObj.getTime() === startDateObj.getTime() && endTimeObj < startTimeObj) {
+      endDateObj.setDate(endDateObj.getDate() + 1);
+      setDateEnd(endDateObj.toISOString().slice(0, 10));
+    }
+  }
+
+  React.useEffect(() => {
+    ensureTimeLogic();
+  }, [endTime]);
 
   // to support adding event from todo
   React.useEffect(() => {
@@ -112,7 +133,7 @@ const AddEventDialog = () => {
           right={
             <TextInput.Icon
               icon="calendar"
-              onPress={() => showMode("dateStart")}
+              onPress={() => setMode("dateStart")}
             />
           }
         />
@@ -125,7 +146,7 @@ const AddEventDialog = () => {
             right={
               <TextInput.Icon
                 icon="clock"
-                onPress={() => showMode("startTime")}
+                onPress={() => setMode("startTime")}
               />
             }
           />
@@ -163,7 +184,7 @@ const endingDateFields = (
           right={
             <TextInput.Icon
               icon="calendar"
-              onPress={() => showMode("dateEnd")}
+              onPress={() => setMode("dateEnd")}
             />
           }
         />
@@ -176,7 +197,7 @@ const endingDateFields = (
             right={
               <TextInput.Icon
                 icon="clock"
-                onPress={() => showMode("endTime")}
+                onPress={() => setMode("endTime")}
               />
             }
           />
@@ -212,16 +233,46 @@ const endingDateFields = (
             style={styles.inputArea}
           />
         </View>
-        {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={datePick}
-              mode={(mode == "dateStart" || mode == "dateEnd") ? "date" : "time"} // if mode == date show date picker, if mode == time show time picker"}
-              is24Hour={true}
-              display="default"
-              onChange={onChange}
-            />
-          )}
+        { mode == "dateStart" && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={new Date(dateStart)}
+            mode={ "date" } 
+            is24Hour={true}
+            display="default"
+            onChange={(event, selectedDate) => changeStartDate(selectedDate)}
+          />
+        )}
+        { mode == "dateEnd" && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={new Date(dateEnd)}
+            mode={ "date" } 
+            is24Hour={true}
+            display="default"
+            onChange={(event, selectedDate) => changeEndDate(selectedDate)}
+          />
+        )}
+        { mode == "startTime" && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={parseTimeFromString(startTime)}
+            mode={ "time" } 
+            is24Hour={true}
+            display="default"
+            onChange={(event, selectedDate) => changeStartTime(selectedDate)}
+          />
+        )}
+        { mode == "endTime" && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={parseTimeFromString(endTime)}
+            mode={ "time" } 
+            is24Hour={true}
+            display="default"
+            onChange={(event, selectedDate) => changeEndTime(selectedDate)}
+          />
+        )}
       </View>
     ),
     isVisible: eventsStore.isDialogOpen(EventsDialogs.AddEventDialog),

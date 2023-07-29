@@ -20,6 +20,25 @@ export function formatDate(dateToFormmat: Date) : string{
     return formattedToday;
 }
 
+export function parseTimeFromString(timeString: string): Date {
+  const [timePart, meridiemPart] = timeString.split(" ");
+  const [hours, minutes] = timePart.split(":").map(Number);
+  // Convert to 24-hour format
+  let parsedHours = hours;
+  if (/^p/i.test(meridiemPart)) {
+    // PM
+    parsedHours = hours === 12 ? 12 : hours + 12;
+  } else {
+    // AM
+    parsedHours = hours === 12 ? 0 : hours;
+  }
+  const date = new Date();
+  date.setHours(parsedHours);
+  date.setMinutes(minutes);
+  date.setSeconds(0); // Optional: Set seconds to 0
+  return date;
+};
+
 export function convertStringToTasks(str: string): eventTask[] {
     // Split the string by newline characters
     const lines = str.split("\n"); 
@@ -42,7 +61,6 @@ export function convertStringToTasks(str: string): eventTask[] {
         }
       }
     }
-    console.log("completion ", tasks);
     return tasks;
   };
 
@@ -56,18 +74,10 @@ export function convertStringToTasks(str: string): eventTask[] {
   export function getTimeDifference(eventDateStr: string, eventTimeStr: string, minutesBeforeReminder: number): number {
     const currentDate = moment();
     const currentDateTime = moment(currentDate);
-  
     const eventDateTimeStr = `${eventDateStr} ${eventTimeStr}`;
-    console.log("1", eventDateTimeStr);
     const eventDateTime = moment(eventDateTimeStr, 'YYYY-MM-DD hh:mm A');
-    console.log("2", eventDateTime);
-
     const reminderTime = moment(eventDateTime).subtract(minutesBeforeReminder, 'minutes');
-    console.log("3", reminderTime);
-
     const timeDifferenceInSeconds = Math.abs(reminderTime.diff(currentDateTime, 'seconds'));
-    console.log("4", timeDifferenceInSeconds);
-
     return timeDifferenceInSeconds;
   }
   

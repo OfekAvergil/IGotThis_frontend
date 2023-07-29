@@ -27,7 +27,6 @@ const LandingScreen = ({ navigation }: any) => {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       const currentEvent: event =  response.notification.request.content.data as event;
       eventsStore.setCurrentEvent(currentEvent.id);
-      console.log('current:', eventsStore.currentEventId)
       if(userStore.gettingReadyTime == '0'){
         navigation.navigate(Pages.CurrentEvent);  
       } else {
