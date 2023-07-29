@@ -9,7 +9,9 @@ export const Colors = {
     pink: "#E45082",
 }
 
-export const BASE_URL = `http://localhost:${PORT}/api`;
+// export const BASE_URL = `http://192.168.1.198:${PORT}/api`;
+export const BASE_URL = `http://192.168.1.198:${PORT}/api`;
+
 
 export enum Pages {
     Landing = "Landing",
