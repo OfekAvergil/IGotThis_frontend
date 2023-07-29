@@ -7,7 +7,6 @@ import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import { Colors, Strings } from "../consts";
 
 const EditEventDialog = () => {
-  const selectedEvent = eventsStore.selectedEvent;
   // selected event exists
   const [title, setTitle] = React.useState("");
   const [datePick, setDatePick] = React.useState(new Date());
@@ -21,20 +20,21 @@ const EditEventDialog = () => {
   const [mode, setMode] = React.useState("date"); //date or time picker (string)
 
   React.useEffect(() => {
-    if (selectedEvent) {
-      setTitle(selectedEvent.title);
-      setDateStart(selectedEvent.dateStart);
-      setDateEnd(selectedEvent.dateEnd);
-      setContent(selectedEvent.content);
-      setLocation(selectedEvent.location || "");
-      setStartTime(selectedEvent.startTime);
-      setEndTime(selectedEvent.endTime);
+    if (eventsStore.selectedEvent) {
+      setTitle(eventsStore.selectedEvent.title);
+      setDateStart(eventsStore.selectedEvent.dateStart);
+      setDateEnd(eventsStore.selectedEvent.dateEnd);
+      setContent(eventsStore.selectedEvent.content);
+      setLocation(eventsStore.selectedEvent.location || "");
+      setStartTime(eventsStore.selectedEvent.startTime);
+      setEndTime(eventsStore.selectedEvent.endTime);
     }
   }, [eventsStore.selectedEvent]);
 
   const isWeb = Platform.OS === "web";
 
   const clearModal = () => {
+    eventsStore.setSelectedEvent(null);
     setDatePick(new Date());
     setTitle("");
     setDateStart("");
@@ -226,7 +226,7 @@ const EditEventDialog = () => {
     enableActions: true,
     onOk: () => {
       eventsStore.closeAllDialogs();
-      let id = selectedEvent ? selectedEvent.id : '-1';
+      let id = eventsStore.selectedEvent ? eventsStore.selectedEvent.id : '-1';
       eventsStore.editEvent(
         id,
         title,

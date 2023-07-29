@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     margin: 16,
     right: 0,
-    top: 280,
+    top: 320,
     backgroundColor: Colors.pink,
     borderRadius: 50,
   },

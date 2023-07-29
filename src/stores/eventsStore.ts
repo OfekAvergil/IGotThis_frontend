@@ -226,7 +226,7 @@ class EventsStore {
       ),
     ];
   }
-  public setSelectedEvent(item: event): void {
+  public setSelectedEvent(item: event | null): void {
     this.selectedEvent = item;
   }
 
