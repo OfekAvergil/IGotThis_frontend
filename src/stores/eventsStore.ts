@@ -178,10 +178,10 @@ class EventsStore {
         this.events[eventIndex].title = eventTitle;
         this.events[eventIndex].dateStart = eventDateStart;
         this.events[eventIndex].dateEnd = eventDateEnd;
-        if (eventSatrtTime) this.events[eventIndex].dateEnd = eventSatrtTime;
-        if (eventEndTime) this.events[eventIndex].dateEnd = eventEndTime;
-        if (eventContent) this.events[eventIndex].dateEnd = eventContent;
-        if (eventLocation) this.events[eventIndex].dateEnd = eventLocation;
+        if (eventSatrtTime) this.events[eventIndex].startTime = eventSatrtTime;
+        if (eventEndTime) this.events[eventIndex].endTime = eventEndTime;
+        if (eventContent) this.events[eventIndex].content = eventContent;
+        if (eventLocation) this.events[eventIndex].location = eventLocation;
         this.events = [...this.events];
       });
       // update notifications
