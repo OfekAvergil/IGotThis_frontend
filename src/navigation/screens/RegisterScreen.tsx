@@ -46,6 +46,7 @@ const RegisterScreen = ({ navigation }: any) => {
     setPassword("");
     setEmail("");
     setPasswordRepeat("");
+    userStore.setErrorMessage("");
   }
   return (
     <SafeAreaView style={styles.container}>

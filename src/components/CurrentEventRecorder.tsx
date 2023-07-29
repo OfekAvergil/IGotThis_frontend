@@ -72,7 +72,7 @@ export default function EventRecorder(props: recorderProps) {
       
       {(!isRecording || isPaused) && (
         <IconButton
-          onPress={isPaused? continueRecording: startRecording}
+          onPress={startRecording}
           icon="microphone"
           mode="contained"
           style={styles.RecordButton}
@@ -81,7 +81,8 @@ export default function EventRecorder(props: recorderProps) {
       )}
       {isRecording && !isPaused  &&(
         <IconButton
-          icon="microphone"
+        onPress={stopRecording}
+          icon="stop"
           mode="contained"
           containerColor={Colors.primary}
           iconColor="#DCDCDC"
@@ -97,14 +98,8 @@ export default function EventRecorder(props: recorderProps) {
         disabled={recording && !isRecording ? false : true}
       ></IconButton>
       <IconButton
-        onPress={stopRecording}
-        icon="stop"
-        mode="contained"
-        disabled={recording ? false : true}
-      ></IconButton>
-      <IconButton
         onPress={deleteRecording}
-        icon="restart"
+        icon="delete"
         mode="contained"
         disabled={recording && !isRecording ? false : true}
       ></IconButton>

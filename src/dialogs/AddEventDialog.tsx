@@ -6,6 +6,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 import todosStore from "../stores/todosStore";
 import { Colors, Strings } from "../consts";
+import { getCurrentDate } from "../common";
 
 const AddEventDialog = () => {
   const [title, setTitle] = React.useState("");
@@ -76,8 +77,9 @@ const AddEventDialog = () => {
 
   // to support adding event at chosen date
   React.useEffect(() => {
-    setDateStart(eventsStore.selectedDate || "");
-    setDateEnd(eventsStore.selectedDate || "");
+    let date = eventsStore.selectedDate? eventsStore.selectedDate : getCurrentDate();
+    setDateStart(date);
+    setDateEnd(date);
   }, [eventsStore.selectedDate]);
 
   const startingDateFields = (

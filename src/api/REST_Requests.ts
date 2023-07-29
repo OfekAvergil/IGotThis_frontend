@@ -43,6 +43,10 @@ export async function sendLogin(email: string, password: string) {
   return await axios.post(`${BASE_URL}/user/login`,{
     email: email,
     password: password
+  },
+  {
+    // Set the timeout to 10 seconds
+    timeout: 10000,
   });
 }
 
@@ -56,6 +60,10 @@ export async function sendSignUp(newUser: user) {
         isInCharge: newUser.isSuperviosr,
         homeAddress: newUser.homeAddress,
         contactNumber: newUser.contactNumber
+    },
+    {
+      // Set the timeout to 10 seconds
+      timeout: 10000,
     }
   );
 }

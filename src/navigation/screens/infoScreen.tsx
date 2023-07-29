@@ -44,6 +44,7 @@ const InfoScreen = ({ navigation }: any) => {
     setContact("");
     setRole(false);
     setChecked("first");
+    userStore.setErrorMessage("");
   }
 
   return (

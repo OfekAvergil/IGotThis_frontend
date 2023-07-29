@@ -5,6 +5,7 @@ import { Colors, Pages, Strings } from '../consts';
 import eventsStore, { event } from '../stores/eventsStore';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { runInAction } from 'mobx';
 
 const NextEvent = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -33,10 +34,14 @@ const NextEvent = () => {
   
   // always get next event
   React.useEffect(()=>{
-    getNextEvent();
+    runInAction(() => {
+      getNextEvent();
+    });
     // rerender on each enter to this screen
     const unsubscribe = navigation.addListener('focus', () => {
-      getNextEvent();
+      runInAction(() => {
+        getNextEvent();
+      });
     });
     return unsubscribe;
   }, [navigation, eventsStore.events]);

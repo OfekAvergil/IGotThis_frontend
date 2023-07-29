@@ -34,6 +34,7 @@ const LogInScreen = ({ navigation }: any) => {
   const clearPage = ()=>{
     setInputMail("");
     setInputPassword("");
+    userStore.setErrorMessage("");
   }
 
   return (

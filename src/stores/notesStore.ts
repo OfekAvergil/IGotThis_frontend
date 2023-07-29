@@ -55,7 +55,9 @@ class NotesStore {
         audio: record,
       };
       let newNotePushed = await sendPost(Route, newNote, userStore.secretKey);
-      this.notes = [...this.notes, newNotePushed.data];
+      runInAction(() => {
+        this.notes = [...this.notes, newNotePushed.data];
+      }); 
     } catch (error) {
       console.log(`Error in adding note: ${error}`);
     }
@@ -64,7 +66,9 @@ class NotesStore {
   public deleteNote = async (noteId: number) => {
     try {
       let res = await sendDelete(Route, noteId, userStore.secretKey);
-      this.notes = this.notes.filter((n) => n.id !== noteId);
+      runInAction(() => {
+        this.notes = this.notes.filter((n) => n.id !== noteId);
+      }); 
     } catch (error) {
       console.log(`Error in deleting note: ${error}`);
     }
@@ -97,10 +101,12 @@ class NotesStore {
         },
         userStore.secretKey
       );
-      this.notes[noteIndex].name = noteName;
-      if (contentToSet) this.notes[noteIndex].content = contentToSet;
-      if (recording) this.notes[noteIndex].audio = recording;
-      this.notes = [...this.notes];
+      runInAction(() => {
+        this.notes[noteIndex].name = noteName;
+        if (contentToSet) this.notes[noteIndex].content = contentToSet;
+        if (recording) this.notes[noteIndex].audio = recording;
+        this.notes = [...this.notes];
+      }); 
     } catch (error) {
       console.log(`Error in editing note: ${error}`);
     }

@@ -40,7 +40,9 @@ class TodoStore {
         content: contentToSet,
       };
       let newTodoPushed = await sendPost(Route, newTodo, userStore.secretKey);
-      this.tasks = [...this.tasks, newTodoPushed.data];
+      runInAction(() => {
+        this.tasks = [...this.tasks, newTodoPushed.data];
+      });
     } catch (error) {
       console.log(`Error in adding note: ${error}`);
     }
@@ -49,7 +51,9 @@ class TodoStore {
   public deleteTodo = async (todoId: number) => {
     try {
       let res = await sendDelete(Route, todoId, userStore.secretKey);
-      this.tasks = this.tasks.filter((n) => n.id !== todoId);
+      runInAction(() => {
+        this.tasks = this.tasks.filter((n) => n.id !== todoId);
+      });
     } catch (error) {
       console.log(`Error in deleting note: ${error}`);
     }
@@ -75,8 +79,10 @@ class TodoStore {
         },
         userStore.secretKey
       );
-      this.tasks[todoIndex].content = contentToSet;
-      this.tasks = [...this.tasks];
+      runInAction(() => {
+        this.tasks[todoIndex].content = contentToSet;
+        this.tasks = [...this.tasks];
+      });
     } catch (error) {
       console.log(`Error in editing note: ${error}`);
     }

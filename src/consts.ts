@@ -9,7 +9,7 @@ export const Colors = {
     pink: "#E45082",
 }
 
-export const BASE_URL = `http://localhost:${PORT}/api`;
+export const BASE_URL = `http://10.0.0.10:${PORT}/api`;
 
 export enum Pages {
     Landing = "Landing",
@@ -87,6 +87,7 @@ export const Strings= {
     forget_password_header: "Enter details for restore",
     navigate_button : "Navigate",
     need_directions_note: "Need directions?",
+    tasks_list_current_event_header: "Your Next Tasks:",
     start_event_button: "start event",
     need_help: "Need some help?",
     call_help_button: "Call Help",

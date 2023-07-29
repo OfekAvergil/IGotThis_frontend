@@ -47,13 +47,13 @@ const GettingReadyScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ObservedHeader
+      {/* <ObservedHeader
         header={currentEvent?.title || ""}
         hour={time}
         note={currentEvent?.content}
         location={currentEvent?.location}
         handleExit={handleExit}
-      />
+      /> */}
       <Card style={styles.card}>
         <Card.Content>
           <View style={{ paddingTop: 10 }}>

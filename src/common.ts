@@ -46,6 +46,12 @@ export function convertStringToTasks(str: string): eventTask[] {
     return tasks;
   };
 
+  export function getCurrentDate(){
+    const date: Date = new Date();
+    const current: string = date.toISOString().split("T")[0];
+    return current;
+  };
+
 
   export function getTimeDifference(eventDateStr: string, eventTimeStr: string, minutesBeforeReminder: number): number {
     const currentDate = moment();

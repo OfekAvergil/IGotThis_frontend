@@ -63,6 +63,7 @@ class EventsStore {
       console.error("Failed to fetch events:", error);
     }
   };
+  
 
   public addEvent = async (
     eventTitle: string,
@@ -86,7 +87,6 @@ class EventsStore {
         location: eventLocation,
       };
       let res = await sendPost(Route, newEventData, userStore.secretKey);
-
       let newEvent = {
         id: res.data.id,
         title: res.data.title,
@@ -99,7 +99,9 @@ class EventsStore {
         location: res.data.location,
         tasks: [], // empty todo array
       };
-      this.events.push(newEvent);
+      runInAction(() => {
+        this.events.push(newEvent);
+      });
       // update the event with the tasks (api with chatgpt).
       await this.schedulePushNotification(newEvent);
       try {
@@ -113,7 +115,9 @@ class EventsStore {
         let tasks = res.data;
         let eventIndex = this.events.findIndex((n) => n.id === newEvent.id);
         if (newEvent)
+        runInAction(() => {
           this.events[eventIndex].tasks = convertStringToTasks(tasks);
+        });
       } catch (error) {
         console.error("Failed to add tasks to event:", error);
       }
@@ -125,7 +129,9 @@ class EventsStore {
   public deleteEvent = async (eventId: string) => {
     try {
       let res = await sendDelete(Route, eventId, userStore.secretKey);
-      this.events = this.events.filter((n) => n.id !== eventId);
+      runInAction(() => {
+        this.events = this.events.filter((n) => n.id !== eventId);
+      });
     } catch (error) {
       console.log(`Error in deleting event: ${error}`);
     }
@@ -168,14 +174,16 @@ class EventsStore {
         userStore.secretKey
       );
       // update store
-      this.events[eventIndex].title = eventTitle;
-      this.events[eventIndex].dateStart = eventDateStart;
-      this.events[eventIndex].dateEnd = eventDateEnd;
-      if (eventSatrtTime) this.events[eventIndex].dateEnd = eventSatrtTime;
-      if (eventEndTime) this.events[eventIndex].dateEnd = eventEndTime;
-      if (eventContent) this.events[eventIndex].dateEnd = eventContent;
-      if (eventLocation) this.events[eventIndex].dateEnd = eventLocation;
-      this.events = [...this.events];
+      runInAction(() => {
+        this.events[eventIndex].title = eventTitle;
+        this.events[eventIndex].dateStart = eventDateStart;
+        this.events[eventIndex].dateEnd = eventDateEnd;
+        if (eventSatrtTime) this.events[eventIndex].dateEnd = eventSatrtTime;
+        if (eventEndTime) this.events[eventIndex].dateEnd = eventEndTime;
+        if (eventContent) this.events[eventIndex].dateEnd = eventContent;
+        if (eventLocation) this.events[eventIndex].dateEnd = eventLocation;
+        this.events = [...this.events];
+      });
       // update notifications
       let eventIdentifier = this.events[eventIndex].id;
       await this.cancelSchedulePushNotification(eventIdentifier);
@@ -222,7 +230,7 @@ class EventsStore {
     this.selectedEvent = item;
   }
 
-  // @action
+  //@action
   public setSelectedDate(date: string): void {
     this.selectedDate = date;
   }

@@ -8,6 +8,8 @@ import { Colors, Pages, Strings } from "../consts";
 import PopUpMenu from "./PopUpMenu";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { runInAction } from "mobx";
+import { getCurrentDate } from "../common";
 
 const CalendarEvents = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -23,8 +25,10 @@ const CalendarEvents = () => {
   );
 
   const handleDayPress = async (day: any) => {
-    setSelectedDay(day.dateString);
-    eventsStore.setSelectedDate(day.dateString);
+    runInAction(() => {
+      setSelectedDay(day.dateString);
+      eventsStore.setSelectedDate(day.dateString);
+    });
   };
 
   const renderItem = (item: event) => {
@@ -113,13 +117,6 @@ const CalendarEvents = () => {
         contentContainerStyle={{ flexGrow: 1 }}
       />
     );
-  };
-
-  const getCurrentDate = () => {
-    const date: Date = new Date();
-    const current: string = date.toISOString().split("T")[0];
-    eventsStore.setSelectedDate(current);
-    return current;
   };
 
   const markedAndSelected: { [date: string]: any } = {};

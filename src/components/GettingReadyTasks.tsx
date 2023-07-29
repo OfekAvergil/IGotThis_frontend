@@ -75,7 +75,7 @@ const GettingReadyTasks = () => {
       ListHeaderComponent={
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View style={{ flex: 1, paddingBottom: 10 }}>
-            <Text style={{ flex: 1, fontSize: 16 }}> Your Next Tasks: </Text>
+            <Text style={{ flex: 1, fontSize: 16 }}> {Strings.tasks_list_current_event_header} </Text>
           </View>
         </View>
       }
