@@ -20,7 +20,7 @@ export function formatDate(dateToFormmat: Date) : string{
     return formattedToday;
 }
 
-export function parseTimeFromString(timeString: string): Date {
+export function parseTimeFromString(timeString: string, date?: string): Date {
   const [timePart, meridiemPart] = timeString.split(" ");
   const [hours, minutes] = timePart.split(":").map(Number);
   // Convert to 24-hour format
@@ -32,12 +32,13 @@ export function parseTimeFromString(timeString: string): Date {
     // AM
     parsedHours = hours === 12 ? 0 : hours;
   }
-  const date = new Date();
-  date.setHours(parsedHours);
-  date.setMinutes(minutes);
-  date.setSeconds(0); // Optional: Set seconds to 0
-  return date;
+  const parsedDate = date ? new Date(date) : new Date();
+  parsedDate.setHours(parsedHours);
+  parsedDate.setMinutes(minutes);
+  parsedDate.setSeconds(0);
+  return parsedDate;
 };
+
 
 export function convertStringToTasks(str: string): eventTask[] {
     // Split the string by newline characters

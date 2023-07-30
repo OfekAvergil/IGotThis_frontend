@@ -22,8 +22,6 @@ const AddEventDialog = () => {
 
   const clearModal = () => {
     setTitle("");
-    setDateStart("");
-    setDateEnd("");
     setContent("");
     setLocation("");
     setStartTime("08:00");

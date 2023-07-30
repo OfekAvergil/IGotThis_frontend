@@ -3,7 +3,7 @@ import userStore from "./userStore";
 import {  Strings } from "../consts";
 import { sendDelete, sendGet, sendPost, sendPut } from "../api/REST_Requests";
 import * as Notifications from "expo-notifications";
-import { convertStringToTasks, getTimeDifference } from "../common";
+import { convertStringToTasks, getTimeDifference, parseTimeFromString } from "../common";
 
 export interface event {
   id: string;
@@ -58,6 +58,7 @@ class EventsStore {
       const response = await sendGet(Route, secretKey);
       runInAction(() => {
         this.events = response.data.events;
+        this.sortEvents();
       });
     } catch (error) {
       console.error("Failed to fetch events:", error);
@@ -101,6 +102,7 @@ class EventsStore {
       };
       runInAction(() => {
         this.events.push(newEvent);
+        this.sortEvents();
       });
       // update the event with the tasks (api with chatgpt).
       await this.schedulePushNotification(newEvent);
@@ -131,6 +133,7 @@ class EventsStore {
       let res = await sendDelete(Route, eventId, userStore.secretKey);
       runInAction(() => {
         this.events = this.events.filter((n) => n.id !== eventId);
+        this.sortEvents();
       });
     } catch (error) {
       console.log(`Error in deleting event: ${error}`);
@@ -182,7 +185,7 @@ class EventsStore {
         if (eventEndTime) this.events[eventIndex].endTime = eventEndTime;
         if (eventContent) this.events[eventIndex].content = eventContent;
         if (eventLocation) this.events[eventIndex].location = eventLocation;
-        this.events = [...this.events];
+        this.sortEvents();
       });
       // update notifications
       let eventIdentifier = this.events[eventIndex].id;
@@ -193,6 +196,14 @@ class EventsStore {
     }
   };
 
+  public sortEvents = (): void => {
+    const tmp = eventsStore.events.sort((a, b) => {
+      const time1: Date = parseTimeFromString(a.startTime, a.dateStart);
+      const time2: Date = parseTimeFromString(b.startTime, b.dateStart);
+      return time1.getTime() - time2.getTime();
+    });
+    this.events = [...tmp];
+  }
   public getEventsByDate = (date: string): event[] => {
     return this.events.filter((n) => n.dateStart === date);
   };

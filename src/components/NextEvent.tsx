@@ -6,6 +6,7 @@ import eventsStore, { event } from '../stores/eventsStore';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { runInAction } from 'mobx';
+import { parseTimeFromString } from '../common';
 
 const NextEvent = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -13,24 +14,16 @@ const NextEvent = () => {
   const [nextEvent, setNextEvent] = React.useState<event>();
 
   const getNextEvent = () => {
-    // Get the current date and time
-    const currentDate: string = new Date().toISOString().slice(0, 10);
-    const currentTime: string = new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const sortedEvents = eventsStore.events.sort((a, b) => {
-      const dateA = new Date(a.dateStart);
-      const dateB = new Date(b.dateStart);
-      return dateA.getTime() - dateB.getTime();
+    const sortedEvents = eventsStore.events;
+    // Find the first event that starts after the current date and time
+    const nextEvent = sortedEvents.find(event => {
+      const time = parseTimeFromString(event.startTime, event.dateStart);
+      return time >= new Date();
     });
   
-    // Find the first event that starts after the current date
-    const nextEvent = sortedEvents.find(event => {
-      return event.dateStart >= currentDate  && event.startTime > currentTime;
-    });
     setNextEvent(nextEvent);
   };
+  
   
   // always get next event
   React.useEffect(()=>{
