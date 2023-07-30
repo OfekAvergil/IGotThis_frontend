@@ -1,5 +1,11 @@
 import * as React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView} from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
 import { Card, FAB } from "react-native-paper";
@@ -12,7 +18,8 @@ import { runInAction } from "mobx";
 import { getCurrentDate } from "../common";
 
 const CalendarEvents = () => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const { navigate } =
+    useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   React.useEffect(() => {
     if (userStore.secretKey) {
@@ -41,19 +48,16 @@ const CalendarEvents = () => {
           }}
         >
           <View style={{ flexDirection: "row" }}>
-            <Text
-              style={styles.time}
-            >
-              {item.startTime} -
-            </Text>
-            <Text
-              style={styles.time}
-            >
-              {item.endTime}
-            </Text>
+            <Text style={styles.time}>{item.startTime} -</Text>
+            <Text style={styles.time}>{item.endTime}</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: "row", alignItems: "center", margin: 2}}
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              margin: 2,
+            }}
           >
             <View
               style={{ flex: 2, flexDirection: "row", alignItems: "center" }}
@@ -61,7 +65,12 @@ const CalendarEvents = () => {
               <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
             </View>
             <View
-              style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center",}}
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
             >
               <PopUpMenu
                 menuItems={[
@@ -94,28 +103,6 @@ const CalendarEvents = () => {
           </View>
         </TouchableOpacity>
       </Card>
-    );
-  };
-
-  const renderEventsForSelectedDay = (day: string) => {
-    // convert day to be only date string
-    const dayDate = day.split("T")[0];
-    return (
-      <FlatList
-        data={eventsStore.getEventsByDate(dayDate)}
-        renderItem={({ item }) => renderItem(item)}
-        ListHeaderComponent={
-          <View style={{ flex: 1, padding: 10, flexDirection: "row" }}>
-            <Text style={{ flex: 1 }}> Your Events for: {selectedDay}</Text>
-          </View>
-        }
-        ListEmptyComponent={
-          <View style={{ flex: 1, padding: 10, flexDirection: "row" }}>
-            <Text style={{ flex: 1 }}>No events for this day</Text>
-          </View>
-        }
-        contentContainerStyle={{ flexGrow: 1 }}
-      />
     );
   };
 
@@ -165,36 +152,53 @@ const CalendarEvents = () => {
     },
   };
 
+  // convert day to be only date string
+  const dayDate = selectedDay.split("T")[0];
+
   return (
-    <ScrollView>
-      <Calendar
-        current={getCurrentDate()}
-        items={eventsStore.events}
-        onDayPress={handleDayPress}
-        markingType="period"
-        markedDates={markedAndSelected}
-        theme={{
-          backgroundColor: Colors.background,
-          calendarBackground: Colors.background,
-          textSectionTitleColor: "#b6c1cd",
-          selectedDayBackgroundColor: Colors.primary,
-          selectedDayTextColor: "#ffffff",
-          todayTextColor: Colors.primary,
-          dayTextColor: "#2d4150",
-          textDisabledColor: Colors.basicGrey,
-        }}
-        hideArrows={false}
-      />
-      {selectedDay && renderEventsForSelectedDay(selectedDay)}
-      <FAB
-        style={styles.fab}
-        small
-        icon="plus"
-        onPress={() => {
-          eventsStore.openDialog(EventsDialogs.AddEventDialog);
-        }}
-      />
-    </ScrollView>
+    <FlatList
+      data={eventsStore.getEventsByDate(dayDate)}
+      renderItem={({ item }) => renderItem(item)}
+      ListHeaderComponent={
+        <>
+          <Calendar
+            current={getCurrentDate()}
+            items={eventsStore.events}
+            onDayPress={handleDayPress}
+            markingType="period"
+            markedDates={markedAndSelected}
+            theme={{
+              backgroundColor: Colors.background,
+              calendarBackground: Colors.background,
+              textSectionTitleColor: "#b6c1cd",
+              selectedDayBackgroundColor: Colors.pink,
+              selectedDayTextColor: "#ffffff",
+              todayTextColor: Colors.primary,
+              dayTextColor: "#2d4150",
+              textDisabledColor: Colors.basicGrey,
+            }}
+            hideArrows={false}
+          />
+          <FAB
+            style={styles.fab}
+            small
+            icon="plus"
+            onPress={() => {
+              eventsStore.openDialog(EventsDialogs.AddEventDialog);
+            }}
+          />
+          <View style={{ flex: 1, padding: 10, flexDirection: "row" }}>
+            <Text style={{ flex: 1 }}> Your Events for: {selectedDay}</Text>
+          </View>
+        </> 
+      }
+      ListEmptyComponent={
+        <View style={{ flex: 1, padding: 10, flexDirection: "row" }}>
+          <Text style={{ flex: 1 }}>No events for this day</Text>
+        </View>
+      }
+      contentContainerStyle={{ flexGrow: 1 }}
+    />
   );
 };
 
@@ -234,7 +238,7 @@ const styles = StyleSheet.create({
     padding: 20,
     textAlignVertical: "center",
   },
-  time:{
+  time: {
     color: Colors.basicGrey,
     textAlign: "left",
     fontSize: 14,
