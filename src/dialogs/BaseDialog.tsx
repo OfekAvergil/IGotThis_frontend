@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Button, Dialog, Divider, Portal, Text, IconButton } from "react-native-paper";
+import {Button, Dialog, Divider, Portal, Text, IconButton,} from "react-native-paper";
 import { StyleSheet, View } from "react-native";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 
 interface props {
   title: string;
@@ -10,7 +10,7 @@ interface props {
   enableActions: boolean;
   onOk?: Function;
   onCancle?: Function;
-  onDismiss: ()=>void;
+  onDismiss: () => void;
   editAction?: Function;
 }
 
@@ -21,21 +21,24 @@ const BasicDialog = (props: props) => {
         <View style={styles.header}>
           <Text style={styles.headerTitle}>{props.title}</Text>
           <View style={styles.closeButton}>
-          {props.editAction && <IconButton
+            {props.editAction && (
+              <IconButton
                 icon="lead-pencil"
                 onPress={() => {
                   props.editAction?.();
                 }}
                 iconColor={Colors.basicGrey}
                 style={{ height: 22, width: 22, margin: 10 }}
-              />}
+              />
+            )}
             <IconButton
               icon="close"
               iconColor={Colors.basicGrey}
               onPress={() => {
                 props.onDismiss();
               }}
-              style={{ height:22, width:22 }}/>
+              style={{ height: 22, width: 22 }}
+            />
           </View>
         </View>
         <Divider style={{ borderColor: "white" }}></Divider>
@@ -55,7 +58,9 @@ const BasicDialog = (props: props) => {
                   props.onCancle?.();
                 }}
               >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text style={styles.cancelButtonText}>
+                  {Strings.cancle_button}
+                </Text>
               </Button>
             </View>
             <View
@@ -71,7 +76,7 @@ const BasicDialog = (props: props) => {
                   props.onOk?.();
                 }}
               >
-                Ok
+                {Strings.ok_button}
               </Button>
             </View>
           </View>
@@ -116,6 +121,6 @@ const styles = StyleSheet.create({
   closeButton: {
     paddingHorizontal: 10,
     flexDirection: "row",
-    alignItems:"center"
+    alignItems: "center",
   },
 });

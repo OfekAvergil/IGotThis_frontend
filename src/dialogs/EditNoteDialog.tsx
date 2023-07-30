@@ -4,7 +4,7 @@ import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import Recorder from "../components/DialogRecorder";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 
 const EditNoteDialog = () => {
   const [title, setTitle] = React.useState("");
@@ -24,39 +24,36 @@ const EditNoteDialog = () => {
   }
 
   return BasicDialog({
-    title: "Edit Note",
+    title: Strings.edit_note_header,
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <TextInput
-            label="title"
+            label={Strings.title_field_header}
             value={title}
             onChangeText={(title) => setTitle(title)}
             style={styles.input}
           />
           <TextInput
-            label="content"
+            label={Strings.content_field_header}
             value={content}
             onChangeText={(content) => setContent(content)}
             multiline={true}
             numberOfLines={5}
             style={styles.inputArea}
           />
-           <Recorder addNewRec= {getRecording}  existedRecord={recording}/>
-
+           <Recorder addNewRec= {getRecording} existedRecord={recording}/>
         </View>
       </View>
     ),
     isVisible: notesStore.isDialogOpen(NotesDialogs.EditNoteDialog),
     enableActions: true,
     onOk: () => {
-      console.log("ok");
       notesStore.closeAllDialogs();
       notesStore.editNote(notesStore.selectedNote?.id||-1 ,title, content, recording? recording: undefined);
       notesStore.setSelectedNote(null);
     },
     onCancle: () => {
-      console.log("cancle");
       notesStore.closeAllDialogs();
       notesStore.setSelectedNote(null);
     },

@@ -7,41 +7,32 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
 import { Pages, Strings } from "../consts";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import userStore, { settingsDialogs } from "../stores/userStore";
 
-const TasksFromEventDialog = () => {
+const ResetPasswordDialog = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   return BasicDialog({
-    title: "notice",
+    title: Strings.info_alert_header,
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <Text>
-            {Strings.tasks_from_event_prompt}
+            {Strings.reset_password_prompt}
           </Text>
         </View>
       </View>
     ),
-    isVisible: eventsStore.isDialogOpen(EventsDialogs.TasksFromEventDialog),
-    enableActions: true,
+    isVisible: userStore.isDialogOpen(settingsDialogs.ResetPassword),
+    enableActions: false,
     onDismiss: () => {
-      eventsStore.closeAllDialogs();
-      navigate(Pages.NavBar);
-    },
-    onCancle: () => {
-      eventsStore.closeAllDialogs();
-      navigate(Pages.NavBar);
-    },
-    onOk: () => {
-      handleExtractTasks();
-      handleSpeechToText();
-      eventsStore.closeAllDialogs();
+      userStore.closeAllDialogs();
       navigate(Pages.NavBar);
     },
   });
 };
 
-export default TasksFromEventDialog;
+export default ResetPasswordDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {

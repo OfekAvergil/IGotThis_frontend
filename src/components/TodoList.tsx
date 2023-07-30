@@ -1,10 +1,9 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Button, Card, Menu } from "react-native-paper";
-import noteStore from "../stores/notesStore";
+import { Text, Button, Card } from "react-native-paper";
 import { useEffect } from "react";
 import userStore from "../stores/userStore";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 import todosStore, { TodoDialogs, toDo } from "../stores/todosStore";
 import PopUpMenu from "./PopUpMenu";
 import Icon from 'react-native-paper/src/components/Icon'
@@ -12,10 +11,7 @@ import eventsStore, { EventsDialogs } from "../stores/eventsStore";
 
 export default function TodoList() {
   useEffect(() => {
-    // This code will run after the component has been rendered to the screen
-    console.log('userStore.secretKey' + userStore.secretKey)
     todosStore.fetchTodos(userStore.secretKey);
-    console.log(noteStore.notes)
   }, []);
 
   /**
@@ -24,6 +20,11 @@ export default function TodoList() {
    */
   function checkNote(item: toDo): void{
     todosStore.deleteTodo(item.id)
+  }
+
+  function editNote(item:toDo): void{
+    todosStore.setSelectedTodo(item);
+    todosStore.openDialog(TodoDialogs.EditTodoDialog);
   }
 
   const renderItem = (item: toDo) => {
@@ -40,7 +41,7 @@ export default function TodoList() {
               <PopUpMenu 
                 menuItems={[
                   {
-                    title: "Add To Calnader",
+                    title: Strings.popup_menu_add_to_calendar_button,
                     action: () => {
                       todosStore.setSelectedTodo(item);
                       eventsStore.openDialog(EventsDialogs.AddEventDialog);
@@ -48,15 +49,14 @@ export default function TodoList() {
                     leadingIcon: "calendar-plus"
                   },
                   {
-                    title: "Edit",
+                    title: Strings.popup_menu_edit_button,
                     action: () => {
-                      todosStore.setSelectedTodo(item);
-                      todosStore.openDialog(TodoDialogs.EditTodoDialog);
+                      editNote(item);
                     },
                     leadingIcon: "lead-pencil"
                   },
                   {
-                    title: "Delete",
+                    title: Strings.popup_menu_delete_button,
                     action: () => {
                       checkNote(item);
                     },
@@ -78,7 +78,7 @@ export default function TodoList() {
       ListHeaderComponent={
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 1, padding: 10 }}>
-            <Text style={{ flex: 1 }}> Your Tasks</Text>
+            <Text style={{ flex: 1 }}> {Strings.tasks_header}</Text>
           </View>
           <View>
             <Button
@@ -86,7 +86,7 @@ export default function TodoList() {
                 todosStore.openDialog(TodoDialogs.AddTodoDialog);
               }}
             >
-              New Task +
+              {Strings.new_tasks_button}
             </Button>
           </View>
         </View>
@@ -99,7 +99,7 @@ export default function TodoList() {
           }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
-                <Text style={{ color: "white" }}>{"Add new task +"}</Text>
+                <Text style={{ color: "white" }}>{Strings.new_tasks_button}</Text>
               </View>
             </View>
           </TouchableOpacity>

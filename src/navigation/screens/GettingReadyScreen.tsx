@@ -1,11 +1,9 @@
 import React from "react";
 import { View, SafeAreaView, StyleSheet, Linking } from "react-native";
-import { Text, Button, TextInput, Card } from "react-native-paper";
+import { Text, Button,  Card } from "react-native-paper";
 import CurrentEventHeader from "../../components/CurrentEventHeader";
-import { Audio } from "expo-av";
-import { Colors } from "../../consts";
+import { Colors, Pages, Strings } from "../../consts";
 import eventsStore, { event } from "../../stores/eventsStore";
-import TasksFromEventDialog from "../../dialogs/TasksFromEventDialog";
 import { observer } from "mobx-react";
 import GettingReadyTasks from "../../components/GettingReadyTasks";
 
@@ -17,7 +15,6 @@ const GettingReadyScreen = ({ navigation }: any) => {
 
   React.useEffect(()=>{
     if(eventsStore.currentEventId){
-      console.log("ehy", eventsStore.currentEventId)
       setCurrentEvent(eventsStore.findCurrentEvent());
     }
   }, [eventsStore.currentEventId, ])
@@ -27,16 +24,14 @@ const GettingReadyScreen = ({ navigation }: any) => {
    */
   function handleExit(): void {
     eventsStore.setCurrentEvent(undefined);
-    console.log(navigation);
-    navigation.navigate('NavBar');      
+    navigation.navigate(Pages.NavBar);      
   };
 
   /**
    * move to current event display
    */
   function startEvent(): void {
-    console.log(navigation);
-    navigation.navigate('CurrentEvent');    
+    navigation.navigate(Pages.CurrentEvent);    
   }
 
   /**
@@ -66,7 +61,7 @@ const GettingReadyScreen = ({ navigation }: any) => {
           </View>
           <View style={{flexDirection:"row", alignItems:"center"}}>
             <Text>
-              Need directions?
+              {Strings.need_directions_note}
             </Text>
              <Button
                 icon = "navigation"
@@ -74,10 +69,9 @@ const GettingReadyScreen = ({ navigation }: any) => {
                 onPress={() => {navigate(currentEvent?.location || "")}}
                 labelStyle={{ fontSize: 16, color:Colors.secondery }}
                 style={{ borderColor: Colors.secondery ,justifyContent:"center" , margin:10}}
-                // disabled={currentEvent?.location? false: true}
                 >
               <Text style={{color: Colors.secondery,  fontSize:18}}>
-                Navigate 
+                {Strings.navigate_button}
               </Text>
             </Button>
           </View>
@@ -90,7 +84,7 @@ const GettingReadyScreen = ({ navigation }: any) => {
               icon="check"
               onPress={startEvent}
             >
-              start event
+              {Strings.start_event_button}
             </Button>
           </View>
         </Card.Content>

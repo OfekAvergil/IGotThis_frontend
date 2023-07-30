@@ -3,7 +3,7 @@ import { View, SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import CurrentEventHeader from "../../components/CurrentEventHeader";
 import { Audio } from "expo-av";
-import { Colors } from "../../consts";
+import { Colors, Pages, Strings } from "../../consts";
 import EventRecorder from "../../components/CurrentEventRecorder";
 import notesStore from "../../stores/notesStore";
 import eventsStore, { EventsDialogs, event } from "../../stores/eventsStore";
@@ -33,8 +33,7 @@ const CurrentEventScreen = ({ navigation }: any) => {
     if (content || recording) {
       eventsStore.openDialog(EventsDialogs.TasksFromEventDialog);
     } else {
-      console.log(navigation);
-      navigation.navigate("NavBar");
+      navigation.navigate(Pages.NavBar);
     }
   }
 
@@ -68,7 +67,7 @@ const CurrentEventScreen = ({ navigation }: any) => {
         <Card.Content>
           <View style={{ paddingTop: 20 }}>
             <Text style={{ color: "grey", padding: 10 }}>
-              you can record the meeting
+              {Strings.current_event_record_notes}
             </Text>
             <EventRecorder
               addNewRec={(record: Audio.Recording | null) => {
@@ -78,14 +77,14 @@ const CurrentEventScreen = ({ navigation }: any) => {
           </View>
           <View style={{ paddingTop: 40 }}>
             <Text style={{ color: "grey", padding: 10 }}>
-              or take some notes
+              {Strings.current_event_notes}
             </Text>
             <TextInput
-              placeholder="write here..."
+              label="write here..."
               value={content}
               onChangeText={(content) => setContent(content)}
               multiline={true}
-              numberOfLines={5}
+              numberOfLines={3}
               style={styles.inputArea}
             />
           </View>
@@ -93,7 +92,7 @@ const CurrentEventScreen = ({ navigation }: any) => {
             style={{ width: "100%", paddingTop: 30, alignItems: "flex-end" }}
           >
             <Button style={{}} mode="contained" icon="check" onPress={endEvent}>
-              Done!
+              {Strings.done_button}
             </Button>
           </View>
         </Card.Content>
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     margin: 7,
   },
   inputArea: {
-    height: 200,
+    height: 150,
     borderColor: Colors.basicGrey,
     borderWidth: 1,
     borderRadius: 5,

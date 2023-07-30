@@ -1,14 +1,15 @@
 import * as React from "react";
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Card } from "react-native-paper";
-import { Colors } from "../consts";
+import { Colors, Pages, Strings } from "../consts";
 import todosStore, { toDo } from "../stores/todosStore";
 import Icon from "react-native-paper/src/components/Icon";
-import { useNavigation } from "@react-navigation/native";
+import { ParamListBase, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const NextTasks = () => {
   const [todos, setTodos] = React.useState<toDo[]>([]);
-  const navigation = useNavigation();
+  const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   /**
    * when todo is clicked - delete it from the todos list.
@@ -33,10 +34,10 @@ const NextTasks = () => {
 
   const emptyItem = (
     <Card style={styles.emptyListItem}>
-      <TouchableOpacity onPress={() => navigation.navigate("ToDo")}>
+      <TouchableOpacity onPress={() => navigate(Pages.ToDo)}>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: "white" }}>{"No tasks planned. Let's add some +"}</Text>
+            <Text style={{ color: "white" }}>{Strings.empty_tasks_message}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -77,7 +78,7 @@ const NextTasks = () => {
       ListHeaderComponent={
         <View style={{ flexDirection: "row" }}>
           <View style={{ padding: 10 }}>
-            <Text> Your Next Tasks</Text>
+            <Text> {Strings.next_tasks_title} </Text>
           </View>
         </View>
       }

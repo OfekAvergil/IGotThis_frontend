@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
-import { Colors } from "../../consts";
+import { Colors, Pages, Strings } from "../../consts";
 import { observer } from "mobx-react";
 import LoginError from "../../components/LoginError";
 
@@ -16,39 +16,42 @@ const LogInScreen = ({ navigation }: any) => {
   async function handleLogIn() {
     await userStore.loginUser({mail: inputMail, password: inputPassword});
     if(userStore.errorMessage===""){
-      setInputMail("");
-      setInputPassword("");
-      navigation.navigate("PickView");
+      clearPage();
+      navigation.navigate(Pages.PickView);
     }
   };
 
   const handleForgotPassword = () => {
-    setInputMail("");
-    setInputPassword("");
-    navigation.navigate("ForgetPassword");
+    clearPage();
+    navigation.navigate(Pages.ForgetPassword);
   };
 
   const handleCreateAccount = () => { 
+    clearPage();
+    navigation.navigate(Pages.Register);
+  };
+
+  const clearPage = ()=>{
     setInputMail("");
     setInputPassword("");
-    navigation.navigate("Register");
-  };
+    userStore.setErrorMessage("");
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <LoginHeader header="Login"/>
+      <LoginHeader header={Strings.login_page_header}/>
       <Card style={styles.card}>
         <Card.Content>
           <TextInput
             value={inputMail}
             onChangeText={setInputMail}
-            placeholder="Mail"
+            label={Strings.email_field_header}
             secureTextEntry={false}
-            right={<TextInput.Icon icon="Email" />}
+            right={<TextInput.Icon icon="email" />}
             style={styles.input}
           />
           <TextInput
-            placeholder="Password"
+            label={Strings.password_field_header}
             value={inputPassword}
             onChangeText={setInputPassword}
             secureTextEntry={true}
@@ -64,7 +67,7 @@ const LogInScreen = ({ navigation }: any) => {
               style={{width:150 ,marginLeft: -12,
             }}
             >
-              Forgot password?
+              {Strings.login_page_forget_password_button}
             </Button>
           <ObserverMessage/>
           <Button
@@ -74,7 +77,7 @@ const LogInScreen = ({ navigation }: any) => {
             onPress={handleLogIn}
             disabled={inputMail==="" || inputPassword===""}
           >
-            Login
+            {Strings.login_page_button}
           </Button>
           <Button
             style={styles.card_button}

@@ -8,26 +8,31 @@ import {
 } from "react-native";
 import { Button } from "react-native-paper";
 import userStore from "../../stores/userStore";
-import { Colors } from "../../consts";
+import { Colors, Strings } from "../../consts";
 import { observer } from "mobx-react";
 import eventsStore from "../../stores/eventsStore";
 import todosStore from "../../stores/todosStore";
 
 
 const HomeScreen = () => {
-
+  const [username, setUsername] = React.useState("");
   const TasksListener = observer(NextTasks);
   const EventsListener = observer(NextEvent);
 
   React.useEffect(() => {
-    // This code will run after the component has been rendered to the screen
-    console.log('userStore.secretKey' + userStore.secretKey)
     if (userStore.secretKey) {
       eventsStore.fetchEvents(userStore.secretKey);
       todosStore.fetchTodos(userStore.secretKey);
     }
 
   }, [userStore.secretKey]);
+
+  React.useEffect(() => {
+    if (userStore.user) {
+      setUsername(userStore.user.user_name);
+    }
+
+  }, [userStore.user]);
 
 
   const navigateHome = () => {
@@ -51,14 +56,14 @@ const HomeScreen = () => {
     <View style={{height:"100%"}}>
       <View style={{ padding: 10 }}>
         <Text style={{ color: "black", fontSize: 25, fontWeight:"500" }}>
-          Hello {userStore.user?.user_name} !
+          Hello {username} !
         </Text>
       </View>
       <EventsListener />
       <TasksListener />
       <View>
         <View style={{ marginBottom:10, padding: 10, }}>
-            <Text> Need some help?</Text>
+            <Text> {Strings.need_help}</Text>
         </View>
         <View style={{ alignItems:"center", flexDirection:"row", padding: 10}}>
           <View style={{ paddingRight: 5, }}>
@@ -69,7 +74,7 @@ const HomeScreen = () => {
                 labelStyle={{ fontSize: 16 }}
                 style={{ width:175, height:80, backgroundColor: Colors.secondery, justifyContent:"center"}}>
                 <Text style={{color:"white", fontSize:18}}>
-                  Call Help
+                  {Strings.call_help_button}
                 </Text>
             </Button>
           </View>
@@ -81,7 +86,7 @@ const HomeScreen = () => {
                 labelStyle={{ fontSize: 16, color:Colors.secondery }}
                 style={{ width:175, height:80, borderColor: Colors.secondery ,justifyContent:"center" }}>
               <Text style={{color: Colors.secondery,  fontSize:18}}>
-                Go Home 
+                {Strings.navigate_home_button}
               </Text>
             </Button>
             </View>

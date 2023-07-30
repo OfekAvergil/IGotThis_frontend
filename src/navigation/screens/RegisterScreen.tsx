@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, Button, TextInput, Card } from "react-native-paper";
 import userStore from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
-import { Colors } from "../../consts";
+import { Colors, Pages, Strings } from "../../consts";
 import LoginError from "../../components/LoginError";
 import { observer } from "mobx-react";
 
@@ -26,15 +26,15 @@ const RegisterScreen = ({ navigation }: any) => {
         isSuperviosr: false
       })
       clearPage();
-      navigation.navigate("Info");
+      navigation.navigate(Pages.Info);
     } else{
-      userStore.setErrorMessage("passwords do not match.");
+      userStore.setErrorMessage(Strings.error_passwords_not_match);
     }
   };
 
   const handkeAllreadyHaveAccount = () => {
     clearPage();
-    navigation.navigate("Login");
+    navigation.navigate(Pages.Login);
   };
 
   const isPasswordsOk = (): boolean => {
@@ -46,14 +46,15 @@ const RegisterScreen = ({ navigation }: any) => {
     setPassword("");
     setEmail("");
     setPasswordRepeat("");
+    userStore.setErrorMessage("");
   }
   return (
     <SafeAreaView style={styles.container}>
-      <LoginHeader header="Sign in"/>
+      <LoginHeader header={Strings.register_page_header}/>
       <Card style={styles.card}>
         <Card.Content>
           <TextInput
-            label="User name"
+            label={Strings.user_field_header}
             value={username}
             onChangeText={setUsername}
             secureTextEntry={false}
@@ -61,7 +62,7 @@ const RegisterScreen = ({ navigation }: any) => {
             style={styles.input}
           />
           <TextInput
-            label="Email"
+            label={Strings.email_field_header}
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
@@ -69,7 +70,7 @@ const RegisterScreen = ({ navigation }: any) => {
             right={<TextInput.Icon icon="email" />}
             style={styles.input}          />
           <TextInput
-            label="Password"
+            label={Strings.password_field_header}
             value={password}
             onChangeText={setPassword}
             secureTextEntry={true}
@@ -77,7 +78,7 @@ const RegisterScreen = ({ navigation }: any) => {
             style={styles.input}
           />
           <TextInput
-            label="Confirm Password"
+            label={Strings.reenter_password_field_header}
             value={passwordRepeat}
             onChangeText={setPasswordRepeat}
             secureTextEntry={true}
@@ -92,7 +93,7 @@ const RegisterScreen = ({ navigation }: any) => {
             onPress={handleRegister}
             disabled={username==="" || email==="" || password===""}
           >
-            Register
+            {Strings.register_page_button}
           </Button>
           <Button
             style={styles.card_button}
@@ -100,9 +101,9 @@ const RegisterScreen = ({ navigation }: any) => {
             onPress={handkeAllreadyHaveAccount}
           >
             <Text>
-              Allready have an account?  
+              {Strings.register_page_already_have_account} 
             </Text> 
-            Login
+            {Strings.login_page_button}
           </Button>
         </Card.Content>
       </Card>

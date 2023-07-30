@@ -1,10 +1,9 @@
-import { action, makeAutoObservable, makeObservable, observable, runInAction } from "mobx";
-import axios, * as others from "axios";
+import { makeAutoObservable, runInAction } from "mobx";
 import userStore from "./userStore";
-import { toDo } from "./todosStore";
-import { BASE_URL } from "../consts";
-import * as Notifications from 'expo-notifications';
-
+import {  Strings } from "../consts";
+import { sendDelete, sendGet, sendPost, sendPut } from "../api/REST_Requests";
+import * as Notifications from "expo-notifications";
+import { convertStringToTasks, getTimeDifference, parseTimeFromString } from "../common";
 
 export interface event {
   id: string;
@@ -39,6 +38,9 @@ export enum EventsDialogs {
   TasksFromEventDialog,
 }
 
+const Route: string = "events";
+const notificationsRoute: string = "notificiation";
+
 class EventsStore {
   events: event[] = [];
   currentOpenDialog: EventsDialogs | null = null;
@@ -48,28 +50,21 @@ class EventsStore {
   expoPushToken: string | undefined;
 
   constructor() {
-    makeObservable(this, {
-      selectedDate: observable,
-      setSelectedDate: action
-    });
+    makeAutoObservable(this);
   }
 
   public fetchEvents = async (secretKey: string | null) => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/events`, {
-        headers: {
-          Authorization: `${secretKey}`, // Include the token in the Authorization header
-        },
-      }); // replace with your API endpoint
-      console.log("response.data.events", response.data.events);
+      const response = await sendGet(Route, secretKey);
       runInAction(() => {
-        this.events = response.data.events; // assuming the API returns an array of events
+        this.events = response.data.events;
+        this.sortEvents();
       });
     } catch (error) {
-      // Handle error here
       console.error("Failed to fetch events:", error);
     }
   };
+  
 
   public addEvent = async (
     eventTitle: string,
@@ -77,7 +72,6 @@ class EventsStore {
     eventDateEnd: string,
     eventSatrtTime: string,
     eventEndTime: string,
-    eventNotifyTimeFrame: string,
     eventContent: string,
     eventLocation: string
   ) => {
@@ -89,20 +83,11 @@ class EventsStore {
         dateEnd: eventDateEnd,
         startTime: eventSatrtTime,
         endTime: eventEndTime,
-        notifyTimeFrame: eventNotifyTimeFrame,
+        notifyTimeFrame: userStore.gettingReadyTime,
         content: eventContent,
         location: eventLocation,
       };
-      let res = await axios.post(
-        `${BASE_URL}/api/events`, 
-        newEventData, 
-        {
-        headers: {
-          Authorization: userStore.secretKey,
-        },
-      }
-      );
-
+      let res = await sendPost(Route, newEventData, userStore.secretKey);
       let newEvent = {
         id: res.data.id,
         title: res.data.title,
@@ -113,28 +98,28 @@ class EventsStore {
         notifyTimeFrame: res.data.notifyTimeFrame,
         content: res.data.content,
         location: res.data.location,
-        tasks: [], // epmty todo array
+        tasks: [], // empty todo array
       };
-      this.events.push(newEvent);
+      runInAction(() => {
+        this.events.push(newEvent);
+        this.sortEvents();
+      });
       // update the event with the tasks (api with chatgpt).
-
-      await this.schedulePushNotification(newEvent)
-
+      await this.schedulePushNotification(newEvent);
       try {
         let id = newEvent.id;
-        let res = await axios.put(
-          `${BASE_URL}/api/events/addTasks?id=${id}`,
+        let res = await sendPut(
+          "events/addTasks",
           id,
-          {
-            headers: {
-              Authorization: userStore.secretKey,
-            },
-          },
+          id,
+          userStore.secretKey
         );
         let tasks = res.data;
-        console.log("hey", tasks);
         let eventIndex = this.events.findIndex((n) => n.id === newEvent.id);
-        if (newEvent) this.events[eventIndex].tasks = this.convertStringToTasks(tasks);
+        if (newEvent)
+        runInAction(() => {
+          this.events[eventIndex].tasks = convertStringToTasks(tasks);
+        });
       } catch (error) {
         console.error("Failed to add tasks to event:", error);
       }
@@ -145,23 +130,21 @@ class EventsStore {
 
   public deleteEvent = async (eventId: string) => {
     try {
-      let res = await axios.delete(
-        `${BASE_URL}/api/events?id=${eventId}`,
-      {
-        headers: {
-          Authorization: userStore.secretKey,
-        },
-      }
-      );
-      this.events = this.events.filter((n) => n.id !== eventId);
+      let res = await sendDelete(Route, eventId, userStore.secretKey);
+      runInAction(() => {
+        this.events = this.events.filter((n) => n.id !== eventId);
+        this.sortEvents();
+      });
     } catch (error) {
       console.log(`Error in deleting event: ${error}`);
     }
   };
 
-  public deleteAll = async()=>{
-    this.events.forEach(item => {this.deleteEvent(item.id)});
-  }
+  public deleteAll = async () => {
+    this.events.forEach((item) => {
+      this.deleteEvent(item.id);
+    });
+  };
 
   public editEvent = async (
     eventId: string,
@@ -174,14 +157,14 @@ class EventsStore {
     eventLocation: string
   ) => {
     try {
-      console.log("eventId", eventId);
       const eventIndex = this.events.findIndex((n) => n.id === eventId);
       if (eventIndex === -1) {
         throw new Error(`Event with ID ${eventId} not found`);
       }
       // update db
-      let res = await axios.put(
-        `${BASE_URL}/api/events?id=${eventId}`,
+      let res = await sendPut(
+        Route,
+        eventId,
         {
           title: eventTitle,
           dateStart: eventDateStart,
@@ -191,37 +174,39 @@ class EventsStore {
           content: eventContent,
           location: eventLocation,
         },
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+        userStore.secretKey
       );
       // update store
-      this.events[eventIndex].title = eventTitle;
-      this.events[eventIndex].dateStart = eventDateStart;
-      this.events[eventIndex].dateEnd = eventDateEnd;
-      if (eventSatrtTime) this.events[eventIndex].dateEnd = eventSatrtTime;
-      if (eventEndTime) this.events[eventIndex].dateEnd = eventEndTime;
-      if (eventContent) this.events[eventIndex].dateEnd = eventContent;
-      if (eventLocation) this.events[eventIndex].dateEnd = eventLocation;
-      this.events = [...this.events];
+      runInAction(() => {
+        this.events[eventIndex].title = eventTitle;
+        this.events[eventIndex].dateStart = eventDateStart;
+        this.events[eventIndex].dateEnd = eventDateEnd;
+        if (eventSatrtTime) this.events[eventIndex].startTime = eventSatrtTime;
+        if (eventEndTime) this.events[eventIndex].endTime = eventEndTime;
+        if (eventContent) this.events[eventIndex].content = eventContent;
+        if (eventLocation) this.events[eventIndex].location = eventLocation;
+        this.sortEvents();
+      });
       // update notifications
-      let eventIdentifier = this.events[eventIndex].id
-      await this.cancelSchedulePushNotification(eventIdentifier)
-      await this.schedulePushNotification(this.events[eventIndex])
+      let eventIdentifier = this.events[eventIndex].id;
+      await this.cancelSchedulePushNotification(eventIdentifier);
+      await this.schedulePushNotification(this.events[eventIndex]);
     } catch (error) {
       console.log(`Error in editing event: ${error}`);
     }
   };
 
+  public sortEvents = (): void => {
+    const tmp = eventsStore.events.sort((a, b) => {
+      const time1: Date = parseTimeFromString(a.startTime, a.dateStart);
+      const time2: Date = parseTimeFromString(b.startTime, b.dateStart);
+      return time1.getTime() - time2.getTime();
+    });
+    this.events = [...tmp];
+  }
   public getEventsByDate = (date: string): event[] => {
     return this.events.filter((n) => n.dateStart === date);
   };
-
-  get count(): number {
-    return this.events.length;
-  }
 
   public isDialogOpen(dialog: EventsDialogs): boolean {
     return this.currentOpenDialog === dialog;
@@ -252,11 +237,11 @@ class EventsStore {
       ),
     ];
   }
-  public setSelectedEvent(item: event): void {
+  public setSelectedEvent(item: event | null): void {
     this.selectedEvent = item;
   }
 
-  // @action
+  //@action
   public setSelectedDate(date: string): void {
     this.selectedDate = date;
   }
@@ -277,94 +262,55 @@ class EventsStore {
   }
 
   public schedulePushNotification = async (event: event) => {
-    const date = new Date(`${event.dateStart} ${event.startTime}`);
-    const halfHour = (Number(event.notifyTimeFrame)) * 60 * 1000;
-    const now = new Date();
-    const secondsDiff = Math.floor((date.getTime() - halfHour - now.getTime()) / 1000);
-
+    const secondsDiff = getTimeDifference(event.dateStart, event.startTime, Number(userStore.gettingReadyTime));
+    console.log("time diff", secondsDiff);
     try {
       let notificationDocument: notificationDoc = {
         content: {
-          title: 'Event coming up',
+          title: Strings.notification_header,
           body: event.title,
           data: event,
         },
-        trigger: { seconds: secondsDiff }
-      }
+        trigger: { seconds: secondsDiff },
+      };
 
-      let notificationIdentifier = await Notifications.scheduleNotificationAsync(notificationDocument);
-      notificationDocument.id = notificationIdentifier
-      notificationDocument.eventId = event.id
-      console.log('succes in scheduling event', notificationIdentifier)
-      let resNotificationAddInServer = await axios.post(
-        `${BASE_URL}/api/notifications`,
+      let notificationIdentifier =
+        await Notifications.scheduleNotificationAsync(notificationDocument);
+      notificationDocument.id = notificationIdentifier;
+      notificationDocument.eventId = event.id;
+      console.log("succes in scheduling event", notificationIdentifier);
+      let resNotificationAddInServer = await sendPost(
+        notificationsRoute,
         notificationDocument,
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+        userStore.secretKey,
       );
     } catch (error) {
-      console.log('error in scheduling event', error)
+      console.log("error in scheduling event", error);
     }
-  }
-
+  };
 
   public cancelSchedulePushNotification = async (eventId: string) => {
     try {
-      let res = await axios.delete(
-        `${BASE_URL}/api/notifications?id=${eventId}`,
-        {
-          headers: {
-            Authorization: userStore.secretKey,
-          },
-        }
+      let res = await sendDelete(
+        notificationsRoute,
+        eventId,
+        userStore.secretKey
       );
-      
-      if(res.data && res.data.id){
-        res = await axios.delete(
-          `${BASE_URL}/api/notifications?id=${res.data.id}`,
-          {
-            headers: {
-              Authorization: userStore.secretKey,
-            },
-          }
+      if (res.data && res.data.id) {
+        res = await sendDelete(
+          notificationsRoute,
+          res.data.id,
+          userStore.secretKey
         );
-        let cancelNotificationRes = await Notifications.cancelScheduledNotificationAsync(res.data.id);
-        console.log('cancel event', cancelNotificationRes)
-
+        let cancelNotificationRes =
+          await Notifications.cancelScheduledNotificationAsync(res.data.id);
+        console.log("cancel event", cancelNotificationRes);
       } else {
-        console.log(`Notification not found for event id: ${eventId}`)
+        console.log(`Notification not found for event id: ${eventId}`);
       }
     } catch (error) {
       console.log(`Error in canceling event notification: ${error}`);
     }
-  }
-
-  private convertStringToTasks(str: string): eventTask[]{
-    const lines = str.split('\n'); // Split the string by newline characters
-    const tasks: eventTask[] = [];
-  
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim(); // Remove leading/trailing whitespaces
-  
-      if (line.length > 0) {
-        // Ignore empty lines
-        const taskNumberMatch = line.match(/^\d+\./); // Check if the line starts with a number followed by a dot
-  
-        if (taskNumberMatch) {
-          const content = line.slice(taskNumberMatch[0].length).trim(); // Extract the content after the task number
-          const task = {
-            content,
-            isDone: false,
-          };
-          tasks.push(task);
-        }
-      }
-    }
-    console.log("completion ", tasks);
-    return tasks;
   };
 }
 

@@ -42,7 +42,6 @@ export default function App() {
      */
     async function getPermission(){
       await Audio.requestPermissionsAsync().then((permission) => {
-        console.log(permission.granted);
         userStore.setAudioPremissions(permission.granted);
       }).catch(error => {
         console.log(error);
@@ -65,21 +64,6 @@ export default function App() {
         })
       }
     });
-
-    // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-    //   console.log('notification', notification)
-    // });
-
-    // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-    //   navigation.navigate('Settings');
-    //   console.log('Ofek what you want to do here?');
-    //   console.log(response);
-    // });
-
-    // return () => {
-    //   Notifications.removeNotificationSubscription(notificationListener.current);
-    //   Notifications.removeNotificationSubscription(responseListener.current);
-    // };
   }, []);
 
   
@@ -105,7 +89,6 @@ async function registerForPushNotificationsAsync() {
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
-    console.log('finalStatus', finalStatus)
 
     if (existingStatus !== 'granted') {
       const { status } = await Notifications.requestPermissionsAsync();
@@ -115,8 +98,11 @@ async function registerForPushNotificationsAsync() {
       alert('Failed to get push token for push notification!');
       return;
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
+    token = (await Notifications.getExpoPushTokenAsync(
+      {
+        projectId: 'IGotThis',
+      }
+    )).data;
   } else {
     alert('Must use physical device for Push Notifications');
   }

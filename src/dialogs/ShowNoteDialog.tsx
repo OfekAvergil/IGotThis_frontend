@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text } from "react-native-paper";
-import notesStore, { NotesDialogs, note } from "../stores/notesStore";
+import notesStore, { NotesDialogs } from "../stores/notesStore";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View } from "react-native";
 import DialogPlayer from "../components/DialogPlayer";

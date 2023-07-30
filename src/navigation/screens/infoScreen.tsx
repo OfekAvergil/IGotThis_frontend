@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import { Text, Button, TextInput, Card, RadioButton } from "react-native-paper";
+import { Text, Button, TextInput, Card} from "react-native-paper";
 import userStore, { user } from "../../stores/userStore";
 import LoginHeader from "../../components/LoginHeader";
-import { Colors } from "../../consts";
+import { Colors, Pages, Strings } from "../../consts";
 import eventsStore from "../../stores/eventsStore";
 import todosStore from "../../stores/todosStore";
 import notesStore from "../../stores/notesStore";
-import Icon from "react-native-paper/src/components/Icon";
 import LoginError from "../../components/LoginError";
 import { observer } from "mobx-react";
 
@@ -34,17 +33,26 @@ const InfoScreen = ({ navigation }: any) => {
         await eventsStore.fetchEvents(userStore.secretKey);
         await todosStore.fetchTodos(userStore.secretKey);
         await notesStore.fetchNotes(userStore.secretKey);
-        navigation.navigate("Walkthrough");
+        clearPage();
+        navigation.navigate(Pages.Walkthrough);
       }
     }
   }
 
+  const clearPage = ()=>{
+    setAddress("");
+    setContact("");
+    setRole(false);
+    setChecked("first");
+    userStore.setErrorMessage("");
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <LoginHeader header="Sign in" />
+      <LoginHeader header={Strings.register_page_header} />
       <Card style={styles.card}>
         <Card.Content>
-          <Text style={styles.notes}>Which user is in this device?</Text>
+          <Text style={styles.notes}>{Strings.select_user_header}</Text>
           <View style={styles.section}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Button
@@ -56,7 +64,7 @@ const InfoScreen = ({ navigation }: any) => {
                 style={styles.RadioButton}
               >
                 {/* <Icon source="face-man-outline" size={22} color="black" /> */}
-                <Text style={styles.label}>Main User</Text>
+                <Text style={styles.label}>{Strings.main_user_title}</Text>
               </Button>
               <Button
                 onPress={() => {
@@ -67,23 +75,23 @@ const InfoScreen = ({ navigation }: any) => {
                 style={styles.RadioButton}
               >
                 {/* <Icon source="face-agent" size={24} color="black" /> */}
-                <Text style={styles.label}>Supervisior</Text>
+                <Text style={styles.label}>{Strings.supervisior_user_title}</Text>
               </Button>
             </View>
           </View>
           <View style={styles.section}>
-            <Text style={styles.notes}>Please fill in some details:</Text>
+            <Text style={styles.notes}>{Strings.fill_details_header}</Text>
             <TextInput
               value={address}
               onChangeText={setAddress}
-              label="Your home address"
+              label={Strings.info_page_address_field_label}
               secureTextEntry={false}
               style={styles.input}
             />
             <TextInput
               value={contact}
               onChangeText={setContact}
-              label="Emergency contact"
+              label={Strings.info_page_contact_field_label}
               secureTextEntry={false}
               style={styles.input}
             />
@@ -102,12 +110,11 @@ const InfoScreen = ({ navigation }: any) => {
                 icon="chevron-left"
                 onPress={() => {
                   userStore.setErrorMessage("");
-                  setAddress("");
-                  setContact("");
-                  navigation.navigate("Register");
+                  clearPage();
+                  navigation.navigate(Pages.Register);
                 }}
               >
-                Back
+                {Strings.back_button}
               </Button>
             </View>
             <View
@@ -118,7 +125,7 @@ const InfoScreen = ({ navigation }: any) => {
               }}
             >
               <Button mode="contained" icon="check" onPress={handleSave}>
-                Done!
+                {Strings.done_button}
               </Button>
             </View>
           </View>

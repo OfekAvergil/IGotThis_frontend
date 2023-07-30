@@ -1,36 +1,44 @@
 import * as React from "react";
-import { TextInput, Switch, Text   } from "react-native-paper";
+import { TextInput, Switch, Text } from "react-native-paper";
 import BasicDialog from "./BaseDialog";
 import { StyleSheet, View} from "react-native";
-import { Colors } from "../consts";
+import { Colors, Strings } from "../consts";
 import { useState } from "react";
 import userStore, { settingsDialogs } from "../stores/userStore";
 
-const EditAccountDialog = () => {
-  const [gettingReadyTime, setTime] = useState('30');
+const EditPreferencesDialog = () => {
+  const [gettingReadyTime, setTime] = useState(userStore.gettingReadyTime);
   const [notifications, setNotifications] = useState(true);
   const [tasks, setTasks] = useState(true);
 
+  const handleSave = () => {
+    if(notifications){
+      userStore.setGettingReadyTime(gettingReadyTime);
+    } else {
+      userStore.setGettingReadyTime('0');
+    }
+  }
+
   return BasicDialog({
-    title: "Preferences",
+    title: Strings.preferences_header,
     content: (
       <View style={styles.dialogContent}>
         <View style={styles.form}>
           <Text  style={styles.notes}>
-            Send notification in time to get ready to event?
+           {Strings.send_notification_prompt}
           </Text>
           <View style={{flexDirection:"row", alignItems:"center"}}>
             <Text style={styles.label}>
-              Getting ready mode: 
+              {Strings.getting_ready_mode_label}
             </Text>
             <Switch value={notifications} onValueChange={()=> setNotifications(!notifications)} />
           </View>
           <Text style={styles.notes}>
-          How much minutes it takes you to get ready?
+          {Strings.getting_ready_time_prompt}
           </Text>
           <View style={{flexDirection:"row", alignItems:"center"}}>
             <Text style={styles.label}>
-              Time (in minutes): 
+              {Strings.time_minutes_label}: 
             </Text>
             <TextInput
               value={gettingReadyTime}
@@ -39,11 +47,11 @@ const EditAccountDialog = () => {
             /> 
           </View>
           <Text style={styles.notes}>
-            Create automatically tasks for help you getting ready?
+            {Strings.getting_ready_tasks_prompt}
           </Text>
           <View style={{flexDirection:"row", alignItems:"center"}}>
             <Text style={styles.label}>
-              Getting ready tasks: 
+              {Strings.getting_ready_tasks_label}
             </Text>
             <Switch value={tasks} onValueChange={()=> setTasks(!tasks)} />
           </View>     
@@ -53,11 +61,10 @@ const EditAccountDialog = () => {
     isVisible: userStore.isDialogOpen(settingsDialogs.PreferencesDialog),
     enableActions: true,
     onOk: () => {
-      console.log("ok");
+      handleSave();
       userStore.closeAllDialogs();
     },
     onCancle: () => {
-      console.log("cancle");
       userStore.closeAllDialogs();
     },
     onDismiss: () => {
@@ -66,7 +73,7 @@ const EditAccountDialog = () => {
   });
 };
 
-export default EditAccountDialog;
+export default EditPreferencesDialog;
 
 const styles = StyleSheet.create({
   dialogContent: {

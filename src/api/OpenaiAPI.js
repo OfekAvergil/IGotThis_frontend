@@ -1,4 +1,3 @@
-import React, { Component, useState } from "react";
 import userStore from "../stores/userStore";
 import notesStore from "../stores/notesStore";
 import todosStore from "../stores/todosStore";
@@ -8,6 +7,7 @@ import * as FileSystem from 'expo-file-system';
 
 export async function handleExtractTasks() {
   const text = notesStore.textCurrentEventNote;
+  const route = `tasks/extract-task`;
   if (text) {
     try {
       if (text == null) {
@@ -32,6 +32,7 @@ export async function handleExtractTasks() {
     notesStore.setTextCurrentEventNote(null);
   }
 }
+
 
 export async function handleSpeechToText() {
   try {
@@ -69,8 +70,12 @@ export async function handleSpeechToText() {
   }
 }
 
+/**
+ * convert completion to seperated tasks (completion = ["task1", "task2"]), 
+ * and add them to the todos list
+ * @param completion - array of tasks
+ */
 function convertCompletionToList(completion) {
-  // convert completion to list (complection = ["task1", "task2"])
   // Remove the leading and trailing newline characters
   var cleanedText = completion.trim();
   // Remove the surrounding square brackets

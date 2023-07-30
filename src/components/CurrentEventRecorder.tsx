@@ -3,6 +3,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { Colors } from "../consts";
+import React from "react";
 
 export interface recorderProps {
   addNewRec: (record: Audio.Recording | null) => void;
@@ -77,11 +78,7 @@ export default function EventRecorder(props: recorderProps) {
     props.addNewRec(recording);
   }
 
-  //TODO
-  async function pauseRecording(): Promise<void> {
-    await recording?.pauseAsync;
-    setIsPaused(true);
-  }
+
 
   async function continueRecording(): Promise<void> {
     await recording?.startAsync;
@@ -92,7 +89,7 @@ export default function EventRecorder(props: recorderProps) {
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       {(!isRecording || isPaused) && (
         <IconButton
-          onPress={isPaused ? continueRecording : startRecording}
+          onPress={startRecording}
           icon="microphone"
           mode="contained"
           style={styles.RecordButton}
@@ -101,8 +98,8 @@ export default function EventRecorder(props: recorderProps) {
       )}
       {isRecording && !isPaused && (
         <IconButton
-          onPress={pauseRecording}
-          icon="pause"
+        onPress={stopRecording}
+          icon="stop"
           mode="contained"
           containerColor={Colors.primary}
           iconColor="#DCDCDC"
@@ -110,25 +107,19 @@ export default function EventRecorder(props: recorderProps) {
           size={50}
         ></IconButton>
       )}
-      <View style={{ flexDirection: "row" }}>
-        <IconButton
-          onPress={playRecording}
-          icon="play"
-          mode="contained"
-          disabled={recording && !isRecording ? false : true}
-        ></IconButton>
-        <IconButton
-          onPress={stopRecording}
-          icon="stop"
-          mode="contained"
-          disabled={recording ? false : true}
-        ></IconButton>
-        <IconButton
-          onPress={deleteRecording}
-          icon="restart"
-          mode="contained"
-          disabled={recording && !isRecording ? false : true}
-        ></IconButton>
+      <View style={{flexDirection: "row",}}>
+      <IconButton
+        onPress={playRecording}
+        icon="play"
+        mode="contained"
+        disabled={recording && !isRecording ? false : true}
+      ></IconButton>
+      <IconButton
+        onPress={deleteRecording}
+        icon="delete"
+        mode="contained"
+        disabled={recording && !isRecording ? false : true}
+      ></IconButton>
       </View>
     </View>
   );

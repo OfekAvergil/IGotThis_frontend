@@ -4,7 +4,7 @@ import AddEventDialog from "../../dialogs/AddEventDialog";
 import { observer } from "mobx-react";
 import ShowEventDialog from "../../dialogs/ShowEventDialog";
 import EditEventDialog from "../../dialogs/EditEventDialog";
-import { View, StyleSheet, Platform } from 'react-native';
+import { View } from 'react-native';
 
 
 const CalenderScreen = () => {

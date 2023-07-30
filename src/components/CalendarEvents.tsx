@@ -1,27 +1,20 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView} from "react-native";
 import { Calendar } from "react-native-calendars";
 import eventsStore, { EventsDialogs, event } from "../stores/eventsStore";
-import { Card, FAB, Menu } from "react-native-paper";
+import { Card, FAB } from "react-native-paper";
 import userStore from "../stores/userStore";
-import { handleExtractTasks, handleSpeechToText } from "../api/OpenaiAPI";
-import { Colors } from "../consts";
+import { Colors, Pages, Strings } from "../consts";
 import PopUpMenu from "./PopUpMenu";
-import { useNavigation } from "@react-navigation/native";
+import { ParamListBase, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { runInAction } from "mobx";
+import { getCurrentDate } from "../common";
 
 const CalendarEvents = () => {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   React.useEffect(() => {
-    // This code will run after the component has been rendered to the screen
-    // You can perform initialization tasks or fetch data from an API here
     if (userStore.secretKey) {
       eventsStore.fetchEvents(userStore.secretKey);
     }
@@ -32,73 +25,73 @@ const CalendarEvents = () => {
   );
 
   const handleDayPress = async (day: any) => {
-    setSelectedDay(day.dateString);
-    eventsStore.setSelectedDate(day.dateString);
+    runInAction(() => {
+      setSelectedDay(day.dateString);
+      eventsStore.setSelectedDate(day.dateString);
+    });
   };
+
   const renderItem = (item: event) => {
     return (
-        <Card style={styles.listItem}>
-          <TouchableOpacity
-            onPress={() => {
-              eventsStore.setSelectedEvent(item);
-              eventsStore.openDialog(EventsDialogs.ShowEventDialog);
-            }}>
-              
-          <View style={{ flexDirection:"row"}}>
+      <Card style={styles.listItem}>
+        <TouchableOpacity
+          onPress={() => {
+            eventsStore.setSelectedEvent(item);
+            eventsStore.openDialog(EventsDialogs.ShowEventDialog);
+          }}
+        >
+          <View style={{ flexDirection: "row" }}>
             <Text
-              style={{
-                color: Colors.basicGrey,
-                textAlign: "left",
-                fontSize: 14,
-              }}
+              style={styles.time}
             >
-            {item.startTime} - 
+              {item.startTime} -
             </Text>
             <Text
-              style={{
-                color: Colors.basicGrey,
-                textAlign: "left",
-                fontSize: 14,
-              }}
+              style={styles.time}
             >
-            {item.endTime}
+              {item.endTime}
             </Text>
           </View>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", margin: 2 }}>
-              <View style={{ flex: 2, flexDirection: "row", alignItems: "center"}}>
-                <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
-              </View>
-              <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
-                <PopUpMenu 
+          <View
+            style={{flex: 1, flexDirection: "row", alignItems: "center", margin: 2}}
+          >
+            <View
+              style={{ flex: 2, flexDirection: "row", alignItems: "center" }}
+            >
+              <Text style={{ color: "white", fontSize: 22 }}>{item.title}</Text>
+            </View>
+            <View
+              style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center",}}
+            >
+              <PopUpMenu
                 menuItems={[
                   {
-                    title: "Start now!",
+                    title: Strings.popup_menu_start_now_button,
                     action: () => {
                       eventsStore.setCurrentEvent(item.id);
-                      navigation.navigate('GettingReady');
+                      navigate(Pages.GettingReady);
                     },
-                    leadingIcon: "play"
+                    leadingIcon: "play",
                   },
                   {
-                    title: "Edit",
+                    title: Strings.popup_menu_edit_button,
                     action: () => {
                       eventsStore.setSelectedEvent(item);
                       eventsStore.openDialog(EventsDialogs.EditEventDialog);
                     },
-                    leadingIcon: "lead-pencil"
+                    leadingIcon: "lead-pencil",
                   },
                   {
-                    title: "Delete",
+                    title: Strings.popup_menu_delete_button,
                     action: () => {
                       eventsStore.deleteEvent(item.id);
                     },
-                    leadingIcon: "delete"
+                    leadingIcon: "delete",
                   },
                 ]}
               />
             </View>
           </View>
-
         </TouchableOpacity>
       </Card>
     );
@@ -126,13 +119,6 @@ const CalendarEvents = () => {
     );
   };
 
-  const getCurrentDate = () => {
-    const date: Date = new Date();
-    const current: string = date.toISOString().split("T")[0];
-    eventsStore.setSelectedDate(current);
-    return current;
-  };
-
   const markedAndSelected: { [date: string]: any } = {};
 
   // add single-day events to the marked dates object
@@ -140,7 +126,11 @@ const CalendarEvents = () => {
   eventsOneDay.forEach((date) => {
     // TODO!!!
     if (date === selectedDay) {
-      markedAndSelected[date] = { selected: true, marked:true, dotColor: Colors.secondery };
+      markedAndSelected[date] = {
+        selected: true,
+        marked: true,
+        dotColor: Colors.secondery,
+      };
     } else {
       markedAndSelected[date] = { marked: true, dotColor: Colors.primary };
     }
@@ -212,8 +202,6 @@ export default CalendarEvents;
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
-    //justifyContent: "flex-end",
     marginBottom: 16,
   },
   item: {
@@ -234,7 +222,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     margin: 16,
     right: 0,
-    top: 280,
+    top: 320,
     backgroundColor: Colors.pink,
     borderRadius: 50,
   },
@@ -245,5 +233,10 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 20,
     textAlignVertical: "center",
+  },
+  time:{
+    color: Colors.basicGrey,
+    textAlign: "left",
+    fontSize: 14,
   },
 });
