@@ -17,9 +17,29 @@ export default function EventRecorder(props: recorderProps) {
     try {
       const newRecording: Audio.Recording = new Audio.Recording();
       console.log("start recording");
-      await newRecording.prepareToRecordAsync(
-        Audio.RecordingOptionsPresets.LOW_QUALITY
-      );
+      const recordingOptions: Audio.RecordingOptions = {
+        android: {
+          extension: '.mp3',
+          outputFormat: 2, // MediaRecorder.OutputFormat.MPEG_4
+          audioEncoder: 3, // MediaRecorder.AudioEncoder.AAC
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+        },
+        ios: {
+          extension: '.m4a',
+          outputFormat: 2, // Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_MPEG4AAC
+          audioQuality: 1, // Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+        },
+        web: {
+          mimeType: 'audio/webm', // Adjust the mime type according to the recorded format
+        },
+      };
+      console.log("start recording");
+      await newRecording.prepareToRecordAsync(recordingOptions);
       await newRecording.startAsync();
       setRecording(newRecording);
       setIsRecording(true);
@@ -28,7 +48,7 @@ export default function EventRecorder(props: recorderProps) {
     }
   }
 
-  async function stopRecording():Promise<void> {
+  async function stopRecording(): Promise<void> {
     try {
       if (isRecording) {
         console.log("stop record");
@@ -41,7 +61,7 @@ export default function EventRecorder(props: recorderProps) {
     }
   }
 
-  async function playRecording():Promise<void> {
+  async function playRecording(): Promise<void> {
     try {
       const recordingUri = recording?.getURI();
       const playbackObject = new Audio.Sound();
@@ -58,31 +78,28 @@ export default function EventRecorder(props: recorderProps) {
   }
 
   //TODO
-  async function pauseRecording() :Promise<void> {
+  async function pauseRecording(): Promise<void> {
     await recording?.pauseAsync;
     setIsPaused(true);
   }
 
-  async function continueRecording() :Promise<void> {
+  async function continueRecording(): Promise<void> {
     await recording?.startAsync;
     setIsPaused(false);
   }
 
   return (
-    <View
-      style={{  alignItems: "center", justifyContent:"center" }}
-    >
-      
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
       {(!isRecording || isPaused) && (
         <IconButton
-          onPress={isPaused? continueRecording: startRecording}
+          onPress={isPaused ? continueRecording : startRecording}
           icon="microphone"
           mode="contained"
           style={styles.RecordButton}
           size={50}
         ></IconButton>
       )}
-      {isRecording && !isPaused  &&(
+      {isRecording && !isPaused && (
         <IconButton
           onPress={pauseRecording}
           icon="pause"
@@ -93,27 +110,26 @@ export default function EventRecorder(props: recorderProps) {
           size={50}
         ></IconButton>
       )}
-      <View style={{flexDirection: "row",}}>
-      <IconButton
-        onPress={playRecording}
-        icon="play"
-        mode="contained"
-        disabled={recording && !isRecording ? false : true}
-      ></IconButton>
-      <IconButton
-        onPress={stopRecording}
-        icon="stop"
-        mode="contained"
-        disabled={recording  ? false : true}
-      ></IconButton>
-      <IconButton
-        onPress={deleteRecording}
-        icon="restart"
-        mode="contained"
-        disabled={recording && !isRecording ? false : true}
-      ></IconButton>
+      <View style={{ flexDirection: "row" }}>
+        <IconButton
+          onPress={playRecording}
+          icon="play"
+          mode="contained"
+          disabled={recording && !isRecording ? false : true}
+        ></IconButton>
+        <IconButton
+          onPress={stopRecording}
+          icon="stop"
+          mode="contained"
+          disabled={recording ? false : true}
+        ></IconButton>
+        <IconButton
+          onPress={deleteRecording}
+          icon="restart"
+          mode="contained"
+          disabled={recording && !isRecording ? false : true}
+        ></IconButton>
       </View>
-   
     </View>
   );
 }
