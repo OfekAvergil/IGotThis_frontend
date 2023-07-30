@@ -63,6 +63,7 @@ const PickViewScreen = ({ navigation }: any) => {
             mode="contained"
             icon="check"
             onPress={handleSave}
+            style={styles.card_button}
           >
            {Strings.done_button}
           </Button>
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
   },
   card_button: {
     margin: 7,
+    height: 40
   },
   section:{
     marginBottom: 10,

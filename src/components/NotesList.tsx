@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   emptyListItem: {
-    backgroundColor: Colors.basicGrey,
+    backgroundColor: Colors.primary,
     minHeight: 50,
     height: "auto",
     margin: 5,
