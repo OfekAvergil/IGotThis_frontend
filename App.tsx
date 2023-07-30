@@ -9,7 +9,10 @@ import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import eventsStore, { event } from './src/stores/eventsStore';
+import { LogBox } from 'react-native';
 
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 
 Notifications.setNotificationHandler({

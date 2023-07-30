@@ -14,7 +14,7 @@ export async function handleExtractTasks() {
         throw new Error("Uh oh, no text was provided");
       }
       const response = await axios.post(
-        `http://192.168.1.236:4005/api/tasks/extract-task`,
+        `http://10.0.0.10:4005/api/tasks/extract-task`,
         { text: text },
         {
           headers: {
@@ -53,7 +53,7 @@ export async function handleSpeechToText() {
       type: `audio/x-${fileType}`,
     });
 
-    const response = await FileSystem.uploadAsync(`http://192.168.1.236:4005/api/tasks/speech-to-text`,
+    const response = await FileSystem.uploadAsync(`http://10.0.0.10:4005/api/tasks/speech-to-text`,
      audioURI, {
       fieldName: 'audio',
       httpMethod: 'POST',
