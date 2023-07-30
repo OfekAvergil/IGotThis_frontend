@@ -39,10 +39,6 @@ const ShowEventDialog = () => {
               {event.content}
             </Text>
           </View>
-          <FlatList
-            renderItem={({ item }) => <Text>{item.content}</Text>}
-            data={event.tasks}
-          />
         </View>
       </View>
     ),
