@@ -39,7 +39,6 @@ export default function EventRecorder(props: recorderProps) {
           mimeType: 'audio/webm', // Adjust the mime type according to the recorded format
         },
       };
-      console.log("start recording");
       await newRecording.prepareToRecordAsync(recordingOptions);
       await newRecording.startAsync();
       setRecording(newRecording);

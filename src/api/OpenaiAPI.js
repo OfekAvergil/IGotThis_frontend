@@ -2,8 +2,7 @@ import userStore from "../stores/userStore";
 import notesStore from "../stores/notesStore";
 import todosStore from "../stores/todosStore";
 import axios from "axios";
-import * as FileSystem from 'expo-file-system'; 
-
+import * as FileSystem from "expo-file-system";
 
 export async function handleExtractTasks() {
   const text = notesStore.textCurrentEventNote;
@@ -33,7 +32,6 @@ export async function handleExtractTasks() {
   }
 }
 
-
 export async function handleSpeechToText() {
   try {
     const audioURI = notesStore.recordingCurrentEventNote;
@@ -53,15 +51,20 @@ export async function handleSpeechToText() {
       type: `audio/x-${fileType}`,
     });
 
-    const response = await FileSystem.uploadAsync(`http://192.168.1.236:4005/api/tasks/speech-to-text`,
-     audioURI, {
-      fieldName: 'audio',
-      httpMethod: 'POST',
-      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await FileSystem.uploadAsync(
+      `http://192.168.1.236:4005/api/tasks/speech-to-text`,
+      audioURI,
+      {
+        fieldName: "audio",
+        httpMethod: "POST",
+        uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log(response);
+    console.log(response.body);
     const completion = response.body;
     convertCompletionToList(completion);
     notesStore.setRecordingCurrentEventNote(null);
@@ -70,8 +73,16 @@ export async function handleSpeechToText() {
   }
 }
 
+function removeChars(inputString) {
+  const charsToRemove = [ "\\n", "\n", '"', "[", "]", "{", "}", "\\", "'"];
+  for (const char of charsToRemove) {
+    inputString = inputString.split(char).join("");
+  }
+  return inputString;
+}
+
 /**
- * convert completion to seperated tasks (completion = ["task1", "task2"]), 
+ * convert completion to seperated tasks (completion = ["task1", "task2"]),
  * and add them to the todos list
  * @param completion - array of tasks
  */
@@ -89,7 +100,8 @@ function convertCompletionToList(completion) {
   //const tasks_list = JSON.parse(completion);
   console.log("tasks_list: ", tasks_list);
   for (let i = 0; i < tasks_list.length; i++) {
-    console.log("task ", tasks_list[i]);
-    todosStore.addTodo(tasks_list[i]);
+    let task = removeChars(tasks_list[i]);
+    console.log("task ", task);
+    todosStore.addTodo(task);
   }
 }
