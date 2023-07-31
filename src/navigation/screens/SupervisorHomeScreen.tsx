@@ -42,7 +42,7 @@ const SupervisorHomeScreen = ({ navigation }: any) => {
         <Button
          style={{width: 200, alignSelf:"center"}}
             mode = "contained"
-            onPress={() => navigation.navigate("ToDo")}
+            onPress={() => navigation.navigate("Notes")}
           > {Strings.go_to_notes}
           </Button>
       </Card>

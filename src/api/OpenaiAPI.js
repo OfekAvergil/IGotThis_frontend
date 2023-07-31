@@ -52,7 +52,7 @@ export async function handleSpeechToText() {
     });
 
     const response = await FileSystem.uploadAsync(
-      `http://192.168.1.236:4005/api/tasks/speech-to-text`,
+      `http://10.0.0.10:4005/api/tasks/speech-to-text`,
       audioURI,
       {
         fieldName: "audio",
